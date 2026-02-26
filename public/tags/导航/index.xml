@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>导航 on Arden J</title>
+    <link>http://localhost:1313/tags/%E5%AF%BC%E8%88%AA/</link>
+    <description>Recent content in 导航 on Arden J</description>
+    <generator>Hugo -- 0.146.0</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 20 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E5%AF%BC%E8%88%AA/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>基于 ROS2 的移动机器人导航系统</title>
+      <link>http://localhost:1313/projects/ros2-mobile-robot-navigation/</link>
+      <pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/ros2-mobile-robot-navigation/</guid>
+      <description>使用 ROS2 Navigation Stack 搭建室内移动机器人自主导航系统，集成 SLAM 建图与路径规划。</description>
+    </item>
+  </channel>
+</rss>

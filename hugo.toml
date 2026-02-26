@@ -1,0 +1,75 @@
+baseURL = 'https://tianye-J.github.io/'
+languageCode = 'zh-cn'
+title = "Arden J"
+theme = 'PaperMod'
+
+[pagination]
+  pagerSize = 8
+
+[params]
+  env = 'production'
+  defaultTheme = 'light'
+  disableThemeToggle = true
+  disableScrollToTop = false
+  ShowReadingTime = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowRssButtonInSectionTermList = false
+  description = "Robotics · AI · Engineering"
+
+  [params.homeInfoParams]
+    Title = "Hello, I'm **Arden J**"
+    Content = "Robotics Engineering @ NJUPT · Exploring AI & Autonomous Systems"
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/tianye-J"
+
+  [params.cover]
+    hiddenInList = false
+    hiddenInSingle = true
+
+  [params.label]
+    text = "Arden J"
+    icon = '/images/logo.png'
+    iconHeight = 28
+
+  [params.footer]
+    hideCopyright = false
+    text = '*万物静默如谜。* — 辛波斯卡'
+
+# ---------- Navigation ----------
+
+[[menu.main]]
+  identifier = "projects"
+  name = "Projects"
+  url = "/projects/"
+  weight = 10
+
+[[menu.main]]
+  identifier = "research"
+  name = "Research"
+  url = "/research/"
+  weight = 20
+
+[[menu.main]]
+  identifier = "learning"
+  name = "Learning"
+  url = "/learning/"
+  weight = 30
+
+[[menu.main]]
+  identifier = "about"
+  name = "About"
+  url = "/about/"
+  weight = 40
+
+# ---------- Markup ----------
+
+[markup]
+  [markup.highlight]
+    style = 'monokailight'
+    noClasses = true
+  [markup.goldmark.renderer]
+    unsafe = true

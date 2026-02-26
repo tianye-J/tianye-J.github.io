@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>计算机视觉 on Arden J</title>
+    <link>http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/</link>
+    <description>Recent content in 计算机视觉 on Arden J</description>
+    <generator>Hugo -- 0.146.0</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 10 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 PyTorch 实现 YOLO 目标检测</title>
+      <link>http://localhost:1313/projects/yolo-object-detection/</link>
+      <pubDate>Tue, 10 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/yolo-object-detection/</guid>
+      <description>从零实现 YOLO 目标检测算法，理解锚框机制、损失函数设计与 NMS 后处理流程。</description>
+    </item>
+  </channel>
+</rss>

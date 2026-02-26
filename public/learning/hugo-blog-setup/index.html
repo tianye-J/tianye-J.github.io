@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="light">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Hugo &#43; PaperMod 博客搭建记录 | Arden J</title>
+<meta name="keywords" content="Hugo, 博客, 教程">
+<meta name="description" content="从零开始搭建 Hugo 静态博客的完整记录，包括主题配置、样式自定义与部署流程。">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/learning/hugo-blog-setup/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.ff106212843b72690f0b8368815d2f53ee8c7beddd49ed9422544a6b4375a993.css" integrity="sha256-/xBiEoQ7cmkPC4NogV0vU&#43;6Me&#43;3dSe2UIlRKa0N1qZM=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/learning/hugo-blog-setup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript><meta property="og:url" content="http://localhost:1313/learning/hugo-blog-setup/">
+  <meta property="og:site_name" content="Arden J">
+  <meta property="og:title" content="Hugo &#43; PaperMod 博客搭建记录">
+  <meta property="og:description" content="从零开始搭建 Hugo 静态博客的完整记录，包括主题配置、样式自定义与部署流程。">
+  <meta property="og:locale" content="zh-cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="learning">
+    <meta property="article:published_time" content="2026-02-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-26T00:00:00+00:00">
+    <meta property="article:tag" content="Hugo">
+    <meta property="article:tag" content="博客">
+    <meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hugo &#43; PaperMod 博客搭建记录">
+<meta name="twitter:description" content="从零开始搭建 Hugo 静态博客的完整记录，包括主题配置、样式自定义与部署流程。">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Learning",
+      "item": "http://localhost:1313/learning/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Hugo + PaperMod 博客搭建记录",
+      "item": "http://localhost:1313/learning/hugo-blog-setup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Hugo + PaperMod 博客搭建记录",
+  "name": "Hugo \u002b PaperMod 博客搭建记录",
+  "description": "从零开始搭建 Hugo 静态博客的完整记录，包括主题配置、样式自定义与部署流程。",
+  "keywords": [
+    "Hugo", "博客", "教程"
+  ],
+  "articleBody": "为什么选择 Hugo 对比了几个主流静态博客方案后，选择 Hugo 的原因：\n构建速度极快 — 毫秒级构建，开发体验优秀 无需运行时依赖 — 单个二进制文件，部署简单 PaperMod 主题 — 简洁优雅，与我追求的极简设计理念契合 项目结构 m ├ ├ │ │ │ │ ├ ├ ├ └ y ─ ─ ─ ─ ─ ─ _ ─ ─ ─ ─ ─ ─ b l h c ├ ├ ├ └ a l s t o u o ─ ─ ─ ─ s a t h g g n ─ ─ ─ ─ s y a e / o t e o t m . e p r l a t u i e t n r e e b s t c s o t s a o / s / m j e r u c P l e a n t s a c r i / s p t c n / e s h g r / / / M o d / # # # # # # # # # # 站 M 项 研 学 关 自 模 静 主 点 a 目 究 习 于 定 板 态 题 配 r 展 内 笔 页 义 覆 资 （ 置 k 示 容 记 面 样 盖 源 不 d 式 要 o 直 w 接 n 修 改 文 ） 章 设计理念 本博客采用 “极简人文主义” 设计风格：\n暖色调背景，营造纸质阅读感 衬线字体（Noto Serif），提升可读性 仅使用轻微的 CSS 过渡动画 大量留白，让内容本身成为焦点 常用命令 # 本地预览（含草稿） hugo server -D # 新建文章 hugo new content/learning/my-post.md # 生产构建 hugo --minify 下一步计划 配置 GitHub Actions 自动部署 添加评论系统 优化 SEO 和 Open Graph 标签 ",
+  "wordCount" : "247",
+  "inLanguage": "en",
+  "datePublished": "2026-02-26T00:00:00Z",
+  "dateModified": "2026-02-26T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/learning/hugo-blog-setup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Arden J",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Arden J (Alt + H)">
+                <img src="http://localhost:1313/images/logo.png" alt="" aria-label="logo"
+                    height="28">Arden J</a>
+            <div class="logo-switches">
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/research/" title="Research">
+                    <span>Research</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/learning/" title="Learning">
+                    <span>Learning</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/learning/">Learning</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Hugo &#43; PaperMod 博客搭建记录
+    </h1>
+    <div class="post-description">
+      从零开始搭建 Hugo 静态博客的完整记录，包括主题配置、样式自定义与部署流程。
+    </div>
+    <div class="post-meta"><span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>2 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="为什么选择-hugo">为什么选择 Hugo<a hidden class="anchor" aria-hidden="true" href="#为什么选择-hugo">#</a></h2>
+<p>对比了几个主流静态博客方案后，选择 Hugo 的原因：</p>
+<ol>
+<li><strong>构建速度极快</strong> — 毫秒级构建，开发体验优秀</li>
+<li><strong>无需运行时依赖</strong> — 单个二进制文件，部署简单</li>
+<li><strong>PaperMod 主题</strong> — 简洁优雅，与我追求的极简设计理念契合</li>
+</ol>
+<h2 id="项目结构">项目结构<a hidden class="anchor" aria-hidden="true" href="#项目结构">#</a></h2>
+
+
+
+<div class="goat svg-container ">
+  
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      font-family="Menlo,Lucida Console,monospace"
+      
+        viewBox="0 0 296 185"
+      >
+      <g transform='translate(8,16)'>
+<path d='M 80,48 L 88,32' fill='none' stroke='currentColor'></path>
+<path d='M 80,144 L 88,128' fill='none' stroke='currentColor'></path>
+<circle cx='80' cy='48' r='6' stroke='currentColor' fill='#fff'></circle>
+<text text-anchor='middle' x='0' y='4' fill='currentColor' style='font-size:1em'>m</text>
+<text text-anchor='middle' x='0' y='20' fill='currentColor' style='font-size:1em'>├</text>
+<text text-anchor='middle' x='0' y='36' fill='currentColor' style='font-size:1em'>├</text>
+<text text-anchor='middle' x='0' y='52' fill='currentColor' style='font-size:1em'>│</text>
+<text text-anchor='middle' x='0' y='68' fill='currentColor' style='font-size:1em'>│</text>
+<text text-anchor='middle' x='0' y='84' fill='currentColor' style='font-size:1em'>│</text>
+<text text-anchor='middle' x='0' y='100' fill='currentColor' style='font-size:1em'>│</text>
+<text text-anchor='middle' x='0' y='116' fill='currentColor' style='font-size:1em'>├</text>
+<text text-anchor='middle' x='0' y='132' fill='currentColor' style='font-size:1em'>├</text>
+<text text-anchor='middle' x='0' y='148' fill='currentColor' style='font-size:1em'>├</text>
+<text text-anchor='middle' x='0' y='164' fill='currentColor' style='font-size:1em'>└</text>
+<text text-anchor='middle' x='8' y='4' fill='currentColor' style='font-size:1em'>y</text>
+<text text-anchor='middle' x='8' y='20' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='8' y='36' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='8' y='116' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='8' y='132' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='8' y='148' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='8' y='164' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='16' y='4' fill='currentColor' style='font-size:1em'>_</text>
+<text text-anchor='middle' x='16' y='20' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='16' y='36' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='16' y='116' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='16' y='132' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='16' y='148' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='16' y='164' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='24' y='4' fill='currentColor' style='font-size:1em'>b</text>
+<text text-anchor='middle' x='32' y='4' fill='currentColor' style='font-size:1em'>l</text>
+<text text-anchor='middle' x='32' y='20' fill='currentColor' style='font-size:1em'>h</text>
+<text text-anchor='middle' x='32' y='36' fill='currentColor' style='font-size:1em'>c</text>
+<text text-anchor='middle' x='32' y='52' fill='currentColor' style='font-size:1em'>├</text>
+<text text-anchor='middle' x='32' y='68' fill='currentColor' style='font-size:1em'>├</text>
+<text text-anchor='middle' x='32' y='84' fill='currentColor' style='font-size:1em'>├</text>
+<text text-anchor='middle' x='32' y='100' fill='currentColor' style='font-size:1em'>└</text>
+<text text-anchor='middle' x='32' y='116' fill='currentColor' style='font-size:1em'>a</text>
+<text text-anchor='middle' x='32' y='132' fill='currentColor' style='font-size:1em'>l</text>
+<text text-anchor='middle' x='32' y='148' fill='currentColor' style='font-size:1em'>s</text>
+<text text-anchor='middle' x='32' y='164' fill='currentColor' style='font-size:1em'>t</text>
+<text text-anchor='middle' x='40' y='4' fill='currentColor' style='font-size:1em'>o</text>
+<text text-anchor='middle' x='40' y='20' fill='currentColor' style='font-size:1em'>u</text>
+<text text-anchor='middle' x='40' y='36' fill='currentColor' style='font-size:1em'>o</text>
+<text text-anchor='middle' x='40' y='52' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='40' y='68' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='40' y='84' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='40' y='100' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='40' y='116' fill='currentColor' style='font-size:1em'>s</text>
+<text text-anchor='middle' x='40' y='132' fill='currentColor' style='font-size:1em'>a</text>
+<text text-anchor='middle' x='40' y='148' fill='currentColor' style='font-size:1em'>t</text>
+<text text-anchor='middle' x='40' y='164' fill='currentColor' style='font-size:1em'>h</text>
+<text text-anchor='middle' x='48' y='4' fill='currentColor' style='font-size:1em'>g</text>
+<text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>g</text>
+<text text-anchor='middle' x='48' y='36' fill='currentColor' style='font-size:1em'>n</text>
+<text text-anchor='middle' x='48' y='52' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='48' y='68' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='48' y='84' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='48' y='100' fill='currentColor' style='font-size:1em'>─</text>
+<text text-anchor='middle' x='48' y='116' fill='currentColor' style='font-size:1em'>s</text>
+<text text-anchor='middle' x='48' y='132' fill='currentColor' style='font-size:1em'>y</text>
+<text text-anchor='middle' x='48' y='148' fill='currentColor' style='font-size:1em'>a</text>
+<text text-anchor='middle' x='48' y='164' fill='currentColor' style='font-size:1em'>e</text>
+<text text-anchor='middle' x='56' y='4' fill='currentColor' style='font-size:1em'>/</text>
+<text text-anchor='middle' x='56' y='20' fill='currentColor' style='font-size:1em'>o</text>
+<text text-anchor='middle' x='56' y='36' fill='currentColor' style='font-size:1em'>t</text>
+<text text-anchor='middle' x='56' y='116' fill='currentColor' style='font-size:1em'>e</text>
+<text text-anchor='middle' x='56' y='132' fill='currentColor' style='font-size:1em'>o</text>
+<text text-anchor='middle' x='56' y='148' fill='currentColor' style='font-size:1em'>t</text>
+<text text-anchor='middle' x='56' y='164' fill='currentColor' style='font-size:1em'>m</text>
+<text text-anchor='middle' x='64' y='20' fill='currentColor' style='font-size:1em'>.</text>
+<text text-anchor='middle' x='64' y='36' fill='currentColor' style='font-size:1em'>e</text>
+<text text-anchor='middle' x='64' y='52' fill='currentColor' style='font-size:1em'>p</text>
+<text text-anchor='middle' x='64' y='68' fill='currentColor' style='font-size:1em'>r</text>
+<text text-anchor='middle' x='64' y='84' fill='currentColor' style='font-size:1em'>l</text>
+<text text-anchor='middle' x='64' y='100' fill='currentColor' style='font-size:1em'>a</text>
+<text text-anchor='middle' x='64' y='116' fill='currentColor' style='font-size:1em'>t</text>
+<text text-anchor='middle' x='64' y='132' fill='currentColor' style='font-size:1em'>u</text>
+<text text-anchor='middle' x='64' y='148' fill='currentColor' style='font-size:1em'>i</text>
+<text text-anchor='middle' x='64' y='164' fill='currentColor' style='font-size:1em'>e</text>
+<text text-anchor='middle' x='72' y='20' fill='currentColor' style='font-size:1em'>t</text>
+<text text-anchor='middle' x='72' y='36' fill='currentColor' style='font-size:1em'>n</text>
+<text text-anchor='middle' x='72' y='52' fill='currentColor' style='font-size:1em'>r</text>
+<text text-anchor='middle' x='72' y='68' fill='currentColor' style='font-size:1em'>e</text>
+<text text-anchor='middle' x='72' y='84' fill='currentColor' style='font-size:1em'>e</text>
+<text text-anchor='middle' x='72' y='100' fill='currentColor' style='font-size:1em'>b</text>
+<text text-anchor='middle' x='72' y='116' fill='currentColor' style='font-size:1em'>s</text>
+<text text-anchor='middle' x='72' y='132' fill='currentColor' style='font-size:1em'>t</text>
+<text text-anchor='middle' x='72' y='148' fill='currentColor' style='font-size:1em'>c</text>
+<text text-anchor='middle' x='72' y='164' fill='currentColor' style='font-size:1em'>s</text>
+<text text-anchor='middle' x='80' y='20' fill='currentColor' style='font-size:1em'>o</text>
+<text text-anchor='middle' x='80' y='36' fill='currentColor' style='font-size:1em'>t</text>
+<text text-anchor='middle' x='80' y='68' fill='currentColor' style='font-size:1em'>s</text>
+<text text-anchor='middle' x='80' y='84' fill='currentColor' style='font-size:1em'>a</text>
+<text text-anchor='middle' x='80' y='100' fill='currentColor' style='font-size:1em'>o</text>
+<text text-anchor='middle' x='80' y='116' fill='currentColor' style='font-size:1em'>/</text>
+<text text-anchor='middle' x='80' y='132' fill='currentColor' style='font-size:1em'>s</text>
+<text text-anchor='middle' x='80' y='164' fill='currentColor' style='font-size:1em'>/</text>
+<text text-anchor='middle' x='88' y='20' fill='currentColor' style='font-size:1em'>m</text>
+<text text-anchor='middle' x='88' y='52' fill='currentColor' style='font-size:1em'>j</text>
+<text text-anchor='middle' x='88' y='68' fill='currentColor' style='font-size:1em'>e</text>
+<text text-anchor='middle' x='88' y='84' fill='currentColor' style='font-size:1em'>r</text>
+<text text-anchor='middle' x='88' y='100' fill='currentColor' style='font-size:1em'>u</text>
+<text text-anchor='middle' x='88' y='116' fill='currentColor' style='font-size:1em'>c</text>
+<text text-anchor='middle' x='88' y='164' fill='currentColor' style='font-size:1em'>P</text>
+<text text-anchor='middle' x='96' y='20' fill='currentColor' style='font-size:1em'>l</text>
+<text text-anchor='middle' x='96' y='52' fill='currentColor' style='font-size:1em'>e</text>
+<text text-anchor='middle' x='96' y='68' fill='currentColor' style='font-size:1em'>a</text>
+<text text-anchor='middle' x='96' y='84' fill='currentColor' style='font-size:1em'>n</text>
+<text text-anchor='middle' x='96' y='100' fill='currentColor' style='font-size:1em'>t</text>
+<text text-anchor='middle' x='96' y='116' fill='currentColor' style='font-size:1em'>s</text>
+<text text-anchor='middle' x='96' y='164' fill='currentColor' style='font-size:1em'>a</text>
+<text text-anchor='middle' x='104' y='52' fill='currentColor' style='font-size:1em'>c</text>
+<text text-anchor='middle' x='104' y='68' fill='currentColor' style='font-size:1em'>r</text>
+<text text-anchor='middle' x='104' y='84' fill='currentColor' style='font-size:1em'>i</text>
+<text text-anchor='middle' x='104' y='100' fill='currentColor' style='font-size:1em'>/</text>
+<text text-anchor='middle' x='104' y='116' fill='currentColor' style='font-size:1em'>s</text>
+<text text-anchor='middle' x='104' y='164' fill='currentColor' style='font-size:1em'>p</text>
+<text text-anchor='middle' x='112' y='52' fill='currentColor' style='font-size:1em'>t</text>
+<text text-anchor='middle' x='112' y='68' fill='currentColor' style='font-size:1em'>c</text>
+<text text-anchor='middle' x='112' y='84' fill='currentColor' style='font-size:1em'>n</text>
+<text text-anchor='middle' x='112' y='116' fill='currentColor' style='font-size:1em'>/</text>
+<text text-anchor='middle' x='112' y='164' fill='currentColor' style='font-size:1em'>e</text>
+<text text-anchor='middle' x='120' y='52' fill='currentColor' style='font-size:1em'>s</text>
+<text text-anchor='middle' x='120' y='68' fill='currentColor' style='font-size:1em'>h</text>
+<text text-anchor='middle' x='120' y='84' fill='currentColor' style='font-size:1em'>g</text>
+<text text-anchor='middle' x='120' y='164' fill='currentColor' style='font-size:1em'>r</text>
+<text text-anchor='middle' x='128' y='52' fill='currentColor' style='font-size:1em'>/</text>
+<text text-anchor='middle' x='128' y='68' fill='currentColor' style='font-size:1em'>/</text>
+<text text-anchor='middle' x='128' y='84' fill='currentColor' style='font-size:1em'>/</text>
+<text text-anchor='middle' x='128' y='164' fill='currentColor' style='font-size:1em'>M</text>
+<text text-anchor='middle' x='136' y='164' fill='currentColor' style='font-size:1em'>o</text>
+<text text-anchor='middle' x='144' y='164' fill='currentColor' style='font-size:1em'>d</text>
+<text text-anchor='middle' x='152' y='164' fill='currentColor' style='font-size:1em'>/</text>
+<text text-anchor='middle' x='184' y='20' fill='currentColor' style='font-size:1em'>#</text>
+<text text-anchor='middle' x='184' y='36' fill='currentColor' style='font-size:1em'>#</text>
+<text text-anchor='middle' x='184' y='52' fill='currentColor' style='font-size:1em'>#</text>
+<text text-anchor='middle' x='184' y='68' fill='currentColor' style='font-size:1em'>#</text>
+<text text-anchor='middle' x='184' y='84' fill='currentColor' style='font-size:1em'>#</text>
+<text text-anchor='middle' x='184' y='100' fill='currentColor' style='font-size:1em'>#</text>
+<text text-anchor='middle' x='184' y='116' fill='currentColor' style='font-size:1em'>#</text>
+<text text-anchor='middle' x='184' y='132' fill='currentColor' style='font-size:1em'>#</text>
+<text text-anchor='middle' x='184' y='148' fill='currentColor' style='font-size:1em'>#</text>
+<text text-anchor='middle' x='184' y='164' fill='currentColor' style='font-size:1em'>#</text>
+<text text-anchor='middle' x='200' y='20' fill='currentColor' style='font-size:1em'>站</text>
+<text text-anchor='middle' x='200' y='36' fill='currentColor' style='font-size:1em'>M</text>
+<text text-anchor='middle' x='200' y='52' fill='currentColor' style='font-size:1em'>项</text>
+<text text-anchor='middle' x='200' y='68' fill='currentColor' style='font-size:1em'>研</text>
+<text text-anchor='middle' x='200' y='84' fill='currentColor' style='font-size:1em'>学</text>
+<text text-anchor='middle' x='200' y='100' fill='currentColor' style='font-size:1em'>关</text>
+<text text-anchor='middle' x='200' y='116' fill='currentColor' style='font-size:1em'>自</text>
+<text text-anchor='middle' x='200' y='132' fill='currentColor' style='font-size:1em'>模</text>
+<text text-anchor='middle' x='200' y='148' fill='currentColor' style='font-size:1em'>静</text>
+<text text-anchor='middle' x='200' y='164' fill='currentColor' style='font-size:1em'>主</text>
+<text text-anchor='middle' x='208' y='20' fill='currentColor' style='font-size:1em'>点</text>
+<text text-anchor='middle' x='208' y='36' fill='currentColor' style='font-size:1em'>a</text>
+<text text-anchor='middle' x='208' y='52' fill='currentColor' style='font-size:1em'>目</text>
+<text text-anchor='middle' x='208' y='68' fill='currentColor' style='font-size:1em'>究</text>
+<text text-anchor='middle' x='208' y='84' fill='currentColor' style='font-size:1em'>习</text>
+<text text-anchor='middle' x='208' y='100' fill='currentColor' style='font-size:1em'>于</text>
+<text text-anchor='middle' x='208' y='116' fill='currentColor' style='font-size:1em'>定</text>
+<text text-anchor='middle' x='208' y='132' fill='currentColor' style='font-size:1em'>板</text>
+<text text-anchor='middle' x='208' y='148' fill='currentColor' style='font-size:1em'>态</text>
+<text text-anchor='middle' x='208' y='164' fill='currentColor' style='font-size:1em'>题</text>
+<text text-anchor='middle' x='216' y='20' fill='currentColor' style='font-size:1em'>配</text>
+<text text-anchor='middle' x='216' y='36' fill='currentColor' style='font-size:1em'>r</text>
+<text text-anchor='middle' x='216' y='52' fill='currentColor' style='font-size:1em'>展</text>
+<text text-anchor='middle' x='216' y='68' fill='currentColor' style='font-size:1em'>内</text>
+<text text-anchor='middle' x='216' y='84' fill='currentColor' style='font-size:1em'>笔</text>
+<text text-anchor='middle' x='216' y='100' fill='currentColor' style='font-size:1em'>页</text>
+<text text-anchor='middle' x='216' y='116' fill='currentColor' style='font-size:1em'>义</text>
+<text text-anchor='middle' x='216' y='132' fill='currentColor' style='font-size:1em'>覆</text>
+<text text-anchor='middle' x='216' y='148' fill='currentColor' style='font-size:1em'>资</text>
+<text text-anchor='middle' x='216' y='164' fill='currentColor' style='font-size:1em'>（</text>
+<text text-anchor='middle' x='224' y='20' fill='currentColor' style='font-size:1em'>置</text>
+<text text-anchor='middle' x='224' y='36' fill='currentColor' style='font-size:1em'>k</text>
+<text text-anchor='middle' x='224' y='52' fill='currentColor' style='font-size:1em'>示</text>
+<text text-anchor='middle' x='224' y='68' fill='currentColor' style='font-size:1em'>容</text>
+<text text-anchor='middle' x='224' y='84' fill='currentColor' style='font-size:1em'>记</text>
+<text text-anchor='middle' x='224' y='100' fill='currentColor' style='font-size:1em'>面</text>
+<text text-anchor='middle' x='224' y='116' fill='currentColor' style='font-size:1em'>样</text>
+<text text-anchor='middle' x='224' y='132' fill='currentColor' style='font-size:1em'>盖</text>
+<text text-anchor='middle' x='224' y='148' fill='currentColor' style='font-size:1em'>源</text>
+<text text-anchor='middle' x='224' y='164' fill='currentColor' style='font-size:1em'>不</text>
+<text text-anchor='middle' x='232' y='36' fill='currentColor' style='font-size:1em'>d</text>
+<text text-anchor='middle' x='232' y='116' fill='currentColor' style='font-size:1em'>式</text>
+<text text-anchor='middle' x='232' y='164' fill='currentColor' style='font-size:1em'>要</text>
+<text text-anchor='middle' x='240' y='36' fill='currentColor' style='font-size:1em'>o</text>
+<text text-anchor='middle' x='240' y='164' fill='currentColor' style='font-size:1em'>直</text>
+<text text-anchor='middle' x='248' y='36' fill='currentColor' style='font-size:1em'>w</text>
+<text text-anchor='middle' x='248' y='164' fill='currentColor' style='font-size:1em'>接</text>
+<text text-anchor='middle' x='256' y='36' fill='currentColor' style='font-size:1em'>n</text>
+<text text-anchor='middle' x='256' y='164' fill='currentColor' style='font-size:1em'>修</text>
+<text text-anchor='middle' x='264' y='164' fill='currentColor' style='font-size:1em'>改</text>
+<text text-anchor='middle' x='272' y='36' fill='currentColor' style='font-size:1em'>文</text>
+<text text-anchor='middle' x='272' y='164' fill='currentColor' style='font-size:1em'>）</text>
+<text text-anchor='middle' x='280' y='36' fill='currentColor' style='font-size:1em'>章</text>
+</g>
+
+    </svg>
+  
+</div>
+<h2 id="设计理念">设计理念<a hidden class="anchor" aria-hidden="true" href="#设计理念">#</a></h2>
+<p>本博客采用 <strong>&ldquo;极简人文主义&rdquo;</strong> 设计风格：</p>
+<ul>
+<li>暖色调背景，营造纸质阅读感</li>
+<li>衬线字体（Noto Serif），提升可读性</li>
+<li>仅使用轻微的 CSS 过渡动画</li>
+<li>大量留白，让内容本身成为焦点</li>
+</ul>
+<h2 id="常用命令">常用命令<a hidden class="anchor" aria-hidden="true" href="#常用命令">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 本地预览（含草稿）</span>
+</span></span><span style="display:flex;"><span>hugo server -D
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 新建文章</span>
+</span></span><span style="display:flex;"><span>hugo new content/learning/my-post.md
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 生产构建</span>
+</span></span><span style="display:flex;"><span>hugo --minify
+</span></span></code></pre></div><h2 id="下一步计划">下一步计划<a hidden class="anchor" aria-hidden="true" href="#下一步计划">#</a></h2>
+<ul>
+<li><input disabled="" type="checkbox"> 配置 GitHub Actions 自动部署</li>
+<li><input disabled="" type="checkbox"> 添加评论系统</li>
+<li><input disabled="" type="checkbox"> 优化 SEO 和 Open Graph 标签</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/hugo/">Hugo</a></li>
+      <li><a href="http://localhost:1313/tags/%E5%8D%9A%E5%AE%A2/">博客</a></li>
+      <li><a href="http://localhost:1313/tags/%E6%95%99%E7%A8%8B/">教程</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/learning/linux-command-cheatsheet/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Linux 常用命令速查笔记</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Arden J</a></span> · 
+        <em>万物静默如谜。</em> — 辛波斯卡 · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

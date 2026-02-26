@@ -1,0 +1,22 @@
+{{- with site.Params.homeInfoParams }}
+<article class="first-entry home-info">
+    <header class="entry-header">
+        <h1>{{ .Title | markdownify }}</h1>
+    </header>
+    <div class="entry-content">
+        {{ .Content | markdownify }}
+    </div>
+    {{/* Epigraph — a quiet philosophical anchor */}}
+    <div class="home-epigraph" aria-label="epigraph">
+        <p class="epigraph-text">要有耐心去面对心中尚未解答的一切，去尝试爱问题本身。</p>
+        <p class="epigraph-source">— 里尔克《给青年诗人的信》</p>
+    </div>
+    <footer class="entry-footer">
+        {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
+    </footer>
+    {{/* Decorative illustration — abstract engineering doodle */}}
+    <div class="home-illustration" aria-hidden="true">
+        <img src="/images/home-doodle.svg" alt="" loading="lazy" draggable="false">
+    </div>
+</article>
+{{- end -}}

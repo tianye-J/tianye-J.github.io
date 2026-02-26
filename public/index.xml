@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Arden J</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on Arden J</description>
+    <generator>Hugo -- 0.146.0</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 26 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo &#43; PaperMod 博客搭建记录</title>
+      <link>http://localhost:1313/learning/hugo-blog-setup/</link>
+      <pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/learning/hugo-blog-setup/</guid>
+      <description>从零开始搭建 Hugo 静态博客的完整记录，包括主题配置、样式自定义与部署流程。</description>
+    </item>
+    <item>
+      <title>Linux 常用命令速查笔记</title>
+      <link>http://localhost:1313/learning/linux-command-cheatsheet/</link>
+      <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/learning/linux-command-cheatsheet/</guid>
+      <description>整理日常开发中最常用的 Linux 命令，涵盖文件操作、进程管理、网络调试等场景。</description>
+    </item>
+    <item>
+      <title>基于 ROS2 的移动机器人导航系统</title>
+      <link>http://localhost:1313/projects/ros2-mobile-robot-navigation/</link>
+      <pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/ros2-mobile-robot-navigation/</guid>
+      <description>使用 ROS2 Navigation Stack 搭建室内移动机器人自主导航系统，集成 SLAM 建图与路径规划。</description>
+    </item>
+    <item>
+      <title>强化学习在机器人控制中的应用综述</title>
+      <link>http://localhost:1313/research/rl-robot-control-survey/</link>
+      <pubDate>Sun, 15 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/research/rl-robot-control-survey/</guid>
+      <description>梳理强化学习（RL）在机器人运动控制领域的主要方法、挑战与最新进展。</description>
+    </item>
+    <item>
+      <title>使用 PyTorch 实现 YOLO 目标检测</title>
+      <link>http://localhost:1313/projects/yolo-object-detection/</link>
+      <pubDate>Tue, 10 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/yolo-object-detection/</guid>
+      <description>从零实现 YOLO 目标检测算法，理解锚框机制、损失函数设计与 NMS 后处理流程。</description>
+    </item>
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/about/</guid>
+      <description>&lt;div class=&#34;about-illustration&#34; aria-hidden=&#34;true&#34;&gt;
+  &lt;img src=&#34;http://localhost:1313/images/portrait.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34; draggable=&#34;false&#34;&gt;
+&lt;/div&gt;
+&lt;div class=&#34;page-epigraph&#34;&gt;
+  &lt;p class=&#34;epigraph-text&#34;&gt;我们的工作就是用有限去触碰无限。&lt;/p&gt;
+  &lt;p class=&#34;epigraph-source&#34;&gt;— 维特根斯坦&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;关于我&#34;&gt;关于我&lt;/h2&gt;
+&lt;p&gt;你好，我是 &lt;strong&gt;Arden J&lt;/strong&gt;，一名就读于 NJUPT（南京邮电大学）的机器人工程专业学生。&lt;/p&gt;
+&lt;p&gt;我对机器人技术、人工智能和自主系统充满热情。目前正在探索机器人算法、计算机视觉和深度学习等方向。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;兴趣领域&#34;&gt;兴趣领域&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;机器人学&lt;/strong&gt; — 运动规划、SLAM、机器人控制&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;人工智能&lt;/strong&gt; — 深度学习、强化学习、计算机视觉&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;工程实践&lt;/strong&gt; — 嵌入式系统、ROS、机械设计&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;联系方式&#34;&gt;联系方式&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub: &lt;a href=&#34;https://github.com/tianye-J&#34;&gt;tianye-J&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Email: &lt;a href=&#34;mailto:jjh444972201@gmail.com&#34;&gt;jjh444972201@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+  </channel>
+</rss>

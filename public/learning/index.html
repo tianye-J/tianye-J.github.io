@@ -10,7 +10,7 @@
 <meta name="description" content="学习笔记与技术积累">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/learning/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.bc9fcc86fdb94bcf2a7e20b03fdb774b4bd9eeccbd5331c0d0851ba81d4e94e0.css" integrity="sha256-vJ/Mhv25S88qfiCwP9t3S0vZ7sy9UzHA0IUbqB1OlOA=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a671a065ae1c0bcc0382c2d3a4664d3b1412d740f3d413f853445585af75a754.css" integrity="sha256-pnGgZa4cC8wDgsLTpGZNOxQS10Dz1BP4U0RVha91p1Q=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -109,6 +109,28 @@
 
 </div>
 
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">深度学习入门：PyTorch零基础到多任务联合微调
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>前言 该文章是基于我校 校科学技术协会 woc-python组题目个人解答过程的系统性回顾。
+项目代码：NJUPT-SAST-Python-WoC-2025
+本文主要记录学习和方法迭代的过程，详细代码实现请查阅代码库。
+题目简介： 任务背景与目标
+本项目旨在探索多任务学习 (Multi-Task Learning) 在计算机视觉中的应用。核心目标是通过联合网络的设计，实现底层视觉（图像重构）与高层视觉（语义理解）两个任务的相互促进 (Mutual Promotion)。
+基础任务定义 (Single-Task Baselines)
+网络需从零开始搭建与训练,完成以下两个独立任务：
+Task 1：底层图像恢复 (Low-level Vision) 任务内容：任选一种退化图像修复场景（包括但不限于超分辨率、去噪、去雾、低光增强等）。 评估指标：PSNR 与 SSIM，需在验证集上具有合理表现。 Task 2：高层图像分类 (High-level Vision) 任务内容：基于 CIFAR 数据集的图像分类。 评估指标：Accuracy（最低要求界定为 60%）。 多任务联合优化约束 (Multi-Task Constraints)
+在跑通单任务 Baseline 后，需构建多任务联合网络（例如 Task 1 辅助 Task 2，或反之），且必须满足以下硬性约束：
+1.架构轻量化与一致性：多任务分支需与单任务网络结构保持高度一致，禁止大幅增加参数量。 2.鼓励采用参数共享 (Parameter Sharing) 或引入轻量的交互通信模块。 3.微调策略 (Fine-tuning)：在单任务预训练的基础上，通过微调分支头或特征层来实现融合。 4.损失函数创新：鼓励设计具有创新性的互促损失函数 (Mutual-promoting Loss) 来平衡两个任务的梯度。 最终效果： 在 低清图直接分类 和经过多任务学习后 超分-&gt;分类 的结果对比中，后者正确率达到81.01%，而前者只有47.26%，多任务学习将图像分类的正确率提升约0.7倍！ 让我们回到一切的开始，详细聊聊从无到有的过程吧。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-26 18:39:55 +0800 CST'>February 26, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to 深度学习入门：PyTorch零基础到多任务联合微调" href="http://localhost:1313/learning/multi-learning/"></a>
+</article>
+
 
     </main>
     
@@ -126,7 +148,194 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
         <path d="M12 6H0l6-6z" />
     </svg>
-</a>
+</a><script>
+(function () {
+  'use strict';
+
+   
+  var mq = window.matchMedia('(min-width: 1440px)');
+  var postContent = document.querySelector('.post-content');
+  if (!postContent) return;
+
+  var allH = postContent.querySelectorAll('h2[id], h3[id], h4[id]');
+  if (allH.length < 2) return;
+
+   
+  var tl = document.createElement('nav');
+  tl.className = 'toc-timeline';
+  tl.setAttribute('aria-label', 'Table of Contents');
+
+  var area = document.createElement('div');
+  area.className = 'toc-timeline-area';
+
+  var line = document.createElement('div');
+  line.className = 'toc-timeline-line';
+  area.appendChild(line);
+
+  var prog = document.createElement('div');
+  prog.className = 'toc-timeline-progress';
+  area.appendChild(prog);
+
+   
+  function getContentMetrics() {
+    var r = postContent.getBoundingClientRect();
+    return { top: r.top + window.scrollY, height: postContent.offsetHeight, right: r.right };
+  }
+
+   
+  function headingText(h) {
+    var clone = h.cloneNode(true);
+    var anchor = clone.querySelector('.anchor');
+    if (anchor) anchor.remove();
+    return clone.textContent.trim();
+  }
+
+  var nodes = [];
+  var cm = getContentMetrics();
+
+  allH.forEach(function (h) {
+    var hTop = h.getBoundingClientRect().top + window.scrollY;
+    var rel = (hTop - cm.top) / cm.height;
+    rel = Math.max(0, Math.min(1, rel));
+
+    var node = document.createElement('a');
+    node.className = 'toc-timeline-node';
+    if (h.tagName !== 'H2') node.classList.add('sub');
+    node.href = '#' + h.id;
+    node.style.top = (rel * 100) + '%';
+
+    var dot = document.createElement('span');
+    dot.className = 'toc-timeline-dot';
+
+    var label = document.createElement('span');
+    label.className = 'toc-timeline-label';
+    label.textContent = headingText(h);
+
+     
+    node.appendChild(dot);
+    node.appendChild(label);
+    area.appendChild(node);
+
+    node.addEventListener('click', function (e) {
+      e.preventDefault();
+      h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    nodes.push({ el: h, node: node, rel: rel });
+  });
+
+  tl.appendChild(area);
+  document.body.appendChild(tl);
+
+   
+  function updateTimelinePosition() {
+    var rect = postContent.getBoundingClientRect();
+    tl.style.left = (rect.right + 24) + 'px';
+  }
+
+   
+  var isScrolled = false;
+  var activeIdx = -1;
+
+  function onScroll() {
+    var sy = window.scrollY;
+    var vh = window.innerHeight;
+    var c = getContentMetrics();
+    var cBottom = c.top + c.height;
+
+     
+    var visible = sy + vh > c.top + 60 && sy < cBottom - 60;
+    tl.classList.toggle('visible', visible);
+    if (!visible) return;
+
+     
+    var sliderH = Math.min((vh / c.height) / 3, 0.5);
+    var halfS = sliderH / 2;
+
+    nodes.forEach(function (n) {
+      var hTop = n.el.getBoundingClientRect().top + sy;
+      n.rel = Math.max(0, Math.min(1, (hTop - c.top) / c.height));
+       
+      var display = halfS + n.rel * (1 - sliderH);
+      n.node.style.top = (display * 100) + '%';
+    });
+
+     
+    var nowScrolled = sy > c.top + 120;
+    if (nowScrolled !== isScrolled) {
+      isScrolled = nowScrolled;
+      tl.classList.toggle('scrolled', isScrolled);
+    }
+
+     
+    var newIdx = -1;
+    for (var i = nodes.length - 1; i >= 0; i--) {
+      if (nodes[i].el.getBoundingClientRect().top <= vh * 0.25) {
+        newIdx = i;
+        break;
+      }
+    }
+    if (newIdx !== activeIdx) {
+      if (activeIdx >= 0) nodes[activeIdx].node.classList.remove('active');
+      if (newIdx >= 0) nodes[newIdx].node.classList.add('active');
+      activeIdx = newIdx;
+    }
+
+     
+    var sliderCenter;
+    if (newIdx < 0) {
+       
+      sliderCenter = halfS + nodes[0].rel * (1 - sliderH);
+    } else {
+      var curDisplay = halfS + nodes[newIdx].rel * (1 - sliderH);
+      var nextDisplay;
+      if (newIdx + 1 < nodes.length) {
+        nextDisplay = halfS + nodes[newIdx + 1].rel * (1 - sliderH);
+      } else {
+        nextDisplay = 1 - halfS;
+      }
+       
+      var curAbs = nodes[newIdx].el.getBoundingClientRect().top + sy;
+      var nextAbs = (newIdx + 1 < nodes.length)
+        ? nodes[newIdx + 1].el.getBoundingClientRect().top + sy
+        : c.top + c.height;
+      var sectionLen = nextAbs - curAbs;
+      var scrolledPast = Math.max(0, sy - curAbs);
+      var t = sectionLen > 0 ? Math.max(0, Math.min(1, scrolledPast / sectionLen)) : 0;
+      sliderCenter = curDisplay + t * (nextDisplay - curDisplay);
+    }
+    var sliderTop = sliderCenter - halfS;
+    sliderTop = Math.max(0, Math.min(1 - sliderH, sliderTop));
+    prog.style.top = (sliderTop * 100) + '%';
+    prog.style.height = (sliderH * 100) + '%';
+  }
+
+   
+  function checkMQ() {
+    tl.style.display = mq.matches ? '' : 'none';
+    if (mq.matches) updateTimelinePosition();
+  }
+  mq.addEventListener('change', checkMQ);
+  checkMQ();
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () {
+    updateTimelinePosition();
+    var c = getContentMetrics();
+    nodes.forEach(function (n) {
+      var hTop = n.el.getBoundingClientRect().top + window.scrollY;
+      n.rel = Math.max(0, Math.min(1, (hTop - c.top) / c.height));
+      n.node.style.top = (n.rel * 100) + '%';
+    });
+  });
+
+   
+  requestAnimationFrame(function () {
+    updateTimelinePosition();
+    onScroll();
+  });
+})();
+</script>
 
 <script>
     let menu = document.getElementById('menu');

@@ -1,3 +1,195 @@
+{{- /* 右侧时间轴 TOC — 贴近文本右侧，标签在轴右方 */ -}}
+{{- if (.Param "ShowToc") -}}
+<script>
+(function () {
+  'use strict';
+
+  /* ── 条件检查 ── */
+  var mq = window.matchMedia('(min-width: 1440px)');
+  var postContent = document.querySelector('.post-content');
+  if (!postContent) return;
+
+  var allH = postContent.querySelectorAll('h2[id], h3[id], h4[id]');
+  if (allH.length < 2) return;
+
+  /* ── 构建 DOM ── */
+  var tl = document.createElement('nav');
+  tl.className = 'toc-timeline';
+  tl.setAttribute('aria-label', 'Table of Contents');
+
+  var area = document.createElement('div');
+  area.className = 'toc-timeline-area';
+
+  var line = document.createElement('div');
+  line.className = 'toc-timeline-line';
+  area.appendChild(line);
+
+  var prog = document.createElement('div');
+  prog.className = 'toc-timeline-progress';
+  area.appendChild(prog);
+
+  /* ── 内容区指标 ── */
+  function getContentMetrics() {
+    var r = postContent.getBoundingClientRect();
+    return { top: r.top + window.scrollY, height: postContent.offsetHeight, right: r.right };
+  }
+
+  /* ── 提取标题纯文本（排除 PaperMod 锚点 #） ── */
+  function headingText(h) {
+    var clone = h.cloneNode(true);
+    var anchor = clone.querySelector('.anchor');
+    if (anchor) anchor.remove();
+    return clone.textContent.trim();
+  }
+
+  var nodes = [];
+  var cm = getContentMetrics();
+
+  allH.forEach(function (h) {
+    var hTop = h.getBoundingClientRect().top + window.scrollY;
+    var rel = (hTop - cm.top) / cm.height;
+    rel = Math.max(0, Math.min(1, rel));
+
+    var node = document.createElement('a');
+    node.className = 'toc-timeline-node';
+    if (h.tagName !== 'H2') node.classList.add('sub');
+    node.href = '#' + h.id;
+    node.style.top = (rel * 100) + '%';
+
+    var dot = document.createElement('span');
+    dot.className = 'toc-timeline-dot';
+
+    var label = document.createElement('span');
+    label.className = 'toc-timeline-label';
+    label.textContent = headingText(h);
+
+    /* 顺序：dot（贴轴） → label（轴右侧） */
+    node.appendChild(dot);
+    node.appendChild(label);
+    area.appendChild(node);
+
+    node.addEventListener('click', function (e) {
+      e.preventDefault();
+      h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    nodes.push({ el: h, node: node, rel: rel });
+  });
+
+  tl.appendChild(area);
+  document.body.appendChild(tl);
+
+  /* ── 定位：贴近文本右侧 ── */
+  function updateTimelinePosition() {
+    var rect = postContent.getBoundingClientRect();
+    tl.style.left = (rect.right + 24) + 'px';
+  }
+
+  /* ── 滚动逻辑 ── */
+  var isScrolled = false;
+  var activeIdx = -1;
+
+  function onScroll() {
+    var sy = window.scrollY;
+    var vh = window.innerHeight;
+    var c = getContentMetrics();
+    var cBottom = c.top + c.height;
+
+    /* 文章可见时显示时间轴 */
+    var visible = sy + vh > c.top + 60 && sy < cBottom - 60;
+    tl.classList.toggle('visible', visible);
+    if (!visible) return;
+
+    /* 每帧同步节点位置 — 重映射到 [halfS, 1-halfS] 区间，为滑块留出居中空间 */
+    var sliderH = Math.min((vh / c.height) / 3, 0.5);
+    var halfS = sliderH / 2;
+
+    nodes.forEach(function (n) {
+      var hTop = n.el.getBoundingClientRect().top + sy;
+      n.rel = Math.max(0, Math.min(1, (hTop - c.top) / c.height));
+      /* 将 [0,1] 映射到 [halfS, 1-halfS]，让首尾节点都能被滑块居中 */
+      var display = halfS + n.rel * (1 - sliderH);
+      n.node.style.top = (display * 100) + '%';
+    });
+
+    /* 滚动状态：是否离开文章顶部 */
+    var nowScrolled = sy > c.top + 120;
+    if (nowScrolled !== isScrolled) {
+      isScrolled = nowScrolled;
+      tl.classList.toggle('scrolled', isScrolled);
+    }
+
+    /* 当前活跃标题 */
+    var newIdx = -1;
+    for (var i = nodes.length - 1; i >= 0; i--) {
+      if (nodes[i].el.getBoundingClientRect().top <= vh * 0.25) {
+        newIdx = i;
+        break;
+      }
+    }
+    if (newIdx !== activeIdx) {
+      if (activeIdx >= 0) nodes[activeIdx].node.classList.remove('active');
+      if (newIdx >= 0) nodes[newIdx].node.classList.add('active');
+      activeIdx = newIdx;
+    }
+
+    /* 进度滑块 — 基于活跃节点做章节内插值，与节点在同一坐标系 */
+    var sliderCenter;
+    if (newIdx < 0) {
+      /* 还没到第一个标题：滑块锁定在第一个节点 */
+      sliderCenter = halfS + nodes[0].rel * (1 - sliderH);
+    } else {
+      var curDisplay = halfS + nodes[newIdx].rel * (1 - sliderH);
+      var nextDisplay;
+      if (newIdx + 1 < nodes.length) {
+        nextDisplay = halfS + nodes[newIdx + 1].rel * (1 - sliderH);
+      } else {
+        nextDisplay = 1 - halfS;
+      }
+      /* 当前章节内滚过的比例（以视口顶部为参考，而非 vh*0.25） */
+      var curAbs = nodes[newIdx].el.getBoundingClientRect().top + sy;
+      var nextAbs = (newIdx + 1 < nodes.length)
+        ? nodes[newIdx + 1].el.getBoundingClientRect().top + sy
+        : c.top + c.height;
+      var sectionLen = nextAbs - curAbs;
+      var scrolledPast = Math.max(0, sy - curAbs);
+      var t = sectionLen > 0 ? Math.max(0, Math.min(1, scrolledPast / sectionLen)) : 0;
+      sliderCenter = curDisplay + t * (nextDisplay - curDisplay);
+    }
+    var sliderTop = sliderCenter - halfS;
+    sliderTop = Math.max(0, Math.min(1 - sliderH, sliderTop));
+    prog.style.top = (sliderTop * 100) + '%';
+    prog.style.height = (sliderH * 100) + '%';
+  }
+
+  /* ── 响应式显隐 + 位置更新 ── */
+  function checkMQ() {
+    tl.style.display = mq.matches ? '' : 'none';
+    if (mq.matches) updateTimelinePosition();
+  }
+  mq.addEventListener('change', checkMQ);
+  checkMQ();
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () {
+    updateTimelinePosition();
+    var c = getContentMetrics();
+    nodes.forEach(function (n) {
+      var hTop = n.el.getBoundingClientRect().top + window.scrollY;
+      n.rel = Math.max(0, Math.min(1, (hTop - c.top) / c.height));
+      n.node.style.top = (n.rel * 100) + '%';
+    });
+  });
+
+  /* 初始渲染 */
+  requestAnimationFrame(function () {
+    updateTimelinePosition();
+    onScroll();
+  });
+})();
+</script>
+{{- end -}}
+
 {{- /* 打字机入场效果 — 仅首页 */ -}}
 {{- if .IsHome -}}
 <script>

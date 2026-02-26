@@ -16,6 +16,9 @@ theme = 'PaperMod'
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
   ShowRssButtonInSectionTermList = false
+  ShowToc = true
+  TocOpen = true
+  UseHugoToc = true
   description = "Robotics · AI · Engineering"
 
   [params.homeInfoParams]
@@ -69,7 +72,10 @@ theme = 'PaperMod'
 
 [markup]
   [markup.highlight]
-    style = 'monokailight'
-    noClasses = true
+    noClasses = false
   [markup.goldmark.renderer]
     unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false

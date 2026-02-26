@@ -455,7 +455,9 @@ body:not(.list) .post-content {
     background: rgba(44, 40, 36, 0.06);
 }
 
-/* ---- 15. TOC 目录 ---- */
+/* ---- 15. TOC ---- */
+
+/* ── 小屏：PaperMod 默认折叠式内联 TOC ── */
 .toc {
     background: var(--entry);
     border: 1px solid var(--border);
@@ -463,10 +465,159 @@ body:not(.list) .post-content {
     padding: 1rem 1.5rem;
     margin-bottom: 2rem;
 }
-
 .toc .inner {
     font-size: 0.88rem;
     color: var(--secondary);
+}
+
+/* 大屏隐藏内联 TOC（由 JS 时间轴替代） */
+@media screen and (min-width: 1440px) {
+    .toc { display: none; }
+}
+
+/* ── 右侧时间轴 TOC（JS 动态创建，贴近文本右侧） ── */
+.toc-timeline {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    /* left 由 JS 动态设置，贴近 .post-content 右边缘 */
+}
+.toc-timeline.visible {
+    opacity: 1;
+}
+
+/* 容纳 line/progress/nodes 的区域 */
+.toc-timeline-area {
+    position: absolute;
+    left: 0;
+    top: 12vh;
+    bottom: 12vh;
+    width: 300px;
+    pointer-events: auto;
+}
+
+/* 竖向暖棕色轴线 */
+.toc-timeline-line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1.5px;
+    background: var(--border);
+    border-radius: 1px;
+}
+
+/* 半透明阅读进度滑块（1/3 高度，中点对齐阅读位置） */
+.toc-timeline-progress {
+    position: absolute;
+    left: -4px;
+    width: 10px;
+    background: rgba(200, 121, 90, 0.18);
+    border-radius: 5px;
+    transition: top 0.15s linear, height 0.15s linear;
+    pointer-events: none;
+}
+
+/* ── 节点通用 ── */
+.toc-timeline-node {
+    position: absolute;
+    left: 0;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* h2 节点圆点 — 居中在轴线上 */
+.toc-timeline-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    z-index: 2;
+    margin-left: -3.75px;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* h3/h4 子节点：向右偏移 + 连接线 */
+.toc-timeline-node.sub {
+    left: 18px;
+    gap: 8px;
+}
+.toc-timeline-node.sub .toc-timeline-dot {
+    width: 7px;
+    height: 7px;
+    margin-left: 0;
+}
+/* 连接线：从轴到子节点圆点 */
+.toc-timeline-node.sub::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 50%;
+    width: 18px;
+    height: 1px;
+    background: var(--border);
+}
+
+/* hover & active — 圆点 */
+.toc-timeline-node:hover .toc-timeline-dot {
+    background: var(--accent);
+    transform: scale(1.25);
+}
+.toc-timeline-node.active .toc-timeline-dot {
+    background: var(--accent);
+    transform: scale(1.5);
+    box-shadow: 0 0 0 3px rgba(200, 121, 90, 0.15);
+}
+/* hover & active — 连接线 */
+.toc-timeline-node.sub:hover::before,
+.toc-timeline-node.sub.active::before {
+    background: var(--accent);
+}
+
+/* 节点文字标签 — 轴右侧 */
+.toc-timeline-label {
+    font-size: 0.74rem;
+    font-family: var(--font-family);
+    color: var(--secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    text-align: left;
+    transition: opacity 0.3s ease, color 0.25s ease;
+}
+.toc-timeline-node.sub .toc-timeline-label {
+    font-size: 0.7rem;
+    color: var(--tertiary);
+    max-width: 170px;
+}
+.toc-timeline-node:hover .toc-timeline-label {
+    color: var(--primary);
+}
+.toc-timeline-node.active .toc-timeline-label {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* 滚动状态：隐藏非活跃标签 */
+.toc-timeline.scrolled .toc-timeline-label {
+    opacity: 0;
+}
+.toc-timeline.scrolled .toc-timeline-node.active .toc-timeline-label {
+    opacity: 1;
+}
+/* hover 整个轴区域时恢复所有标签 */
+.toc-timeline-area:hover .toc-timeline-label {
+    opacity: 1 !important;
 }
 
 /* ---- 16. 代码复制按钮 ---- */

@@ -1,0 +1,50 @@
+{{- /* 打字机入场效果 — 仅首页 */ -}}
+{{- if .IsHome -}}
+<script>
+(function () {
+  'use strict';
+
+  // 仅首页、不影响其他页面
+  var h1 = document.querySelector('.home-info .entry-header h1');
+  if (!h1) return;
+
+  // 尊重系统减少动画偏好
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // 读取原始文字，清空 h1 内容
+  var fullText = h1.innerText || h1.textContent || '';
+  h1.textContent = '';
+
+  // 插入闪烁光标
+  var cursor = document.createElement('span');
+  cursor.className = 'typewriter-cursor';
+  cursor.setAttribute('aria-hidden', 'true');
+  cursor.textContent = '|';
+  h1.appendChild(cursor);
+
+  // 延迟与 hero-pop 动画协调
+  // hero-pop: 0.12s delay + 约 0.5s 弹出完成 ≈ 0.62s 后启动打字
+  var i = 0;
+  setTimeout(function () {
+    var interval = setInterval(function () {
+      if (i < fullText.length) {
+        // 在光标前逐字插入
+        h1.insertBefore(document.createTextNode(fullText[i]), cursor);
+        i++;
+      } else {
+        clearInterval(interval);
+        // 打字结束：1s 后光标渐隐消失
+        setTimeout(function () {
+          cursor.style.transition = 'opacity 0.5s ease';
+          cursor.style.opacity = '0';
+          cursor.style.animation = 'none';
+        }, 1000);
+        setTimeout(function () {
+          if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+        }, 1550);
+      }
+    }, 78); // 每字约 78ms，"Arden J" 约 0.55s 打完
+  }, 620);
+})();
+</script>
+{{- end -}}

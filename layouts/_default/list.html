@@ -107,64 +107,6 @@
 {{/* === Three-column section showcase === */}}
 <div class="home-sections">
 
-  {{/* ---- Projects ---- */}}
-  {{- $projects := where site.RegularPages "Section" "projects" }}
-  {{- $projects = $projects.ByDate.Reverse }}
-  <section class="home-section">
-    <div class="home-section-header">
-      <h2><a href="{{ "projects/" | absURL }}">Projects</a></h2>
-      <p class="home-section-desc">项目与工程实践</p>
-    </div>
-    <div class="home-section-list">
-      {{- range first 3 $projects }}
-      <article class="home-section-entry">
-        <a href="{{ .Permalink }}">
-          <h3>{{ .Title }}</h3>
-          {{- if .Description }}
-          <p class="entry-summary">{{ .Description }}</p>
-          {{- end }}
-          <span class="entry-meta">{{ .Date.Format "Jan 2, 2006" }}</span>
-        </a>
-      </article>
-      {{- end }}
-      {{- if eq (len $projects) 0 }}
-      <p class="home-section-empty">暂无文章</p>
-      {{- end }}
-    </div>
-    {{- if gt (len $projects) 3 }}
-    <a class="home-section-more" href="{{ "projects/" | absURL }}">查看全部 →</a>
-    {{- end }}
-  </section>
-
-  {{/* ---- Research ---- */}}
-  {{- $research := where site.RegularPages "Section" "research" }}
-  {{- $research = $research.ByDate.Reverse }}
-  <section class="home-section">
-    <div class="home-section-header">
-      <h2><a href="{{ "research/" | absURL }}">Research</a></h2>
-      <p class="home-section-desc">研究笔记与文献阅读</p>
-    </div>
-    <div class="home-section-list">
-      {{- range first 3 $research }}
-      <article class="home-section-entry">
-        <a href="{{ .Permalink }}">
-          <h3>{{ .Title }}</h3>
-          {{- if .Description }}
-          <p class="entry-summary">{{ .Description }}</p>
-          {{- end }}
-          <span class="entry-meta">{{ .Date.Format "Jan 2, 2006" }}</span>
-        </a>
-      </article>
-      {{- end }}
-      {{- if eq (len $research) 0 }}
-      <p class="home-section-empty">暂无文章</p>
-      {{- end }}
-    </div>
-    {{- if gt (len $research) 3 }}
-    <a class="home-section-more" href="{{ "research/" | absURL }}">查看全部 →</a>
-    {{- end }}
-  </section>
-
   {{/* ---- Learning ---- */}}
   {{- $learning := where site.RegularPages "Section" "learning" }}
   {{- $learning = $learning.ByDate.Reverse }}
@@ -193,7 +135,64 @@
     <a class="home-section-more" href="{{ "learning/" | absURL }}">查看全部 →</a>
     {{- end }}
   </section>
+  
+  {{/* ---- Projects ---- */}}
+  {{- $projects := where site.RegularPages "Section" "projects" }}
+  {{- $projects = $projects.ByDate.Reverse }}
+  <section class="home-section">
+    <div class="home-section-header">
+      <h2><a href="{{ "projects/" | absURL }}">Projects</a></h2>
+      <p class="home-section-desc">项目与工程实践</p>
+    </div>
+    <div class="home-section-list">
+      {{- range first 3 $projects }}
+      <article class="home-section-entry">
+        <a href="{{ .Permalink }}">
+          <h3>{{ .Title }}</h3>
+          {{- if .Description }}
+          <p class="entry-summary">{{ .Description }}</p>
+          {{- end }}
+          <span class="entry-meta">{{ .Date.Format "Jan 2, 2006" }}</span>
+        </a>
+      </article>
+      {{- end }}
+      {{- if eq (len $projects) 0 }}
+      <p class="home-section-empty">暂无文章</p>
+      {{- end }}
+    </div>
+    {{- if gt (len $projects) 3 }}
+    <a class="home-section-more" href="{{ "projects/" | absURL }}">查看全部 →</a>
+    {{- end }}
+  </section> 
 
+{{/* ---- Research ---- */}}
+  {{- $research := where site.RegularPages "Section" "research" }}
+  {{- $research = $research.ByDate.Reverse }}
+  <section class="home-section">
+    <div class="home-section-header">
+      <h2><a href="{{ "research/" | absURL }}">Research</a></h2>
+      <p class="home-section-desc">研究笔记与文献阅读</p>
+    </div>
+    <div class="home-section-list">
+      {{- range first 3 $research }}
+      <article class="home-section-entry">
+        <a href="{{ .Permalink }}">
+          <h3>{{ .Title }}</h3>
+          {{- if .Description }}
+          <p class="entry-summary">{{ .Description }}</p>
+          {{- end }}
+          <span class="entry-meta">{{ .Date.Format "Jan 2, 2006" }}</span>
+        </a>
+      </article>
+      {{- end }}
+      {{- if eq (len $research) 0 }}
+      <p class="home-section-empty">暂无文章</p>
+      {{- end }}
+    </div>
+    {{- if gt (len $research) 3 }}
+    <a class="home-section-more" href="{{ "research/" | absURL }}">查看全部 →</a>
+    {{- end }}
+  </section>
 </div>
 
 {{- end }}{{/* end .IsHome */}}

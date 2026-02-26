@@ -1,6 +1,6 @@
 baseURL = 'https://ardenj.pages.dev/'
 languageCode = 'zh-cn'
-title = "Arden J"
+title = "Arden's blog"
 theme = 'PaperMod'
 
 [pagination]
@@ -19,7 +19,7 @@ theme = 'PaperMod'
   description = "Robotics · AI · Engineering"
 
   [params.homeInfoParams]
-    Title = "Hello, I'm **Arden J**"
+    Title = "Hello, I'm **Arden**"
     Content = "Robotics Engineering @ NJUPT · Exploring AI & Autonomous Systems"
 
   [[params.socialIcons]]
@@ -31,13 +31,13 @@ theme = 'PaperMod'
     hiddenInSingle = true
 
   [params.label]
-    text = "Arden J"
+    text = "Arden's blog"
     icon = '/images/logo.png'
     iconHeight = 28
 
   [params.footer]
     hideCopyright = false
-    text = '*万物静默如谜。* — 辛波斯卡'
+    text = '*南方，某扇房门，某个街角* — 博尔赫斯'
 
 # ---------- Navigation ----------
 
@@ -45,19 +45,19 @@ theme = 'PaperMod'
   identifier = "projects"
   name = "Projects"
   url = "/projects/"
-  weight = 10
+  weight = 20
 
 [[menu.main]]
   identifier = "research"
   name = "Research"
   url = "/research/"
-  weight = 20
+  weight = 30
 
 [[menu.main]]
   identifier = "learning"
   name = "Learning"
   url = "/learning/"
-  weight = 30
+  weight = 10
 
 [[menu.main]]
   identifier = "about"

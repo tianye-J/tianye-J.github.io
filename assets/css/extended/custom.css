@@ -546,10 +546,11 @@ body:not(.list) .post-content {
     transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* h3/h4 子节点：向右偏移 + 连接线 */
+/* h3/h4 子节点：向右偏移 + 连接线 + 折叠过渡 */
 .toc-timeline-node.sub {
     left: 18px;
     gap: 8px;
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .toc-timeline-node.sub .toc-timeline-dot {
     width: 7px;
@@ -565,6 +566,17 @@ body:not(.list) .post-content {
     width: 18px;
     height: 1px;
     background: var(--border);
+    transition: opacity 0.25s ease, background 0.25s ease;
+}
+
+/* 折叠态子节点 — 默认隐藏，滚动/hover 时展开 */
+.toc-timeline-node.sub.toc-sub-collapsed {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) scale(0.8);
+}
+.toc-timeline-node.sub.toc-sub-collapsed::before {
+    opacity: 0;
 }
 
 /* hover & active — 圆点 */

@@ -1,4 +1,4 @@
-{{- /* 右侧时间轴 TOC — 贴近文本右侧，标签在轴右方 */ -}}
+{{- /* 右侧时间轴 TOC — 贴近文本右侧，标签在轴右方，子节点折叠/展开 */ -}}
 {{- if (.Param "ShowToc") -}}
 <script>
 (function () {
@@ -42,17 +42,24 @@
     return clone.textContent.trim();
   }
 
-  var nodes = [];
+  var nodes  = [];
+  var groups = [];    // { h2Idx: number, children: number[] }
   var cm = getContentMetrics();
+  var MIN_GAP = 28;  // 可见节点之间的最小像素间距
 
   allH.forEach(function (h) {
     var hTop = h.getBoundingClientRect().top + window.scrollY;
-    var rel = (hTop - cm.top) / cm.height;
+    var rel  = (hTop - cm.top) / cm.height;
     rel = Math.max(0, Math.min(1, rel));
+
+    var isSub = h.tagName !== 'H2';
 
     var node = document.createElement('a');
     node.className = 'toc-timeline-node';
-    if (h.tagName !== 'H2') node.classList.add('sub');
+    if (isSub) {
+      node.classList.add('sub');
+      node.classList.add('toc-sub-collapsed'); // 默认折叠
+    }
     node.href = '#' + h.id;
     node.style.top = (rel * 100) + '%';
 
@@ -73,11 +80,89 @@
       h.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    nodes.push({ el: h, node: node, rel: rel });
+    var nodeIdx = nodes.length;
+    nodes.push({ el: h, node: node, rel: rel, isSub: isSub, groupIdx: -1, displayTop: rel });
+
+    /* 分组：h2 开新组，h3/h4 归入当前组 */
+    if (!isSub) {
+      groups.push({ h2Idx: nodeIdx, children: [] });
+      nodes[nodeIdx].groupIdx = groups.length - 1;
+    } else if (groups.length > 0) {
+      groups[groups.length - 1].children.push(nodeIdx);
+      nodes[nodeIdx].groupIdx = groups.length - 1;
+    }
   });
 
   tl.appendChild(area);
   document.body.appendChild(tl);
+
+  /* ── 分组展开/折叠管理 ── */
+  var activeGroupIdx = -1;
+  var hoverGroupIdx  = -1;
+
+  function updateGroupVisibility() {
+    groups.forEach(function (g, gIdx) {
+      var expanded = (gIdx === activeGroupIdx || gIdx === hoverGroupIdx);
+      g.children.forEach(function (childIdx) {
+        if (expanded) {
+          nodes[childIdx].node.classList.remove('toc-sub-collapsed');
+        } else {
+          nodes[childIdx].node.classList.add('toc-sub-collapsed');
+        }
+      });
+    });
+  }
+
+  /* h2 节点 hover：临时展开该组子节点 */
+  groups.forEach(function (g, gIdx) {
+    var h2El = nodes[g.h2Idx].node;
+    h2El.addEventListener('mouseenter', function () {
+      hoverGroupIdx = gIdx;
+      updateGroupVisibility();
+      resolveCollisions();
+    });
+    h2El.addEventListener('mouseleave', function () {
+      if (hoverGroupIdx === gIdx) {
+        hoverGroupIdx = -1;
+        updateGroupVisibility();
+        resolveCollisions();
+      }
+    });
+  });
+
+  /* ── 碰撞检测：最小间距防重叠 ── */
+  function resolveCollisions() {
+    var areaH = area.offsetHeight;
+    if (areaH <= 0) return;
+
+    /* 收集可见节点（未折叠的） */
+    var vis = [];
+    nodes.forEach(function (n, idx) {
+      if (n.isSub && n.node.classList.contains('toc-sub-collapsed')) return;
+      vis.push({ idx: idx, topPx: n.displayTop * areaH });
+    });
+    if (vis.length < 2) return;
+    vis.sort(function (a, b) { return a.topPx - b.topPx; });
+
+    /* 从上到下：间距不足则下推 */
+    for (var i = 1; i < vis.length; i++) {
+      if (vis[i].topPx - vis[i - 1].topPx < MIN_GAP) {
+        vis[i].topPx = vis[i - 1].topPx + MIN_GAP;
+      }
+    }
+
+    /* 从下到上：超出底部则上推 */
+    var maxPx = areaH;
+    for (var i = vis.length - 1; i >= 0; i--) {
+      if (vis[i].topPx > maxPx) vis[i].topPx = maxPx;
+      maxPx = vis[i].topPx - MIN_GAP;
+    }
+
+    /* 写回位置 */
+    vis.forEach(function (v) {
+      nodes[v.idx].node.style.top = (v.topPx / areaH * 100) + '%';
+    });
+  }
 
   /* ── 定位：贴近文本右侧 ── */
   function updateTimelinePosition() {
@@ -87,12 +172,12 @@
 
   /* ── 滚动逻辑 ── */
   var isScrolled = false;
-  var activeIdx = -1;
+  var activeIdx  = -1;
 
   function onScroll() {
     var sy = window.scrollY;
     var vh = window.innerHeight;
-    var c = getContentMetrics();
+    var c  = getContentMetrics();
     var cBottom = c.top + c.height;
 
     /* 文章可见时显示时间轴 */
@@ -100,16 +185,16 @@
     tl.classList.toggle('visible', visible);
     if (!visible) return;
 
-    /* 每帧同步节点位置 — 重映射到 [halfS, 1-halfS] 区间，为滑块留出居中空间 */
+    /* 计算滑块比例 */
     var sliderH = Math.min((vh / c.height) / 3, 0.5);
-    var halfS = sliderH / 2;
+    var halfS   = sliderH / 2;
 
+    /* 更新所有节点的自然位置 */
     nodes.forEach(function (n) {
       var hTop = n.el.getBoundingClientRect().top + sy;
       n.rel = Math.max(0, Math.min(1, (hTop - c.top) / c.height));
-      /* 将 [0,1] 映射到 [halfS, 1-halfS]，让首尾节点都能被滑块居中 */
-      var display = halfS + n.rel * (1 - sliderH);
-      n.node.style.top = (display * 100) + '%';
+      n.displayTop = halfS + n.rel * (1 - sliderH);
+      n.node.style.top = (n.displayTop * 100) + '%';
     });
 
     /* 滚动状态：是否离开文章顶部 */
@@ -129,14 +214,24 @@
     }
     if (newIdx !== activeIdx) {
       if (activeIdx >= 0) nodes[activeIdx].node.classList.remove('active');
-      if (newIdx >= 0) nodes[newIdx].node.classList.add('active');
+      if (newIdx >= 0)     nodes[newIdx].node.classList.add('active');
       activeIdx = newIdx;
     }
 
-    /* 进度滑块 — 基于活跃节点做章节内插值，与节点在同一坐标系 */
+    /* 更新活跃分组 — 展开当前章节子节点，折叠其余 */
+    var newGroupIdx = -1;
+    if (newIdx >= 0) newGroupIdx = nodes[newIdx].groupIdx;
+    if (newGroupIdx !== activeGroupIdx) {
+      activeGroupIdx = newGroupIdx;
+      updateGroupVisibility();
+    }
+
+    /* 碰撞检测 */
+    resolveCollisions();
+
+    /* 进度滑块 — 基于活跃节点做章节内插值 */
     var sliderCenter;
     if (newIdx < 0) {
-      /* 还没到第一个标题：滑块锁定在第一个节点 */
       sliderCenter = halfS + nodes[0].rel * (1 - sliderH);
     } else {
       var curDisplay = halfS + nodes[newIdx].rel * (1 - sliderH);
@@ -146,19 +241,18 @@
       } else {
         nextDisplay = 1 - halfS;
       }
-      /* 当前章节内滚过的比例（以视口顶部为参考，而非 vh*0.25） */
-      var curAbs = nodes[newIdx].el.getBoundingClientRect().top + sy;
+      var curAbs  = nodes[newIdx].el.getBoundingClientRect().top + sy;
       var nextAbs = (newIdx + 1 < nodes.length)
         ? nodes[newIdx + 1].el.getBoundingClientRect().top + sy
         : c.top + c.height;
-      var sectionLen = nextAbs - curAbs;
+      var sectionLen  = nextAbs - curAbs;
       var scrolledPast = Math.max(0, sy - curAbs);
       var t = sectionLen > 0 ? Math.max(0, Math.min(1, scrolledPast / sectionLen)) : 0;
       sliderCenter = curDisplay + t * (nextDisplay - curDisplay);
     }
     var sliderTop = sliderCenter - halfS;
     sliderTop = Math.max(0, Math.min(1 - sliderH, sliderTop));
-    prog.style.top = (sliderTop * 100) + '%';
+    prog.style.top    = (sliderTop * 100) + '%';
     prog.style.height = (sliderH * 100) + '%';
   }
 
@@ -173,12 +267,7 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () {
     updateTimelinePosition();
-    var c = getContentMetrics();
-    nodes.forEach(function (n) {
-      var hTop = n.el.getBoundingClientRect().top + window.scrollY;
-      n.rel = Math.max(0, Math.min(1, (hTop - c.top) / c.height));
-      n.node.style.top = (n.rel * 100) + '%';
-    });
+    onScroll();
   });
 
   /* 初始渲染 */

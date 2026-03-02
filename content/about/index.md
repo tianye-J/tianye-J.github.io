@@ -3,6 +3,7 @@ title = "About"
 layout = "single"
 hideMeta = true
 hideFooter = false
+ShowToc = false
 +++
 
 <div class="about-illustration" aria-hidden="true">

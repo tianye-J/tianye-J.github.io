@@ -10,7 +10,7 @@
 <meta name="description" content="Robotics · AI · Engineering">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.a671a065ae1c0bcc0382c2d3a4664d3b1412d740f3d413f853445585af75a754.css" integrity="sha256-pnGgZa4cC8wDgsLTpGZNOxQS10Dz1BP4U0RVha91p1Q=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.167c72a9eb0cd48435fa7e2eaba2e8dcbf7477c859fafb147c8dc8ebb47a041a.css" integrity="sha256-FnxyqesM1IQ1&#43;n4uq6Lo3L90d8hZ&#43;vsUfI3I67R6BBo=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -102,7 +102,7 @@ Task 1：底层图像恢复 (Low-level Vision) 任务内容：任选一种退化
 1.架构轻量化与一致性：多任务分支需与单任务网络结构保持高度一致，禁止大幅增加参数量。 2.鼓励采用参数共享 (Parameter Sharing) 或引入轻量的交互通信模块。 3.微调策略 (Fine-tuning)：在单任务预训练的基础上，通过微调分支头或特征层来实现融合。 4.损失函数创新：鼓励设计具有创新性的互促损失函数 (Mutual-promoting Loss) 来平衡两个任务的梯度。 最终效果： 在 低清图直接分类 和经过多任务学习后 超分-&gt;分类 的结果对比中，后者正确率达到81.01%，而前者只有47.26%，多任务学习将图像分类的正确率提升约0.7倍！ 让我们回到一切的开始，详细聊聊从无到有的过程吧。
 ...</p>
   </div>
-  <footer class="entry-footer"><span title='2026-02-26 18:39:55 +0800 CST'>February 26, 2026</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <footer class="entry-footer"><span title='2026-02-26 18:39:55 +0800 CST'>February 26, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
   <a class="entry-link" aria-label="post link to 深度学习入门：PyTorch零基础到多任务联合微调" href="http://localhost:1313/learning/multi-learning/"></a>
 </article>
 
@@ -165,17 +165,24 @@ Task 1：底层图像恢复 (Low-level Vision) 任务内容：任选一种退化
     return clone.textContent.trim();
   }
 
-  var nodes = [];
+  var nodes  = [];
+  var groups = [];    
   var cm = getContentMetrics();
+  var MIN_GAP = 28;  
 
   allH.forEach(function (h) {
     var hTop = h.getBoundingClientRect().top + window.scrollY;
-    var rel = (hTop - cm.top) / cm.height;
+    var rel  = (hTop - cm.top) / cm.height;
     rel = Math.max(0, Math.min(1, rel));
+
+    var isSub = h.tagName !== 'H2';
 
     var node = document.createElement('a');
     node.className = 'toc-timeline-node';
-    if (h.tagName !== 'H2') node.classList.add('sub');
+    if (isSub) {
+      node.classList.add('sub');
+      node.classList.add('toc-sub-collapsed'); 
+    }
     node.href = '#' + h.id;
     node.style.top = (rel * 100) + '%';
 
@@ -196,11 +203,89 @@ Task 1：底层图像恢复 (Low-level Vision) 任务内容：任选一种退化
       h.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    nodes.push({ el: h, node: node, rel: rel });
+    var nodeIdx = nodes.length;
+    nodes.push({ el: h, node: node, rel: rel, isSub: isSub, groupIdx: -1, displayTop: rel });
+
+     
+    if (!isSub) {
+      groups.push({ h2Idx: nodeIdx, children: [] });
+      nodes[nodeIdx].groupIdx = groups.length - 1;
+    } else if (groups.length > 0) {
+      groups[groups.length - 1].children.push(nodeIdx);
+      nodes[nodeIdx].groupIdx = groups.length - 1;
+    }
   });
 
   tl.appendChild(area);
   document.body.appendChild(tl);
+
+   
+  var activeGroupIdx = -1;
+  var hoverGroupIdx  = -1;
+
+  function updateGroupVisibility() {
+    groups.forEach(function (g, gIdx) {
+      var expanded = (gIdx === activeGroupIdx || gIdx === hoverGroupIdx);
+      g.children.forEach(function (childIdx) {
+        if (expanded) {
+          nodes[childIdx].node.classList.remove('toc-sub-collapsed');
+        } else {
+          nodes[childIdx].node.classList.add('toc-sub-collapsed');
+        }
+      });
+    });
+  }
+
+   
+  groups.forEach(function (g, gIdx) {
+    var h2El = nodes[g.h2Idx].node;
+    h2El.addEventListener('mouseenter', function () {
+      hoverGroupIdx = gIdx;
+      updateGroupVisibility();
+      resolveCollisions();
+    });
+    h2El.addEventListener('mouseleave', function () {
+      if (hoverGroupIdx === gIdx) {
+        hoverGroupIdx = -1;
+        updateGroupVisibility();
+        resolveCollisions();
+      }
+    });
+  });
+
+   
+  function resolveCollisions() {
+    var areaH = area.offsetHeight;
+    if (areaH <= 0) return;
+
+     
+    var vis = [];
+    nodes.forEach(function (n, idx) {
+      if (n.isSub && n.node.classList.contains('toc-sub-collapsed')) return;
+      vis.push({ idx: idx, topPx: n.displayTop * areaH });
+    });
+    if (vis.length < 2) return;
+    vis.sort(function (a, b) { return a.topPx - b.topPx; });
+
+     
+    for (var i = 1; i < vis.length; i++) {
+      if (vis[i].topPx - vis[i - 1].topPx < MIN_GAP) {
+        vis[i].topPx = vis[i - 1].topPx + MIN_GAP;
+      }
+    }
+
+     
+    var maxPx = areaH;
+    for (var i = vis.length - 1; i >= 0; i--) {
+      if (vis[i].topPx > maxPx) vis[i].topPx = maxPx;
+      maxPx = vis[i].topPx - MIN_GAP;
+    }
+
+     
+    vis.forEach(function (v) {
+      nodes[v.idx].node.style.top = (v.topPx / areaH * 100) + '%';
+    });
+  }
 
    
   function updateTimelinePosition() {
@@ -210,12 +295,12 @@ Task 1：底层图像恢复 (Low-level Vision) 任务内容：任选一种退化
 
    
   var isScrolled = false;
-  var activeIdx = -1;
+  var activeIdx  = -1;
 
   function onScroll() {
     var sy = window.scrollY;
     var vh = window.innerHeight;
-    var c = getContentMetrics();
+    var c  = getContentMetrics();
     var cBottom = c.top + c.height;
 
      
@@ -225,14 +310,14 @@ Task 1：底层图像恢复 (Low-level Vision) 任务内容：任选一种退化
 
      
     var sliderH = Math.min((vh / c.height) / 3, 0.5);
-    var halfS = sliderH / 2;
+    var halfS   = sliderH / 2;
 
+     
     nodes.forEach(function (n) {
       var hTop = n.el.getBoundingClientRect().top + sy;
       n.rel = Math.max(0, Math.min(1, (hTop - c.top) / c.height));
-       
-      var display = halfS + n.rel * (1 - sliderH);
-      n.node.style.top = (display * 100) + '%';
+      n.displayTop = halfS + n.rel * (1 - sliderH);
+      n.node.style.top = (n.displayTop * 100) + '%';
     });
 
      
@@ -252,14 +337,24 @@ Task 1：底层图像恢复 (Low-level Vision) 任务内容：任选一种退化
     }
     if (newIdx !== activeIdx) {
       if (activeIdx >= 0) nodes[activeIdx].node.classList.remove('active');
-      if (newIdx >= 0) nodes[newIdx].node.classList.add('active');
+      if (newIdx >= 0)     nodes[newIdx].node.classList.add('active');
       activeIdx = newIdx;
     }
 
      
+    var newGroupIdx = -1;
+    if (newIdx >= 0) newGroupIdx = nodes[newIdx].groupIdx;
+    if (newGroupIdx !== activeGroupIdx) {
+      activeGroupIdx = newGroupIdx;
+      updateGroupVisibility();
+    }
+
+     
+    resolveCollisions();
+
+     
     var sliderCenter;
     if (newIdx < 0) {
-       
       sliderCenter = halfS + nodes[0].rel * (1 - sliderH);
     } else {
       var curDisplay = halfS + nodes[newIdx].rel * (1 - sliderH);
@@ -269,19 +364,18 @@ Task 1：底层图像恢复 (Low-level Vision) 任务内容：任选一种退化
       } else {
         nextDisplay = 1 - halfS;
       }
-       
-      var curAbs = nodes[newIdx].el.getBoundingClientRect().top + sy;
+      var curAbs  = nodes[newIdx].el.getBoundingClientRect().top + sy;
       var nextAbs = (newIdx + 1 < nodes.length)
         ? nodes[newIdx + 1].el.getBoundingClientRect().top + sy
         : c.top + c.height;
-      var sectionLen = nextAbs - curAbs;
+      var sectionLen  = nextAbs - curAbs;
       var scrolledPast = Math.max(0, sy - curAbs);
       var t = sectionLen > 0 ? Math.max(0, Math.min(1, scrolledPast / sectionLen)) : 0;
       sliderCenter = curDisplay + t * (nextDisplay - curDisplay);
     }
     var sliderTop = sliderCenter - halfS;
     sliderTop = Math.max(0, Math.min(1 - sliderH, sliderTop));
-    prog.style.top = (sliderTop * 100) + '%';
+    prog.style.top    = (sliderTop * 100) + '%';
     prog.style.height = (sliderH * 100) + '%';
   }
 
@@ -296,12 +390,7 @@ Task 1：底层图像恢复 (Low-level Vision) 任务内容：任选一种退化
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () {
     updateTimelinePosition();
-    var c = getContentMetrics();
-    nodes.forEach(function (n) {
-      var hTop = n.el.getBoundingClientRect().top + window.scrollY;
-      n.rel = Math.max(0, Math.min(1, (hTop - c.top) / c.height));
-      n.node.style.top = (n.rel * 100) + '%';
-    });
+    onScroll();
   });
 
    

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Thinking on Arden&#39;s blog</title>
+    <link>http://localhost:1313/thinking/</link>
+    <description>Recent content in Thinking on Arden&#39;s blog</description>
+    <generator>Hugo -- 0.147.4</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 05 Mar 2026 16:55:01 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/thinking/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于大一下学期规划的思考</title>
+      <link>http://localhost:1313/thinking/fm_second_semester_intro/</link>
+      <pubDate>Thu, 05 Mar 2026 16:55:01 +0800</pubDate>
+      <guid>http://localhost:1313/thinking/fm_second_semester_intro/</guid>
+      <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+&lt;p&gt;开学将近一周，科研申请、课程、学习、班级工作等事情接踵而至，学习方向的选择和压力也让我非常迷茫。一次偶然的机会，我了解到了知乎上一位&lt;strong&gt;执行力超强&lt;/strong&gt;、&lt;strong&gt;方法论独具特色&lt;/strong&gt;的学生博主&lt;a href=&#34;https://www.zhihu.com/people/23-65-18-56-56/&#34;&gt;东川路第一伊雷娜&lt;/a&gt;，他的生活和学习方式深深震撼了我。于是我决定基于他学习方法论，提取一些和我契合的部分，对本学期进行学习和生活的规划。&lt;/p&gt;
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;</description>
+    </item>
+  </channel>
+</rss>

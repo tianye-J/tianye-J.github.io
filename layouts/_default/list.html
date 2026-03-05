@@ -165,16 +165,16 @@
     {{- end }}
   </section> 
 
-{{/* ---- Research ---- */}}
-  {{- $research := where site.RegularPages "Section" "research" }}
-  {{- $research = $research.ByDate.Reverse }}
+{{/* ---- Thinking ---- */}}
+  {{- $thinking := where site.RegularPages "Section" "thinking" }}
+  {{- $thinking = $thinking.ByDate.Reverse }}
   <section class="home-section">
     <div class="home-section-header">
-      <h2><a href="{{ "research/" | absURL }}">Research</a></h2>
-      <p class="home-section-desc">研究笔记与文献阅读</p>
+      <h2><a href="{{ "thinking/" | absURL }}">Thinking</a></h2>
+      <p class="home-section-desc">一些阶段性反思和计划</p>
     </div>
     <div class="home-section-list">
-      {{- range first 3 $research }}
+      {{- range first 3 $thinking }}
       <article class="home-section-entry">
         <a href="{{ .Permalink }}">
           <h3>{{ .Title }}</h3>
@@ -185,12 +185,12 @@
         </a>
       </article>
       {{- end }}
-      {{- if eq (len $research) 0 }}
+      {{- if eq (len $thinking) 0 }}
       <p class="home-section-empty">暂无文章</p>
       {{- end }}
     </div>
-    {{- if gt (len $research) 3 }}
-    <a class="home-section-more" href="{{ "research/" | absURL }}">查看全部 →</a>
+    {{- if gt (len $thinking) 3 }}
+    <a class="home-section-more" href="{{ "thinking/" | absURL }}">查看全部 →</a>
     {{- end }}
   </section>
 </div>

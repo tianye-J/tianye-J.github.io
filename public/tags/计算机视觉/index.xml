@@ -10,9 +10,9 @@
     <atom:link href="http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>深度学习入门：PyTorch零基础到多任务联合微调</title>
-      <link>http://localhost:1313/learning/multi-learning/</link>
+      <link>http://localhost:1313/projects/multi-learning/</link>
       <pubDate>Thu, 26 Feb 2026 18:39:55 +0800</pubDate>
-      <guid>http://localhost:1313/learning/multi-learning/</guid>
+      <guid>http://localhost:1313/projects/multi-learning/</guid>
       <description>基于超分辨率特征增强的图像分类多任务学习</description>
     </item>
   </channel>

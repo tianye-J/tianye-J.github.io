@@ -27,6 +27,7 @@ ShowToc = false
 
 - **人工智能** — 深度学习、强化学习、计算机视觉
 - **工程实践** — 机械臂、ROS2
+- **研究方向** — Domain Adaptation/Generalization
 
 ---
 

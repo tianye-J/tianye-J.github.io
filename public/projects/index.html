@@ -76,8 +76,8 @@
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/research/" title="Research">
-                    <span>Research</span>
+                <a href="http://localhost:1313/thinking/" title="Thinking">
+                    <span>Thinking</span>
                 </a>
             </li>
             <li>
@@ -101,6 +101,28 @@
     我参与的项目与工程实践
   </div>
 </header>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">深度学习入门：PyTorch零基础到多任务联合微调
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>前言 该文章是基于我校 校科学技术协会 woc-python组题目个人解答过程的系统性回顾。
+项目代码：NJUPT-SAST-Python-WoC-2025
+本文主要记录学习和方法迭代的过程，详细代码实现请查阅代码库。
+题目简介： 任务背景与目标
+本项目旨在探索多任务学习 (Multi-Task Learning) 在计算机视觉中的应用。核心目标是通过联合网络的设计，实现底层视觉（图像重构）与高层视觉（语义理解）两个任务的相互促进 (Mutual Promotion)。
+基础任务定义 (Single-Task Baselines)
+网络需从零开始搭建与训练,完成以下两个独立任务：
+Task 1：底层图像恢复 (Low-level Vision) 任务内容：任选一种退化图像修复场景（包括但不限于超分辨率、去噪、去雾、低光增强等）。 评估指标：PSNR 与 SSIM，需在验证集上具有合理表现。 Task 2：高层图像分类 (High-level Vision) 任务内容：基于 CIFAR 数据集的图像分类。 评估指标：Accuracy（最低要求界定为 60%）。 多任务联合优化约束 (Multi-Task Constraints)
+在跑通单任务 Baseline 后，需构建多任务联合网络（例如 Task 1 辅助 Task 2，或反之），且必须满足以下硬性约束：
+1.架构轻量化与一致性：多任务分支需与单任务网络结构保持高度一致，禁止大幅增加参数量。 2.鼓励采用参数共享 (Parameter Sharing) 或引入轻量的交互通信模块。 3.微调策略 (Fine-tuning)：在单任务预训练的基础上，通过微调分支头或特征层来实现融合。 4.损失函数创新：鼓励设计具有创新性的互促损失函数 (Mutual-promoting Loss) 来平衡两个任务的梯度。 最终效果： 在 低清图直接分类 和经过多任务学习后 超分-&gt;分类 的结果对比中，后者正确率达到81.01%，而前者只有47.26%，多任务学习将图像分类的正确率提升约0.7倍！ 让我们回到一切的开始，详细聊聊从无到有的过程吧。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-26 18:39:55 +0800 CST'>February 26, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to 深度学习入门：PyTorch零基础到多任务联合微调" href="http://localhost:1313/projects/multi-learning/"></a>
+</article>
 
 
     </main>

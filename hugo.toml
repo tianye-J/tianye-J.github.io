@@ -51,9 +51,9 @@ theme = 'PaperMod'
   weight = 20
 
 [[menu.main]]
-  identifier = "research"
-  name = "Research"
-  url = "/research/"
+  identifier = "Thinking"
+  name = "Thinking"
+  url = "/Thinking/"
   weight = 30
 
 [[menu.main]]

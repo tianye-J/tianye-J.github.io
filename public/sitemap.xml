@@ -3,18 +3,30 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2026-02-26T18:39:55+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/learning/</loc>
-    <lastmod>2026-02-26T18:39:55+08:00</lastmod>
+    <lastmod>2026-03-05T16:55:01+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2026-03-05T16:55:01+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/thinking/</loc>
+    <lastmod>2026-03-05T16:55:01+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/%E4%BA%BA%E9%99%85%E5%85%B3%E7%B3%BB/</loc>
+    <lastmod>2026-03-05T16:55:01+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/thinking/fm_second_semester_intro/</loc>
+    <lastmod>2026-03-05T16:55:01+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/%E5%8F%8D%E6%80%9D/</loc>
+    <lastmod>2026-03-05T16:55:01+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects/</loc>
     <lastmod>2026-02-26T18:39:55+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2026-02-26T18:39:55+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/learning/multi-learning/</loc>
+    <loc>http://localhost:1313/projects/multi-learning/</loc>
     <lastmod>2026-02-26T18:39:55+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/</loc>
@@ -24,8 +36,6 @@
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/projects/</loc>
-  </url><url>
-    <loc>http://localhost:1313/research/</loc>
+    <loc>http://localhost:1313/learning/</loc>
   </url>
 </urlset>

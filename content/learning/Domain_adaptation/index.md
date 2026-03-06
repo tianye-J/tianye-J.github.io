@@ -1,7 +1,7 @@
 +++
 title = 'Domain adaptation入门笔记'
 date = 2026-03-06T09:29:23+08:00
-draft = true
+draft = false
 tags = ["域适应", "笔记"]
 math = true
 +++

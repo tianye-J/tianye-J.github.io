@@ -12,8 +12,15 @@
 {{- if .Title }}
 <header class="page-header">
   {{- partial "breadcrumbs.html" . }}
+  {{- if eq .Kind "section" }}
+  <span class="section-label">{{ upper .Title }}</span>
+  {{- end }}
   <h1>
-    {{ .Title }}
+    {{- if eq .Section "learning" }}学习笔记
+    {{- else if eq .Section "projects" }}项目
+    {{- else if eq .Section "thinking" }}随想
+    {{- else }}{{ .Title }}
+    {{- end }}
     {{- if and (or (eq .Kind `term`) (eq .Kind `section`)) (.Param "ShowRssButtonInSectionTermList") }}
     {{- with .OutputFormats.Get "rss" }}
     <a href="{{ .RelPermalink }}" title="RSS" aria-label="RSS">
@@ -112,18 +119,19 @@
   {{- $learning = $learning.ByDate.Reverse }}
   <section class="home-section">
     <div class="home-section-header">
-      <h2><a href="{{ "learning/" | absURL }}">Learning</a></h2>
-      <p class="home-section-desc">学习笔记与技术积累</p>
+      <span class="section-label">LEARNING</span>
+      <h2><a href="{{ "learning/" | absURL }}">学习笔记</a></h2>
+      <p class="home-section-desc">技术积累与知识沉淀</p>
     </div>
     <div class="home-section-list">
       {{- range first 3 $learning }}
       <article class="home-section-entry">
         <a href="{{ .Permalink }}">
+          <span class="entry-meta">{{ .Date.Format "Jan 2006" }}</span>
           <h3>{{ .Title }}</h3>
           {{- if .Description }}
           <p class="entry-summary">{{ .Description }}</p>
           {{- end }}
-          <span class="entry-meta">{{ .Date.Format "Jan 2, 2006" }}</span>
         </a>
       </article>
       {{- end }}
@@ -132,7 +140,7 @@
       {{- end }}
     </div>
     {{- if gt (len $learning) 3 }}
-    <a class="home-section-more" href="{{ "learning/" | absURL }}">查看全部 →</a>
+    <a class="home-section-more" href="{{ "learning/" | absURL }}">查看全部 ›</a>
     {{- end }}
   </section>
   
@@ -141,18 +149,19 @@
   {{- $projects = $projects.ByDate.Reverse }}
   <section class="home-section">
     <div class="home-section-header">
-      <h2><a href="{{ "projects/" | absURL }}">Projects</a></h2>
-      <p class="home-section-desc">项目与工程实践</p>
+      <span class="section-label">PROJECTS</span>
+      <h2><a href="{{ "projects/" | absURL }}">项目</a></h2>
+      <p class="home-section-desc">工程实践与作品集</p>
     </div>
     <div class="home-section-list">
       {{- range first 3 $projects }}
       <article class="home-section-entry">
         <a href="{{ .Permalink }}">
+          <span class="entry-meta">{{ .Date.Format "Jan 2006" }}</span>
           <h3>{{ .Title }}</h3>
           {{- if .Description }}
           <p class="entry-summary">{{ .Description }}</p>
           {{- end }}
-          <span class="entry-meta">{{ .Date.Format "Jan 2, 2006" }}</span>
         </a>
       </article>
       {{- end }}
@@ -161,27 +170,28 @@
       {{- end }}
     </div>
     {{- if gt (len $projects) 3 }}
-    <a class="home-section-more" href="{{ "projects/" | absURL }}">查看全部 →</a>
+    <a class="home-section-more" href="{{ "projects/" | absURL }}">查看全部 ›</a>
     {{- end }}
-  </section> 
+  </section>
 
 {{/* ---- Thinking ---- */}}
   {{- $thinking := where site.RegularPages "Section" "thinking" }}
   {{- $thinking = $thinking.ByDate.Reverse }}
   <section class="home-section">
     <div class="home-section-header">
-      <h2><a href="{{ "thinking/" | absURL }}">Thinking</a></h2>
-      <p class="home-section-desc">一些阶段性反思和计划</p>
+      <span class="section-label">THINKING</span>
+      <h2><a href="{{ "thinking/" | absURL }}">随想</a></h2>
+      <p class="home-section-desc">阶段性反思与计划</p>
     </div>
     <div class="home-section-list">
       {{- range first 3 $thinking }}
       <article class="home-section-entry">
         <a href="{{ .Permalink }}">
+          <span class="entry-meta">{{ .Date.Format "Jan 2006" }}</span>
           <h3>{{ .Title }}</h3>
           {{- if .Description }}
           <p class="entry-summary">{{ .Description }}</p>
           {{- end }}
-          <span class="entry-meta">{{ .Date.Format "Jan 2, 2006" }}</span>
         </a>
       </article>
       {{- end }}
@@ -190,7 +200,7 @@
       {{- end }}
     </div>
     {{- if gt (len $thinking) 3 }}
-    <a class="home-section-more" href="{{ "thinking/" | absURL }}">查看全部 →</a>
+    <a class="home-section-more" href="{{ "thinking/" | absURL }}">查看全部 ›</a>
     {{- end }}
   </section>
 </div>

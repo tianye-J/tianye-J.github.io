@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="light">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Domain adaptation入门笔记 | Arden&#39;s blog</title>
+<meta name="keywords" content="域适应, 笔记">
+<meta name="description" content="
+
+本文为我入门域适应的一些随手记，按照时间顺序进行排序，包含了一些思考和反馈。
+摘录我阅读的文章原文部分使用斜体，关于思考总结的部分使用正常字体。
+
+第一次阅读
+阅读材料：迁移学习入门之一：域适应的背景，理论与方法
+在机器学习中，Domain Shift是一个很常见的问题，即在训练数据与真实场景来自于不同的分布。
+如在医学深度学习模型中，用A医院的数据(Source Domain)训练的模型往往在B医院(Target Domain)预测不准。在摄像头行人重识别(Re-ID)问题中，多个摄像头捕捉的场景分布完全不一致，导致单个行人在多个摄像头中的&quot;重识别&quot;变得较为困难。在联邦学习中，不同客户的数据分布不一致（non-iid）也是最常见的全局模型训练问题。
+而domain adaptation即是对于domain shift的一种解决方案。与其他流派（如迁移学习和微调）不同的点在于，domain adaptation保留了在source domain上的高精度，
+并通过一些方法缩小表示空间（将数据从原始输入形式“如图像、文本”转换后得到的特征向量所在的抽象空间，在当前语境下，它是源域与目标域数据通过特征提取层映射后的空间）上Source与target模型特征的距离。
+
+在了解大方向后，文章给出了一些数学推导，我感觉有点难以理解，这里先记录一些定义和简单的公式：
+
+
+文章定义一个domain由两个部分组成：$D,f$
+
+$D$（分布函数）:可以理解为“画风“或数据长什么样。比如源域$D_S$是高清图，目标域$D_T$是高斯模糊图。
+$f$（标签函数）:是数据的标签，如在二分类问题中输入一张图$x$,它到底是猫还是狗（0或1）。
+
+在 Domain Adaptation 中，我们通常假设物体的本质不变，只是画风变了。
+也就是说，一张猫的图片，无论变多模糊，它依然是猫。也就是:
+$f_S \approx f_T$, 但是 $D_s \neq D_T$
+
+
+什么是误差？
+公式 ：
+
+$$ \epsilon(h, f; \mathcal{D}) = \mathbf{E}_{\mathbf{x} \sim \mathcal{D}}|h(\mathbf{x}) - f(\mathbf{x})| $$
+$h$ (hypothesis，假设)：学习函数，就是我们训练的模型网络。
+$f$：真实标签。
+$\epsilon$ (error)：误差。
+
+这个公式大概是代码里写的 Loss 函数（或者说测试集上的错误率）。
+它表示：在某种画风 $\mathcal{D}$ 下，你的模型 $h$ 预测的结果，和真实答案 $f$ 之间相差多少。
+
+$\epsilon_S(h)$：模型在源域（清晰图）上的错误率。
+$\epsilon_T(h)$：模型在目标域（模糊图）上的错误率。
+
+
+我们手里只有源域的标签，所以我们只能把 $\epsilon_S(h)$ 训练得很小。但我们真正想要的是，$\epsilon_T(h)$ 也很小。
+
+
+关键公式：泛化误差上界
+$$ \epsilon_T(h) \le \epsilon_S(h) &#43; d_1(\mathcal{D}_S, \mathcal{D}_T) &#43; \text{常量} $$我们把这个公式拆成三块来看：
+你要想让目标域错误率 $\epsilon_T(h)$ 很小（等号左边），你必须让等号右边的三项都很小：">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/learning/domain_adaptation/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4f58b5c67b6e2bde64a56f23e4dad964fa4361188ceeadc25376c7a9a05f3473.css" integrity="sha256-T1i1xntuK95kpW8j5NrZZPpDYRiM7q3CU3bHqaBfNHM=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/learning/domain_adaptation/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+        delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+        ]
+    });">
+</script>
+
+<meta property="og:url" content="http://localhost:1313/learning/domain_adaptation/">
+  <meta property="og:site_name" content="Arden&#39;s blog">
+  <meta property="og:title" content="Domain adaptation入门笔记">
+  <meta property="og:description" content=" 本文为我入门域适应的一些随手记，按照时间顺序进行排序，包含了一些思考和反馈。 摘录我阅读的文章原文部分使用斜体，关于思考总结的部分使用正常字体。 第一次阅读 阅读材料：迁移学习入门之一：域适应的背景，理论与方法
+在机器学习中，Domain Shift是一个很常见的问题，即在训练数据与真实场景来自于不同的分布。 如在医学深度学习模型中，用A医院的数据(Source Domain)训练的模型往往在B医院(Target Domain)预测不准。在摄像头行人重识别(Re-ID)问题中，多个摄像头捕捉的场景分布完全不一致，导致单个行人在多个摄像头中的&#34;重识别&#34;变得较为困难。在联邦学习中，不同客户的数据分布不一致（non-iid）也是最常见的全局模型训练问题。
+而domain adaptation即是对于domain shift的一种解决方案。与其他流派（如迁移学习和微调）不同的点在于，domain adaptation保留了在source domain上的高精度， 并通过一些方法缩小表示空间（将数据从原始输入形式“如图像、文本”转换后得到的特征向量所在的抽象空间，在当前语境下，它是源域与目标域数据通过特征提取层映射后的空间）上Source与target模型特征的距离。
+在了解大方向后，文章给出了一些数学推导，我感觉有点难以理解，这里先记录一些定义和简单的公式：
+文章定义一个domain由两个部分组成：$D,f$ $D$（分布函数）:可以理解为“画风“或数据长什么样。比如源域$D_S$是高清图，目标域$D_T$是高斯模糊图。 $f$（标签函数）:是数据的标签，如在二分类问题中输入一张图$x$,它到底是猫还是狗（0或1）。 在 Domain Adaptation 中，我们通常假设物体的本质不变，只是画风变了。 也就是说，一张猫的图片，无论变多模糊，它依然是猫。也就是: $f_S \approx f_T$, 但是 $D_s \neq D_T$
+什么是误差？ 公式 ： $$ \epsilon(h, f; \mathcal{D}) = \mathbf{E}_{\mathbf{x} \sim \mathcal{D}}|h(\mathbf{x}) - f(\mathbf{x})| $$ $h$ (hypothesis，假设)：学习函数，就是我们训练的模型网络。 $f$：真实标签。 $\epsilon$ (error)：误差。 这个公式大概是代码里写的 Loss 函数（或者说测试集上的错误率）。 它表示：在某种画风 $\mathcal{D}$ 下，你的模型 $h$ 预测的结果，和真实答案 $f$ 之间相差多少。
+$\epsilon_S(h)$：模型在源域（清晰图）上的错误率。 $\epsilon_T(h)$：模型在目标域（模糊图）上的错误率。 我们手里只有源域的标签，所以我们只能把 $\epsilon_S(h)$ 训练得很小。但我们真正想要的是，$\epsilon_T(h)$ 也很小。
+关键公式：泛化误差上界 $$ \epsilon_T(h) \le \epsilon_S(h) &#43; d_1(\mathcal{D}_S, \mathcal{D}_T) &#43; \text{常量} $$我们把这个公式拆成三块来看： 你要想让目标域错误率 $\epsilon_T(h)$ 很小（等号左边），你必须让等号右边的三项都很小：">
+  <meta property="og:locale" content="zh-cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="learning">
+    <meta property="article:published_time" content="2026-03-06T09:29:23+08:00">
+    <meta property="article:modified_time" content="2026-03-06T09:29:23+08:00">
+    <meta property="article:tag" content="域适应">
+    <meta property="article:tag" content="笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Domain adaptation入门笔记">
+<meta name="twitter:description" content="
+
+本文为我入门域适应的一些随手记，按照时间顺序进行排序，包含了一些思考和反馈。
+摘录我阅读的文章原文部分使用斜体，关于思考总结的部分使用正常字体。
+
+第一次阅读
+阅读材料：迁移学习入门之一：域适应的背景，理论与方法
+在机器学习中，Domain Shift是一个很常见的问题，即在训练数据与真实场景来自于不同的分布。
+如在医学深度学习模型中，用A医院的数据(Source Domain)训练的模型往往在B医院(Target Domain)预测不准。在摄像头行人重识别(Re-ID)问题中，多个摄像头捕捉的场景分布完全不一致，导致单个行人在多个摄像头中的&quot;重识别&quot;变得较为困难。在联邦学习中，不同客户的数据分布不一致（non-iid）也是最常见的全局模型训练问题。
+而domain adaptation即是对于domain shift的一种解决方案。与其他流派（如迁移学习和微调）不同的点在于，domain adaptation保留了在source domain上的高精度，
+并通过一些方法缩小表示空间（将数据从原始输入形式“如图像、文本”转换后得到的特征向量所在的抽象空间，在当前语境下，它是源域与目标域数据通过特征提取层映射后的空间）上Source与target模型特征的距离。
+
+在了解大方向后，文章给出了一些数学推导，我感觉有点难以理解，这里先记录一些定义和简单的公式：
+
+
+文章定义一个domain由两个部分组成：$D,f$
+
+$D$（分布函数）:可以理解为“画风“或数据长什么样。比如源域$D_S$是高清图，目标域$D_T$是高斯模糊图。
+$f$（标签函数）:是数据的标签，如在二分类问题中输入一张图$x$,它到底是猫还是狗（0或1）。
+
+在 Domain Adaptation 中，我们通常假设物体的本质不变，只是画风变了。
+也就是说，一张猫的图片，无论变多模糊，它依然是猫。也就是:
+$f_S \approx f_T$, 但是 $D_s \neq D_T$
+
+
+什么是误差？
+公式 ：
+
+$$ \epsilon(h, f; \mathcal{D}) = \mathbf{E}_{\mathbf{x} \sim \mathcal{D}}|h(\mathbf{x}) - f(\mathbf{x})| $$
+$h$ (hypothesis，假设)：学习函数，就是我们训练的模型网络。
+$f$：真实标签。
+$\epsilon$ (error)：误差。
+
+这个公式大概是代码里写的 Loss 函数（或者说测试集上的错误率）。
+它表示：在某种画风 $\mathcal{D}$ 下，你的模型 $h$ 预测的结果，和真实答案 $f$ 之间相差多少。
+
+$\epsilon_S(h)$：模型在源域（清晰图）上的错误率。
+$\epsilon_T(h)$：模型在目标域（模糊图）上的错误率。
+
+
+我们手里只有源域的标签，所以我们只能把 $\epsilon_S(h)$ 训练得很小。但我们真正想要的是，$\epsilon_T(h)$ 也很小。
+
+
+关键公式：泛化误差上界
+$$ \epsilon_T(h) \le \epsilon_S(h) &#43; d_1(\mathcal{D}_S, \mathcal{D}_T) &#43; \text{常量} $$我们把这个公式拆成三块来看：
+你要想让目标域错误率 $\epsilon_T(h)$ 很小（等号左边），你必须让等号右边的三项都很小：">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Learning",
+      "item": "http://localhost:1313/learning/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Domain adaptation入门笔记",
+      "item": "http://localhost:1313/learning/domain_adaptation/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Domain adaptation入门笔记",
+  "name": "Domain adaptation入门笔记",
+  "description": " 本文为我入门域适应的一些随手记，按照时间顺序进行排序，包含了一些思考和反馈。 摘录我阅读的文章原文部分使用斜体，关于思考总结的部分使用正常字体。 第一次阅读 阅读材料：迁移学习入门之一：域适应的背景，理论与方法\n在机器学习中，Domain Shift是一个很常见的问题，即在训练数据与真实场景来自于不同的分布。 如在医学深度学习模型中，用A医院的数据(Source Domain)训练的模型往往在B医院(Target Domain)预测不准。在摄像头行人重识别(Re-ID)问题中，多个摄像头捕捉的场景分布完全不一致，导致单个行人在多个摄像头中的\u0026quot;重识别\u0026quot;变得较为困难。在联邦学习中，不同客户的数据分布不一致（non-iid）也是最常见的全局模型训练问题。\n而domain adaptation即是对于domain shift的一种解决方案。与其他流派（如迁移学习和微调）不同的点在于，domain adaptation保留了在source domain上的高精度， 并通过一些方法缩小表示空间（将数据从原始输入形式“如图像、文本”转换后得到的特征向量所在的抽象空间，在当前语境下，它是源域与目标域数据通过特征提取层映射后的空间）上Source与target模型特征的距离。\n在了解大方向后，文章给出了一些数学推导，我感觉有点难以理解，这里先记录一些定义和简单的公式：\n文章定义一个domain由两个部分组成：$D,f$ $D$（分布函数）:可以理解为“画风“或数据长什么样。比如源域$D_S$是高清图，目标域$D_T$是高斯模糊图。 $f$（标签函数）:是数据的标签，如在二分类问题中输入一张图$x$,它到底是猫还是狗（0或1）。 在 Domain Adaptation 中，我们通常假设物体的本质不变，只是画风变了。 也就是说，一张猫的图片，无论变多模糊，它依然是猫。也就是: $f_S \\approx f_T$, 但是 $D_s \\neq D_T$\n什么是误差？ 公式 ： $$ \\epsilon(h, f; \\mathcal{D}) = \\mathbf{E}_{\\mathbf{x} \\sim \\mathcal{D}}|h(\\mathbf{x}) - f(\\mathbf{x})| $$ $h$ (hypothesis，假设)：学习函数，就是我们训练的模型网络。 $f$：真实标签。 $\\epsilon$ (error)：误差。 这个公式大概是代码里写的 Loss 函数（或者说测试集上的错误率）。 它表示：在某种画风 $\\mathcal{D}$ 下，你的模型 $h$ 预测的结果，和真实答案 $f$ 之间相差多少。\n$\\epsilon_S(h)$：模型在源域（清晰图）上的错误率。 $\\epsilon_T(h)$：模型在目标域（模糊图）上的错误率。 我们手里只有源域的标签，所以我们只能把 $\\epsilon_S(h)$ 训练得很小。但我们真正想要的是，$\\epsilon_T(h)$ 也很小。\n关键公式：泛化误差上界 $$ \\epsilon_T(h) \\le \\epsilon_S(h) + d_1(\\mathcal{D}_S, \\mathcal{D}_T) + \\text{常量} $$我们把这个公式拆成三块来看： 你要想让目标域错误率 $\\epsilon_T(h)$ 很小（等号左边），你必须让等号右边的三项都很小：\n",
+  "keywords": [
+    "域适应", "笔记"
+  ],
+  "articleBody": " 本文为我入门域适应的一些随手记，按照时间顺序进行排序，包含了一些思考和反馈。 摘录我阅读的文章原文部分使用斜体，关于思考总结的部分使用正常字体。 第一次阅读 阅读材料：迁移学习入门之一：域适应的背景，理论与方法\n在机器学习中，Domain Shift是一个很常见的问题，即在训练数据与真实场景来自于不同的分布。 如在医学深度学习模型中，用A医院的数据(Source Domain)训练的模型往往在B医院(Target Domain)预测不准。在摄像头行人重识别(Re-ID)问题中，多个摄像头捕捉的场景分布完全不一致，导致单个行人在多个摄像头中的\"重识别\"变得较为困难。在联邦学习中，不同客户的数据分布不一致（non-iid）也是最常见的全局模型训练问题。\n而domain adaptation即是对于domain shift的一种解决方案。与其他流派（如迁移学习和微调）不同的点在于，domain adaptation保留了在source domain上的高精度， 并通过一些方法缩小表示空间（将数据从原始输入形式“如图像、文本”转换后得到的特征向量所在的抽象空间，在当前语境下，它是源域与目标域数据通过特征提取层映射后的空间）上Source与target模型特征的距离。\n在了解大方向后，文章给出了一些数学推导，我感觉有点难以理解，这里先记录一些定义和简单的公式：\n文章定义一个domain由两个部分组成：$D,f$ $D$（分布函数）:可以理解为“画风“或数据长什么样。比如源域$D_S$是高清图，目标域$D_T$是高斯模糊图。 $f$（标签函数）:是数据的标签，如在二分类问题中输入一张图$x$,它到底是猫还是狗（0或1）。 在 Domain Adaptation 中，我们通常假设物体的本质不变，只是画风变了。 也就是说，一张猫的图片，无论变多模糊，它依然是猫。也就是: $f_S \\approx f_T$, 但是 $D_s \\neq D_T$\n什么是误差？ 公式 ： $$ \\epsilon(h, f; \\mathcal{D}) = \\mathbf{E}_{\\mathbf{x} \\sim \\mathcal{D}}|h(\\mathbf{x}) - f(\\mathbf{x})| $$ $h$ (hypothesis，假设)：学习函数，就是我们训练的模型网络。 $f$：真实标签。 $\\epsilon$ (error)：误差。 这个公式大概是代码里写的 Loss 函数（或者说测试集上的错误率）。 它表示：在某种画风 $\\mathcal{D}$ 下，你的模型 $h$ 预测的结果，和真实答案 $f$ 之间相差多少。\n$\\epsilon_S(h)$：模型在源域（清晰图）上的错误率。 $\\epsilon_T(h)$：模型在目标域（模糊图）上的错误率。 我们手里只有源域的标签，所以我们只能把 $\\epsilon_S(h)$ 训练得很小。但我们真正想要的是，$\\epsilon_T(h)$ 也很小。\n关键公式：泛化误差上界 $$ \\epsilon_T(h) \\le \\epsilon_S(h) + d_1(\\mathcal{D}_S, \\mathcal{D}_T) + \\text{常量} $$我们把这个公式拆成三块来看： 你要想让目标域错误率 $\\epsilon_T(h)$ 很小（等号左边），你必须让等号右边的三项都很小：\n$\\epsilon_S(h)$：源域的错误率。 代码体现：将源域的Loss 降到最低。 $d_1(\\mathcal{D}_S, \\mathcal{D}_T)$：源域和目标域的距离（画风差异）。 所有DA重点关注的模块。既然清晰图和模糊图有代沟，我们就在网络里加个模块，把他们的特征“拉近”，让这个距离 $d_1$ 变小。 $\\min\\{...\\}$ 项：两个域标签函数的差异。 我们通常假设猫就是猫，不管清不清晰，所以这部分是个很小的常数，通常被忽略。 如何衡量距离？从$d_1$ 到 $\\mathcal{H}$-distance ： $\\mathcal{H}$-距离（公式4） $$ d_{\\mathcal{H}}(\\mathcal{D}_S, \\mathcal{D}_T) = 2 \\sup_{h \\in \\mathcal{H}} |\\Pr_{\\mathcal{D}_S}(I(h)) - \\Pr_{\\mathcal{D}_T}(I(h))| $$ 这个公式有些复杂，所以我让Gemini帮我生成了详细的解释：\n1. $I(h)$ 是什么？—— “VIP 准入名单” 文献里的原话：$I(h) = \\{\\mathbf{x} : h(\\mathbf{x}) = 1, \\mathbf{x} \\in \\mathcal{X}\\}$ 【破壁机翻译】： 假设你的模型 $h$ 是一个“保安”（二分类器），它的任务是判断来的人是不是 VIP（输出 1 是 VIP，输出 0 不是）。 那么，$I(h)$ 就是所有被这个保安放行（判定为 1）的人的集合。 💻 代码体现： 就相当于你在 PyTorch 里写了一句： vip_group = x[model(x) == 1] 2. $\\Pr$ 是什么？—— “放行概率（命中率）” 符号含义：$\\Pr$ 就是 Probability（概率）。底下的下标 $\\mathcal{D}_S$ 或 $\\mathcal{D}_T$ 代表你是在哪个数据集里抓人。 【破壁机翻译】： $\\Pr_{\\mathcal{D}_S}(I(h))$：你在源域（比如：白天拍的照片）里闭着眼睛瞎抓一张，这张照片被模型判为 1 的概率是多少？（假设是 30%） $\\Pr_{\\mathcal{D}_T}(I(h))$：你在目标域（比如：黑夜拍的照片）里闭着眼睛瞎抓一张，这张照片被模型判为 1 的概率是多少？（假设是 80%） $|\\Pr_{\\mathcal{D}_S} - \\Pr_{\\mathcal{D}_T}|$：取个绝对值，算出概率差（$|30\\% - 80\\%| = 50\\%$）。 这个“差值”说明了什么？ 如果同一个保安 $h$，对白天的人放行率是 30%，对黑夜的人放行率是 80%，差值很大，说明这个保安（模型）对环境变化非常敏感（歧视严重）。说明这两个数据集在保安眼里差距很大。 3. $\\sup$ 是什么？—— “找茬大王（找最大值）” 符号含义：sup 全称是 Supremum（上确界）。你可以简单粗暴地把它等同于 $\\max$（求最大值）。 底下的 $h \\in \\mathcal{H}$：$\\mathcal{H}$ 代表你的“模型家族”（比如所有参数组合下的 ResNet18 模型）。 【破壁机翻译】： 现在，你手下有一万个保安（代表所有可能的模型参数组合 $h$）。 sup 的意思就是：作为老板，你要对这一万个保安挨个进行测试，专门挑出那个“双标最严重”、“对源域和目标域态度差异最大”的保安。 把这个“最能找茬的保安”找出的概率差，定义为这两个数据集的最终距离。 💡 连起来理解：什么是 $\\mathcal{H}$-distance？ 现在我们把整个公式连起来读：\n两个数据集的 $\\mathcal{H}$ 距离，就是我们在所有的模型（$\\sup_{h \\in \\mathcal{H}}$）中，找到那个最能把这两个数据集区分开来的模型，它所表现出的“双标程度（概率差）”。\n为什么要这么定义？（高能预警，这联系到了深度学习的本质！）\n你回想一下公式 (2) 的 $d_1$ 距离，那个距离是站在“上帝视角”找不同，太苛刻了。 而公式 (4) 聪明就聪明在：它把距离和模型绑定在了一起。\n如果两个数据集（清晰图和模糊图），在物理像素上肯定不一样（上帝视角看距离很大）。 **但是！如果我们穷尽了所有的神经网络 $h$，连那个“最会找茬的神经网络（sup）”**都发现： “哎？我怎么觉得清晰图里有 30% 是猫，模糊图里也有 30% 是猫？我完全感觉不到差别啊！”\n那就意味着：在神经网络的视角下，这两个数据集的距离为 0！\n👨‍💻 最终落地：这在代码里怎么实现？（诞生了对抗域适应） 理论家写出了 $\\sup$（找最大差异），工程师怎么把它变成代码？\n答案是：训练一个“域分类器（Domain Discriminator）”。\n我们写一个网络，专门去预测图片是来自源域（0）还是目标域（1）。 我们在训练这个分类器时，让它的 Loss 尽可能小（也就是让它尽可能把两边区分开，这就对应了数学上的 $\\sup$ 操作！）。 同时，我们让前面的 Encoder 特征提取器拼命去骗它，让域分类器的 Loss 尽可能大。 这就是著名的 GRL（Gradient Reversal Layer，梯度反转层） 算法，也就是对抗域适应的核心思想。\n接下来文章进入了严谨的公式推导，我实在有些不想看，刚好Gemini最后提到了代码实现的问题，还挺有意思的，那么我们就继续沿着这条线探索。\n第二次阅读 阅读材料：与Gemini的对话。\n在第一次阅读最后，我们从数学公式的定义转向具体的代码，现在我们通过和Gemini对话来深入。\nDANN（Domain-Adversarial Training of Neural Networks） 根据上文的笔记，我们知道域适应的主要数据集分为两种：源域（source）和目标域（target）。 基于此，DANN网络将结构分为三个模块：\n特征提取器（Encoder）：主要用于提取两个域的特征。 标签分类器（Label Classifier）：基于提取的特征进行分类。 域分类器 (Domain Discriminator)：基于提取的特征判断输入的图片属于哪个域。 冲突来了：\n域分类器的目标是高效识别两个域（也就是算出了那个最大的 H-distance） 而Encoder的目标则是模糊两个域的特征让域分类器无法识别。 如何提高Encoder“欺骗”的效率？这就引出了GRL。\nGRL（Gradient Reversal Layer） 在正常的神经网络中，反向传播（Backward）传回来的梯度（Gradient）是向着loss减小的方向进行的。 在DANN中，域分类器遵循这个规则，但对与Encoder则不一样。\nEncoder目标是混淆两个域的区别，增大loss，而传统的反向传播会使loss减小，所以我们需要在loss前乘上一个负号， 于是，Encoder 拿着相反的梯度更新了参数，成功实现了让 Loss 最大化的目的。这就是GRL在网络中的作用。\n代码实现(Gemini代写)： 第一步：写出 GRL 的底层逻辑：\nimport torch import torch.nn as nn from torch.autograd import Function # 自定义一个带反向求导规则的层 class GradientReversalLayer(Function): @staticmethod def forward(ctx, x, alpha): # 顺向传播：记住这个 alpha (反转系数，通常是 1)，然后原封不动地返回 x ctx.alpha = alpha return x.view_as(x) @staticmethod def backward(ctx, grad_output): # 反向传播：叛徒出现了！把传回来的梯度乘上负的 alpha output = grad_output.neg() * ctx.alpha # 第二个返回值是 None，因为 forward 里的 alpha 不需要求导 return output, None # 把这个魔法封装成一个普通的 nn.Module，方便我们像搭积木一样使用 class GRL(nn.Module): def __init__(self, alpha=1.0): super(GRL, self).__init__() self.alpha = alpha def forward(self, x): return GradientReversalLayer.apply(x, self.alpha) 第二步：搭建 DANN 网络:\nclass DANN(nn.Module): def __init__(self): super(DANN, self).__init__() # 1. 伪造大师 (特征提取器 Shared Encoder) self.encoder = nn.Sequential( nn.Conv2d(3, 64, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2) ) # 2. 动物专家 (任务分类头 Task Head) self.label_classifier = nn.Sequential( nn.Linear(64 * 16 * 16, 128), nn.ReLU(), nn.Linear(128, 10) # 假设分 10 类动物 ) # 3. 海关警察 (域分类头 Domain Head) self.domain_classifier = nn.Sequential( nn.Linear(64 * 16 * 16, 64), nn.ReLU(), nn.Linear(64, 2) # 只分 2 类：0是源域(高清)，1是目标域(简笔画) ) # 加入叛徒翻译官！ self.grl = GRL(alpha=1.0) def forward(self, x): # 共同提取特征 features = self.encoder(x) features_flat = features.view(features.size(0), -1) # 路线 A：正常去做分类任务 class_preds = self.label_classifier(features_flat) # 路线 B：特征经过 GRL，再交给域分类器 reversed_features = self.grl(features_flat) domain_preds = self.domain_classifier(reversed_features) return class_preds, domain_preds 训练逻辑：\n# 假设我们有清晰图数据 (Source) 和 模糊图数据 (Target) criterion = nn.CrossEntropyLoss() for (img_S, label_S), (img_T, _) in zip(source_loader, target_loader): # 把源域打上域标签 0，目标域打上域标签 1 domain_label_S = torch.zeros(img_S.size(0), dtype=torch.long) domain_label_T = torch.ones(img_T.size(0), dtype=torch.long) # --------------------------- # 1. 训练源域 (Source) # --------------------------- class_preds_S, domain_preds_S = model(img_S) # 源域能算分类 Loss（因为有真实标签） loss_class = criterion(class_preds_S, label_S) # 源域算域 Loss（警察要认出这是 0） loss_domain_S = criterion(domain_preds_S, domain_label_S) # --------------------------- # 2. 训练目标域 (Target) # --------------------------- class_preds_T, domain_preds_T = model(img_T) # 注意：目标域没有类别标签，所以不能算分类 Loss！ # 目标域只能算域 Loss（警察要认出这是 1） loss_domain_T = criterion(domain_preds_T, domain_label_T) # --------------------------- # 3. 联合优化！ # --------------------------- # 总 Loss = 分类误差 + (警察认出源域的误差 + 警察认出目标域的误差) total_loss = loss_class + (loss_domain_S + loss_domain_T) optimizer.zero_grad() total_loss.backward() optimizer.step() 当 total_loss.backward() 执行时，魔法发生了：\n对于 domain_classifier（警察）：由于它在 GRL 之后，梯度正常流入，它会努力更新自己，让自己更聪明，把 Source 和 Target 分得更清。 对于 encoder（伪造大师）：当警察的梯度穿过 GRL 层传给它时，乘上了负号！于是 Encoder 努力更新自己，使得提取出来的特征，让警察猜不出来！ 训练到最后的结果： 警察彻底疯了，它看所有特征都觉得是 50% 源域，50% 目标域。 这就意味着，Encoder 成功剔除了“画风（清晰还是模糊）”这个无关特征，只保留了“物体的本质”。 此时，拿目标域（模糊图）去给 label_classifier 预测，准确率就会暴涨！\n反思 DANN作为一个经典网络，必然也会有它的短板：\n全局对齐导致的负迁移 (Negative Transfer)：DANN 只对齐了边缘分布 $P(X)$，忽略了条件分布 $P(Y|X)$。 矫枉过正，Encoder会丢弃大量信息来模糊源域和目标域，导致分类效果直线下滑。 数据需求量大，DANN需要源域和目标域的数据，但现实中往往缺乏目标域的数据。 因此，后来的论文基于这三点进行改进，衍生出了四大方向：\n带条件的对抗域适应 (CDAN, NIPS 2018) 伪标签技术 (Pseudo-labeling / Self-training) 熵最小化 (Entropy Minimization) 无源域适应 (Source-Free DA, SFDA) 这些方向基于三个问题点中的1～2个进行了深入研究和优化，具体深入就要通过读对应的论文了，入门笔记就到这里啦。\n",
+  "wordCount" : "624",
+  "inLanguage": "en",
+  "datePublished": "2026-03-06T09:29:23+08:00",
+  "dateModified": "2026-03-06T09:29:23+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/learning/domain_adaptation/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Arden's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Arden&#39;s blog (Alt + H)">
+                <img src="http://localhost:1313/images/logo.png" alt="" aria-label="logo"
+                    height="28">Arden&#39;s blog</a>
+            <div class="logo-switches">
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/learning/" title="Learning">
+                    <span>Learning</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/thinking/" title="Thinking">
+                    <span>Thinking</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/learning/">Learning</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Domain adaptation入门笔记
+    </h1>
+    <div class="post-meta"><span title='2026-03-06 09:29:23 +0800 CST'>March 6, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#第一次阅读">第一次阅读</a>
+      <ul>
+        <li><a href="#文章定义一个domain由两个部分组成">文章定义一个domain由两个部分组成：</a></li>
+        <li><a href="#什么是误差">什么是误差？</a></li>
+        <li><a href="#关键公式泛化误差上界">关键公式：泛化误差上界</a></li>
+        <li><a href="#如何衡量距离从-到--distance-">如何衡量距离？从 到 -distance ：</a>
+          <ul>
+            <li><a href="#1--是什么-vip-准入名单">1.  是什么？—— “VIP 准入名单”</a></li>
+            <li><a href="#2--是什么-放行概率命中率">2.  是什么？—— “放行概率（命中率）”</a></li>
+            <li><a href="#3--是什么-找茬大王找最大值">3.  是什么？—— “找茬大王（找最大值）”</a></li>
+            <li><a href="#-连起来理解什么是--distance">💡 连起来理解：什么是 -distance？</a></li>
+            <li><a href="#-最终落地这在代码里怎么实现诞生了对抗域适应">👨‍💻 最终落地：这在代码里怎么实现？（诞生了对抗域适应）</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#第二次阅读">第二次阅读</a>
+      <ul>
+        <li><a href="#danndomain-adversarial-training-of-neural-networks">DANN（Domain-Adversarial Training of Neural Networks）</a></li>
+        <li><a href="#grlgradient-reversal-layer">GRL（Gradient Reversal Layer）</a></li>
+        <li><a href="#代码实现gemini代写">代码实现(Gemini代写)：</a></li>
+      </ul>
+    </li>
+    <li><a href="#反思">反思</a></li>
+  </ul>
+</nav>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><blockquote>
+<ul>
+<li>本文为我入门域适应的一些随手记，按照时间顺序进行排序，包含了一些思考和反馈。</li>
+<li>摘录我阅读的文章原文部分使用<em>斜体</em>，关于思考总结的部分使用正常字体。</li>
+</ul></blockquote>
+<h2 id="第一次阅读">第一次阅读<a hidden class="anchor" aria-hidden="true" href="#第一次阅读">#</a></h2>
+<p>阅读材料：<a href="https://zhuanlan.zhihu.com/p/439560708">迁移学习入门之一：域适应的背景，理论与方法</a></p>
+<p>在机器学习中，Domain Shift是一个很常见的问题，即在训练数据与真实场景来自于不同的分布。
+<em>如在医学深度学习模型中，用A医院的数据(Source Domain)训练的模型往往在B医院(Target Domain)预测不准。在摄像头行人重识别(Re-ID)问题中，多个摄像头捕捉的场景分布完全不一致，导致单个行人在多个摄像头中的&quot;重识别&quot;变得较为困难。在联邦学习中，不同客户的数据分布不一致（non-iid）也是最常见的全局模型训练问题。</em></p>
+<p>而domain adaptation即是对于domain shift的一种解决方案。与其他流派（如迁移学习和微调）不同的点在于，domain adaptation保留了在source domain上的高精度，
+并通过一些方法缩小表示空间（将数据从原始输入形式“如图像、文本”转换后得到的特征向量所在的抽象空间，在当前语境下，它是源域与目标域数据通过特征提取层映射后的空间）上Source与target模型特征的距离。</p>
+<p><img alt="具体图像" loading="lazy" src="/learning/domain_adaptation/v2-551104354ea5639291e857744282a7d4_1440w.png"></p>
+<p>在了解大方向后，文章给出了一些数学推导，我感觉有点难以理解，这里先记录一些定义和简单的公式：</p>
+<ul>
+<li>
+<h3 id="文章定义一个domain由两个部分组成">文章定义一个domain由两个部分组成：$D,f$<a hidden class="anchor" aria-hidden="true" href="#文章定义一个domain由两个部分组成">#</a></h3>
+<ol>
+<li><strong>$D$（分布函数）</strong>:可以理解为“画风“或数据长什么样。比如源域$D_S$是高清图，目标域$D_T$是高斯模糊图。</li>
+<li><strong>$f$（标签函数）</strong>:是数据的标签，如在二分类问题中输入一张图$x$,它到底是猫还是狗（0或1）。</li>
+</ol>
+<p>在 Domain Adaptation 中，我们通常假设<strong>物体的本质不变，只是画风变了</strong>。
+也就是说，一张猫的图片，无论变多模糊，它依然是猫。也就是:
+$f_S \approx f_T$, 但是 $D_s \neq D_T$</p>
+</li>
+<li>
+<h3 id="什么是误差">什么是误差？<a hidden class="anchor" aria-hidden="true" href="#什么是误差">#</a></h3>
+<p>公式 ：
+</p>
+$$ \epsilon(h, f; \mathcal{D}) = \mathbf{E}_{\mathbf{x} \sim \mathcal{D}}|h(\mathbf{x}) - f(\mathbf{x})| $$<ul>
+<li><strong>$h$ (hypothesis，假设)</strong>：学习函数，就是我们训练的模型网络。</li>
+<li><strong>$f$</strong>：真实标签。</li>
+<li><strong>$\epsilon$ (error)</strong>：误差。</li>
+</ul>
+<p>这个公式大概是代码里写的 <strong>Loss 函数（或者说测试集上的错误率）</strong>。
+它表示：在某种画风 $\mathcal{D}$ 下，你的模型 $h$ 预测的结果，和真实答案 $f$ 之间相差多少。</p>
+<ul>
+<li>$\epsilon_S(h)$：模型在源域（清晰图）上的错误率。</li>
+<li>$\epsilon_T(h)$：模型在目标域（模糊图）上的错误率。</li>
+</ul>
+<blockquote>
+<p>我们手里只有源域的标签，所以我们只能把 $\epsilon_S(h)$ 训练得很小。但我们<strong>真正想要的是，$\epsilon_T(h)$ 也很小</strong>。</p></blockquote>
+</li>
+<li>
+<h3 id="关键公式泛化误差上界">关键公式：泛化误差上界<a hidden class="anchor" aria-hidden="true" href="#关键公式泛化误差上界">#</a></h3>
+$$ \epsilon_T(h) \le \epsilon_S(h) + d_1(\mathcal{D}_S, \mathcal{D}_T) + \text{常量} $$<p>我们把这个公式拆成三块来看：
+你要想让<strong>目标域错误率 $\epsilon_T(h)$ 很小</strong>（等号左边），你必须让等号右边的三项都很小：</p>
+<ol>
+<li><strong>$\epsilon_S(h)$</strong>：源域的错误率。
+<ul>
+<li><em>代码体现</em>：将源域的Loss 降到最低。</li>
+</ul>
+</li>
+<li><strong>$d_1(\mathcal{D}_S, \mathcal{D}_T)$</strong>：源域和目标域的<strong>距离（画风差异）</strong>。
+<ul>
+<li>所有DA重点关注的模块。既然清晰图和模糊图有代沟，我们就在网络里加个模块，把他们的特征“拉近”，让这个距离 $d_1$ 变小。</li>
+</ul>
+</li>
+<li><strong>$\min\{...\}$ 项</strong>：两个域标签函数的差异。
+<ul>
+<li>我们通常假设猫就是猫，不管清不清晰，所以这部分是个很小的常数，通常被忽略。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<h3 id="如何衡量距离从-到--distance-">如何衡量距离？从$d_1$ 到 $\mathcal{H}$-distance ：<a hidden class="anchor" aria-hidden="true" href="#如何衡量距离从-到--distance-">#</a></h3>
+<ul>
+<li>
+<p><strong>$\mathcal{H}$-距离（公式4）</strong>
+</p>
+$$ d_{\mathcal{H}}(\mathcal{D}_S, \mathcal{D}_T) = 2 \sup_{h \in \mathcal{H}} |\Pr_{\mathcal{D}_S}(I(h)) - \Pr_{\mathcal{D}_T}(I(h))| $$<blockquote>
+<p>这个公式有些复杂，所以我让Gemini帮我生成了详细的解释：</p></blockquote>
+<h4 id="1--是什么-vip-准入名单">1. $I(h)$ 是什么？—— “VIP 准入名单”<a hidden class="anchor" aria-hidden="true" href="#1--是什么-vip-准入名单">#</a></h4>
+<ul>
+<li><strong>文献里的原话</strong>：$I(h) = \{\mathbf{x} : h(\mathbf{x}) = 1, \mathbf{x} \in \mathcal{X}\}$</li>
+<li><strong>【破壁机翻译】</strong>：
+假设你的模型 $h$ 是一个“保安”（二分类器），它的任务是判断来的人是不是 VIP（输出 1 是 VIP，输出 0 不是）。
+那么，$I(h)$ 就是<strong>所有被这个保安放行（判定为 1）的人的集合</strong>。</li>
+<li><strong>💻 代码体现</strong>：
+就相当于你在 PyTorch 里写了一句：
+<code>vip_group = x[model(x) == 1]</code></li>
+</ul>
+<h4 id="2--是什么-放行概率命中率">2. $\Pr$ 是什么？—— “放行概率（命中率）”<a hidden class="anchor" aria-hidden="true" href="#2--是什么-放行概率命中率">#</a></h4>
+<ul>
+<li><strong>符号含义</strong>：$\Pr$ 就是 Probability（概率）。底下的下标 $\mathcal{D}_S$ 或 $\mathcal{D}_T$ 代表你是在哪个数据集里抓人。</li>
+<li><strong>【破壁机翻译】</strong>：
+<ul>
+<li>$\Pr_{\mathcal{D}_S}(I(h))$：你在<strong>源域（比如：白天拍的照片）<strong>里闭着眼睛瞎抓一张，这张照片</strong>被模型判为 1</strong> 的概率是多少？（假设是 30%）</li>
+<li>$\Pr_{\mathcal{D}_T}(I(h))$：你在<strong>目标域（比如：黑夜拍的照片）<strong>里闭着眼睛瞎抓一张，这张照片</strong>被模型判为 1</strong> 的概率是多少？（假设是 80%）</li>
+<li>$|\Pr_{\mathcal{D}_S} - \Pr_{\mathcal{D}_T}|$：取个绝对值，算出概率差（$|30\% - 80\%| = 50\%$）。</li>
+</ul>
+</li>
+<li><strong>这个“差值”说明了什么？</strong>
+如果同一个保安 $h$，对白天的人放行率是 30%，对黑夜的人放行率是 80%，差值很大，说明<strong>这个保安（模型）对环境变化非常敏感（歧视严重）</strong>。说明这两个数据集在保安眼里<strong>差距很大</strong>。</li>
+</ul>
+<h4 id="3--是什么-找茬大王找最大值">3. $\sup$ 是什么？—— “找茬大王（找最大值）”<a hidden class="anchor" aria-hidden="true" href="#3--是什么-找茬大王找最大值">#</a></h4>
+<ul>
+<li><strong>符号含义</strong>：<code>sup</code> 全称是 Supremum（上确界）。你可以简单粗暴地把它等同于 <strong>$\max$（求最大值）</strong>。</li>
+<li><strong>底下的 $h \in \mathcal{H}$</strong>：$\mathcal{H}$ 代表你的“模型家族”（比如所有参数组合下的 ResNet18 模型）。</li>
+<li><strong>【破壁机翻译】</strong>：
+现在，你手下有一万个保安（代表所有可能的模型参数组合 $h$）。
+<code>sup</code> 的意思就是：作为老板，你要对这一万个保安挨个进行测试，<strong>专门挑出那个“双标最严重”、“对源域和目标域态度差异最大”的保安</strong>。
+把这个“最能找茬的保安”找出的概率差，定义为这两个数据集的最终距离。</li>
+</ul>
+<hr>
+<h4 id="-连起来理解什么是--distance">💡 连起来理解：什么是 $\mathcal{H}$-distance？<a hidden class="anchor" aria-hidden="true" href="#-连起来理解什么是--distance">#</a></h4>
+<p>现在我们把整个公式连起来读：</p>
+<blockquote>
+<p><strong>两个数据集的 $\mathcal{H}$ 距离，就是我们在所有的模型（$\sup_{h \in \mathcal{H}}$）中，找到那个最能把这两个数据集区分开来的模型，它所表现出的“双标程度（概率差）”。</strong></p></blockquote>
+<p><strong>为什么要这么定义？（高能预警，这联系到了深度学习的本质！）</strong></p>
+<p>你回想一下公式 (2) 的 $d_1$ 距离，那个距离是站在“上帝视角”找不同，太苛刻了。
+而公式 (4) 聪明就聪明在：它<strong>把距离和模型绑定在了一起</strong>。</p>
+<p>如果两个数据集（清晰图和模糊图），在物理像素上肯定不一样（上帝视角看距离很大）。
+**但是！<strong>如果我们穷尽了所有的神经网络 $h$，连那个</strong>“最会找茬的神经网络（sup）”**都发现：
+“哎？我怎么觉得清晰图里有 30% 是猫，模糊图里也有 30% 是猫？我完全感觉不到差别啊！”</p>
+<p>那就意味着：<strong>在神经网络的视角下，这两个数据集的距离为 0！</strong></p>
+<h4 id="-最终落地这在代码里怎么实现诞生了对抗域适应">👨‍💻 最终落地：这在代码里怎么实现？（诞生了对抗域适应）<a hidden class="anchor" aria-hidden="true" href="#-最终落地这在代码里怎么实现诞生了对抗域适应">#</a></h4>
+<p>理论家写出了 $\sup$（找最大差异），工程师怎么把它变成代码？</p>
+<p><strong>答案是：训练一个“域分类器（Domain Discriminator）”</strong>。</p>
+<ol>
+<li>我们写一个网络，专门去预测图片是来自源域（0）还是目标域（1）。</li>
+<li>我们在训练这个分类器时，让它的 Loss 尽可能<strong>小</strong>（也就是让它尽可能把两边区分开，这就对应了数学上的 <strong>$\sup$</strong> 操作！）。</li>
+<li>同时，我们让前面的 <strong>Encoder</strong> 特征提取器拼命去骗它，让域分类器的 Loss 尽可能<strong>大</strong>。</li>
+</ol>
+<p><strong>这就是著名的 GRL（Gradient Reversal Layer，梯度反转层） 算法，也就是对抗域适应的核心思想。</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>接下来文章进入了严谨的公式推导，我实在有些不想看，刚好Gemini最后提到了代码实现的问题，还挺有意思的，那么我们就继续沿着这条线探索。</p></blockquote>
+<h2 id="第二次阅读">第二次阅读<a hidden class="anchor" aria-hidden="true" href="#第二次阅读">#</a></h2>
+<p>阅读材料：与Gemini的对话。</p>
+<p>在第一次阅读最后，我们从数学公式的定义转向具体的代码，现在我们通过和Gemini对话来深入。</p>
+<h3 id="danndomain-adversarial-training-of-neural-networks">DANN（Domain-Adversarial Training of Neural Networks）<a hidden class="anchor" aria-hidden="true" href="#danndomain-adversarial-training-of-neural-networks">#</a></h3>
+<p>根据上文的笔记，我们知道域适应的主要数据集分为两种：源域（source）和目标域（target）。
+基于此，DANN网络将结构分为三个模块：</p>
+<ol>
+<li><strong>特征提取器（Encoder）</strong>：主要用于提取两个域的特征。</li>
+<li><strong>标签分类器（Label Classifier）</strong>：基于提取的特征进行分类。</li>
+<li><strong>域分类器 (Domain Discriminator)</strong>：基于提取的特征判断输入的图片属于哪个域。</li>
+</ol>
+<p><strong>冲突来了</strong>：</p>
+<ul>
+<li>域分类器的目标是高效识别两个域（也就是算出了那个最大的 H-distance）</li>
+<li>而Encoder的目标则是模糊两个域的特征让域分类器无法识别。</li>
+</ul>
+<p>如何提高Encoder“欺骗”的效率？这就引出了<strong>GRL</strong>。</p>
+<h3 id="grlgradient-reversal-layer">GRL（Gradient Reversal Layer）<a hidden class="anchor" aria-hidden="true" href="#grlgradient-reversal-layer">#</a></h3>
+<p>在正常的神经网络中，反向传播（Backward）传回来的梯度（Gradient）是向着loss减小的方向进行的。
+在<strong>DANN</strong>中，域分类器遵循这个规则，但对与Encoder则不一样。</p>
+<p>Encoder目标是混淆两个域的区别，增大loss，而传统的反向传播会使loss减小，所以我们需要在loss前<strong>乘上一个负号</strong>，
+于是，Encoder 拿着相反的梯度更新了参数，成功实现了<strong>让 Loss 最大化</strong>的目的。这就是GRL在网络中的作用。</p>
+<h3 id="代码实现gemini代写">代码实现(Gemini代写)：<a hidden class="anchor" aria-hidden="true" href="#代码实现gemini代写">#</a></h3>
+<p><strong>第一步：写出 GRL 的底层逻辑</strong>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Function</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 自定义一个带反向求导规则的层</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GradientReversalLayer</span><span class="p">(</span><span class="n">Function</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="nd">@staticmethod</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 顺向传播：记住这个 alpha (反转系数，通常是 1)，然后原封不动地返回 x</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ctx</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">view_as</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@staticmethod</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">grad_output</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 反向传播：叛徒出现了！把传回来的梯度乘上负的 alpha</span>
+</span></span><span class="line"><span class="cl">        <span class="n">output</span> <span class="o">=</span> <span class="n">grad_output</span><span class="o">.</span><span class="n">neg</span><span class="p">()</span> <span class="o">*</span> <span class="n">ctx</span><span class="o">.</span><span class="n">alpha</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 第二个返回值是 None，因为 forward 里的 alpha 不需要求导</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 把这个魔法封装成一个普通的 nn.Module，方便我们像搭积木一样使用</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GRL</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">(</span><span class="n">GRL</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">GradientReversalLayer</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>
+</span></span></code></pre></div><p><strong>第二步：搭建 DANN 网络</strong>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">DANN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">(</span><span class="n">DANN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 1. 伪造大师 (特征提取器 Shared Encoder)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 2. 动物专家 (任务分类头 Task Head)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">label_classifier</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span> <span class="o">*</span> <span class="mi">16</span> <span class="o">*</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># 假设分 10 类动物</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 3. 海关警察 (域分类头 Domain Head)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">domain_classifier</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span> <span class="o">*</span> <span class="mi">16</span> <span class="o">*</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># 只分 2 类：0是源域(高清)，1是目标域(简笔画)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 加入叛徒翻译官！</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">grl</span> <span class="o">=</span> <span class="n">GRL</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 共同提取特征</span>
+</span></span><span class="line"><span class="cl">        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">features_flat</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 路线 A：正常去做分类任务</span>
+</span></span><span class="line"><span class="cl">        <span class="n">class_preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_classifier</span><span class="p">(</span><span class="n">features_flat</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 路线 B：特征经过 GRL，再交给域分类器</span>
+</span></span><span class="line"><span class="cl">        <span class="n">reversed_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grl</span><span class="p">(</span><span class="n">features_flat</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">domain_preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain_classifier</span><span class="p">(</span><span class="n">reversed_features</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">class_preds</span><span class="p">,</span> <span class="n">domain_preds</span>
+</span></span></code></pre></div><p><strong>训练逻辑</strong>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 假设我们有清晰图数据 (Source) 和 模糊图数据 (Target)</span>
+</span></span><span class="line"><span class="cl"><span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="n">img_S</span><span class="p">,</span> <span class="n">label_S</span><span class="p">),</span> <span class="p">(</span><span class="n">img_T</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">source_loader</span><span class="p">,</span> <span class="n">target_loader</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 把源域打上域标签 0，目标域打上域标签 1</span>
+</span></span><span class="line"><span class="cl">    <span class="n">domain_label_S</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img_S</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">domain_label_T</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">img_T</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># ---------------------------</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 1. 训练源域 (Source)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ---------------------------</span>
+</span></span><span class="line"><span class="cl">    <span class="n">class_preds_S</span><span class="p">,</span> <span class="n">domain_preds_S</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">img_S</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 源域能算分类 Loss（因为有真实标签）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">loss_class</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">class_preds_S</span><span class="p">,</span> <span class="n">label_S</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">    <span class="c1"># 源域算域 Loss（警察要认出这是 0）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">loss_domain_S</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">domain_preds_S</span><span class="p">,</span> <span class="n">domain_label_S</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># ---------------------------</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 2. 训练目标域 (Target)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ---------------------------</span>
+</span></span><span class="line"><span class="cl">    <span class="n">class_preds_T</span><span class="p">,</span> <span class="n">domain_preds_T</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">img_T</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 注意：目标域没有类别标签，所以不能算分类 Loss！</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 目标域只能算域 Loss（警察要认出这是 1）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">loss_domain_T</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">domain_preds_T</span><span class="p">,</span> <span class="n">domain_label_T</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># ---------------------------</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 3. 联合优化！</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ---------------------------</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 总 Loss = 分类误差 + (警察认出源域的误差 + 警察认出目标域的误差)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">total_loss</span> <span class="o">=</span> <span class="n">loss_class</span> <span class="o">+</span> <span class="p">(</span><span class="n">loss_domain_S</span> <span class="o">+</span> <span class="n">loss_domain_T</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">total_loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</span></span></code></pre></div><p>当 <code>total_loss.backward()</code> 执行时，魔法发生了：</p>
+<ol>
+<li><strong>对于 <code>domain_classifier</code>（警察）</strong>：由于它在 GRL 之后，梯度正常流入，它会努力更新自己，让自己更聪明，把 Source 和 Target 分得更清。</li>
+<li><strong>对于 encoder（伪造大师）</strong>：当警察的梯度穿过 GRL 层传给它时，<strong>乘上了负号</strong>！于是 Encoder 努力更新自己，使得提取出来的特征，让警察<strong>猜不出来</strong>！</li>
+</ol>
+<p>训练到最后的结果：
+警察彻底疯了，它看所有特征都觉得是 50% 源域，50% 目标域。
+这就意味着，Encoder 成功剔除了“画风（清晰还是模糊）”这个无关特征，只保留了“物体的本质”。
+此时，拿目标域（模糊图）去给 label_classifier 预测，准确率就会暴涨！</p>
+<h2 id="反思">反思<a hidden class="anchor" aria-hidden="true" href="#反思">#</a></h2>
+<p>DANN作为一个经典网络，必然也会有它的短板：</p>
+<ul>
+<li>全局对齐导致的负迁移 (Negative Transfer)：DANN 只对齐了<strong>边缘分布 $P(X)$</strong>，忽略了<strong>条件分布 $P(Y|X)$</strong>。</li>
+<li>矫枉过正，Encoder会丢弃大量信息来模糊源域和目标域，导致分类效果直线下滑。</li>
+<li>数据需求量大，DANN需要源域和目标域的数据，但现实中往往缺乏目标域的数据。</li>
+</ul>
+<p>因此，后来的论文基于这三点进行改进，衍生出了四大方向：</p>
+<ul>
+<li>带条件的对抗域适应 (CDAN, NIPS 2018)</li>
+<li>伪标签技术 (Pseudo-labeling / Self-training)</li>
+<li>熵最小化 (Entropy Minimization)</li>
+<li>无源域适应 (Source-Free DA, SFDA)</li>
+</ul>
+<blockquote>
+<p>这些方向基于三个问题点中的1～2个进行了深入研究和优化，具体深入就要通过读对应的论文了，入门笔记就到这里啦。</p></blockquote>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/%E5%9F%9F%E9%80%82%E5%BA%94/">域适应</a></li>
+      <li><a href="http://localhost:1313/tags/%E7%AC%94%E8%AE%B0/">笔记</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <div class="footer-columns">
+        <div class="footer-col footer-col-brand">
+            <span class="footer-brand">Arden&#39;s blog</span>
+            <p class="footer-tagline">Robotics · AI · Engineering</p>
+        </div>
+        <div class="footer-col footer-col-nav">
+            <span class="footer-col-title">NAVIGATE</span>
+            <ul>
+                <li><a href="http://localhost:1313/learning/">Learning</a></li>
+                <li><a href="http://localhost:1313/projects/">Projects</a></li>
+                <li><a href="http://localhost:1313/thinking/">Thinking</a></li>
+                <li><a href="http://localhost:1313/about/">About</a></li>
+            </ul>
+        </div>
+        <div class="footer-col footer-col-connect">
+            <span class="footer-col-title">CONNECT</span>
+            <ul>
+                <li><a href="https://github.com/tianye-J" target="_blank" rel="noopener noreferrer">Github</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+            <span>&copy; 2026 Arden&#39;s blog</span>
+        <span class="footer-quote"><em>南方，某扇房门，某个街角</em> — 博尔赫斯</span>
+        <span class="footer-powered">
+            Powered by
+            <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+            <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+        </span>
+    </div>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a><script>
+(function () {
+  'use strict';
+
+   
+  var mq = window.matchMedia('(min-width: 1440px)');
+  var postContent = document.querySelector('.post-content');
+  if (!postContent) return;
+
+  var allH = postContent.querySelectorAll('h2[id], h3[id], h4[id]');
+  if (allH.length < 2) return;
+
+   
+  var tl = document.createElement('nav');
+  tl.className = 'toc-timeline';
+  tl.setAttribute('aria-label', 'Table of Contents');
+
+  var area = document.createElement('div');
+  area.className = 'toc-timeline-area';
+
+  var line = document.createElement('div');
+  line.className = 'toc-timeline-line';
+  area.appendChild(line);
+
+  var prog = document.createElement('div');
+  prog.className = 'toc-timeline-progress';
+  area.appendChild(prog);
+
+   
+  function getContentMetrics() {
+    var r = postContent.getBoundingClientRect();
+    return { top: r.top + window.scrollY, height: postContent.offsetHeight, right: r.right };
+  }
+
+   
+  function headingText(h) {
+    var clone = h.cloneNode(true);
+    var anchor = clone.querySelector('.anchor');
+    if (anchor) anchor.remove();
+    return clone.textContent.trim();
+  }
+
+  var nodes  = [];
+  var groups = [];    
+  var cm = getContentMetrics();
+  var MIN_GAP = 28;  
+
+  allH.forEach(function (h) {
+    var hTop = h.getBoundingClientRect().top + window.scrollY;
+    var rel  = (hTop - cm.top) / cm.height;
+    rel = Math.max(0, Math.min(1, rel));
+
+    var isSub = h.tagName !== 'H2';
+
+    var node = document.createElement('a');
+    node.className = 'toc-timeline-node';
+    if (isSub) {
+      node.classList.add('sub');
+      node.classList.add('toc-sub-collapsed'); 
+    }
+    node.href = '#' + h.id;
+    node.style.top = (rel * 100) + '%';
+
+    var dot = document.createElement('span');
+    dot.className = 'toc-timeline-dot';
+
+    var label = document.createElement('span');
+    label.className = 'toc-timeline-label';
+    label.textContent = headingText(h);
+
+     
+    node.appendChild(dot);
+    node.appendChild(label);
+    area.appendChild(node);
+
+    node.addEventListener('click', function (e) {
+      e.preventDefault();
+      h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    var nodeIdx = nodes.length;
+    nodes.push({ el: h, node: node, rel: rel, isSub: isSub, groupIdx: -1, displayTop: rel });
+
+     
+    if (!isSub) {
+      groups.push({ h2Idx: nodeIdx, children: [] });
+      nodes[nodeIdx].groupIdx = groups.length - 1;
+    } else if (groups.length > 0) {
+      groups[groups.length - 1].children.push(nodeIdx);
+      nodes[nodeIdx].groupIdx = groups.length - 1;
+    }
+  });
+
+  tl.appendChild(area);
+  document.body.appendChild(tl);
+
+   
+  var activeGroupIdx = -1;
+  var hoverGroupIdx  = -1;
+
+  function updateGroupVisibility() {
+    groups.forEach(function (g, gIdx) {
+      var expanded = (gIdx === activeGroupIdx || gIdx === hoverGroupIdx);
+      g.children.forEach(function (childIdx) {
+        if (expanded) {
+          nodes[childIdx].node.classList.remove('toc-sub-collapsed');
+        } else {
+          nodes[childIdx].node.classList.add('toc-sub-collapsed');
+        }
+      });
+    });
+  }
+
+   
+  groups.forEach(function (g, gIdx) {
+    var h2El = nodes[g.h2Idx].node;
+    h2El.addEventListener('mouseenter', function () {
+      hoverGroupIdx = gIdx;
+      updateGroupVisibility();
+      resolveCollisions();
+    });
+    h2El.addEventListener('mouseleave', function () {
+      if (hoverGroupIdx === gIdx) {
+        hoverGroupIdx = -1;
+        updateGroupVisibility();
+        resolveCollisions();
+      }
+    });
+  });
+
+   
+  function resolveCollisions() {
+    var areaH = area.offsetHeight;
+    if (areaH <= 0) return;
+
+     
+    var vis = [];
+    nodes.forEach(function (n, idx) {
+      if (n.isSub && n.node.classList.contains('toc-sub-collapsed')) return;
+      vis.push({ idx: idx, topPx: n.displayTop * areaH });
+    });
+    if (vis.length < 2) return;
+    vis.sort(function (a, b) { return a.topPx - b.topPx; });
+
+     
+    for (var i = 1; i < vis.length; i++) {
+      if (vis[i].topPx - vis[i - 1].topPx < MIN_GAP) {
+        vis[i].topPx = vis[i - 1].topPx + MIN_GAP;
+      }
+    }
+
+     
+    var maxPx = areaH;
+    for (var i = vis.length - 1; i >= 0; i--) {
+      if (vis[i].topPx > maxPx) vis[i].topPx = maxPx;
+      maxPx = vis[i].topPx - MIN_GAP;
+    }
+
+     
+    vis.forEach(function (v) {
+      nodes[v.idx].node.style.top = (v.topPx / areaH * 100) + '%';
+    });
+  }
+
+   
+  function updateTimelinePosition() {
+    var rect = postContent.getBoundingClientRect();
+    tl.style.left = (rect.right + 24) + 'px';
+  }
+
+   
+  var isScrolled = false;
+  var activeIdx  = -1;
+
+  function onScroll() {
+    var sy = window.scrollY;
+    var vh = window.innerHeight;
+    var c  = getContentMetrics();
+    var cBottom = c.top + c.height;
+
+     
+    var visible = sy + vh > c.top + 60 && sy < cBottom - 60;
+    tl.classList.toggle('visible', visible);
+    if (!visible) return;
+
+     
+    var sliderH = Math.min((vh / c.height) / 3, 0.5);
+    var halfS   = sliderH / 2;
+
+     
+    nodes.forEach(function (n) {
+      var hTop = n.el.getBoundingClientRect().top + sy;
+      n.rel = Math.max(0, Math.min(1, (hTop - c.top) / c.height));
+      n.displayTop = halfS + n.rel * (1 - sliderH);
+      n.node.style.top = (n.displayTop * 100) + '%';
+    });
+
+     
+    var nowScrolled = sy > c.top + 120;
+    if (nowScrolled !== isScrolled) {
+      isScrolled = nowScrolled;
+      tl.classList.toggle('scrolled', isScrolled);
+    }
+
+     
+    var newIdx = -1;
+    for (var i = nodes.length - 1; i >= 0; i--) {
+      if (nodes[i].el.getBoundingClientRect().top <= vh * 0.25) {
+        newIdx = i;
+        break;
+      }
+    }
+    if (newIdx !== activeIdx) {
+      if (activeIdx >= 0) nodes[activeIdx].node.classList.remove('active');
+      if (newIdx >= 0)     nodes[newIdx].node.classList.add('active');
+      activeIdx = newIdx;
+    }
+
+     
+    var newGroupIdx = -1;
+    if (newIdx >= 0) newGroupIdx = nodes[newIdx].groupIdx;
+    if (newGroupIdx !== activeGroupIdx) {
+      activeGroupIdx = newGroupIdx;
+      updateGroupVisibility();
+    }
+
+     
+    resolveCollisions();
+
+     
+    var sliderCenter;
+    if (newIdx < 0) {
+      sliderCenter = halfS + nodes[0].rel * (1 - sliderH);
+    } else {
+      var curDisplay = halfS + nodes[newIdx].rel * (1 - sliderH);
+      var nextDisplay;
+      if (newIdx + 1 < nodes.length) {
+        nextDisplay = halfS + nodes[newIdx + 1].rel * (1 - sliderH);
+      } else {
+        nextDisplay = 1 - halfS;
+      }
+      var curAbs  = nodes[newIdx].el.getBoundingClientRect().top + sy;
+      var nextAbs = (newIdx + 1 < nodes.length)
+        ? nodes[newIdx + 1].el.getBoundingClientRect().top + sy
+        : c.top + c.height;
+      var sectionLen  = nextAbs - curAbs;
+      var scrolledPast = Math.max(0, sy - curAbs);
+      var t = sectionLen > 0 ? Math.max(0, Math.min(1, scrolledPast / sectionLen)) : 0;
+      sliderCenter = curDisplay + t * (nextDisplay - curDisplay);
+    }
+    var sliderTop = sliderCenter - halfS;
+    sliderTop = Math.max(0, Math.min(1 - sliderH, sliderTop));
+    prog.style.top    = (sliderTop * 100) + '%';
+    prog.style.height = (sliderH * 100) + '%';
+  }
+
+   
+  function checkMQ() {
+    tl.style.display = mq.matches ? '' : 'none';
+    if (mq.matches) updateTimelinePosition();
+  }
+  mq.addEventListener('change', checkMQ);
+  checkMQ();
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () {
+    updateTimelinePosition();
+    onScroll();
+  });
+
+   
+  requestAnimationFrame(function () {
+    updateTimelinePosition();
+    onScroll();
+  });
+})();
+</script>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+</body>
+
+</html>

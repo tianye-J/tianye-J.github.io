@@ -2,17 +2,69 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Arden&#39;s blog</title>
-    <link>http://localhost:56153/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on Arden&#39;s blog</description>
     <generator>Hugo -- 0.147.4</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 05 Mar 2026 16:55:01 +0800</lastBuildDate>
-    <atom:link href="http://localhost:56153/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Mar 2026 09:29:23 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Domain adaptation入门笔记</title>
+      <link>http://localhost:1313/learning/domain_adaptation/</link>
+      <pubDate>Fri, 06 Mar 2026 09:29:23 +0800</pubDate>
+      <guid>http://localhost:1313/learning/domain_adaptation/</guid>
+      <description>&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;本文为我入门域适应的一些随手记，按照时间顺序进行排序，包含了一些思考和反馈。&lt;/li&gt;
+&lt;li&gt;摘录我阅读的文章原文部分使用&lt;em&gt;斜体&lt;/em&gt;，关于思考总结的部分使用正常字体。&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;h2 id=&#34;第一次阅读&#34;&gt;第一次阅读&lt;/h2&gt;
+&lt;p&gt;阅读材料：&lt;a href=&#34;https://zhuanlan.zhihu.com/p/439560708&#34;&gt;迁移学习入门之一：域适应的背景，理论与方法&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在机器学习中，Domain Shift是一个很常见的问题，即在训练数据与真实场景来自于不同的分布。
+&lt;em&gt;如在医学深度学习模型中，用A医院的数据(Source Domain)训练的模型往往在B医院(Target Domain)预测不准。在摄像头行人重识别(Re-ID)问题中，多个摄像头捕捉的场景分布完全不一致，导致单个行人在多个摄像头中的&amp;quot;重识别&amp;quot;变得较为困难。在联邦学习中，不同客户的数据分布不一致（non-iid）也是最常见的全局模型训练问题。&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;而domain adaptation即是对于domain shift的一种解决方案。与其他流派（如迁移学习和微调）不同的点在于，domain adaptation保留了在source domain上的高精度，
+并通过一些方法缩小表示空间（将数据从原始输入形式“如图像、文本”转换后得到的特征向量所在的抽象空间，在当前语境下，它是源域与目标域数据通过特征提取层映射后的空间）上Source与target模型特征的距离。&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;具体图像&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/learning/domain_adaptation/v2-551104354ea5639291e857744282a7d4_1440w.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在了解大方向后，文章给出了一些数学推导，我感觉有点难以理解，这里先记录一些定义和简单的公式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;h3 id=&#34;文章定义一个domain由两个部分组成&#34;&gt;文章定义一个domain由两个部分组成：$D,f$&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;$D$（分布函数）&lt;/strong&gt;:可以理解为“画风“或数据长什么样。比如源域$D_S$是高清图，目标域$D_T$是高斯模糊图。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;$f$（标签函数）&lt;/strong&gt;:是数据的标签，如在二分类问题中输入一张图$x$,它到底是猫还是狗（0或1）。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在 Domain Adaptation 中，我们通常假设&lt;strong&gt;物体的本质不变，只是画风变了&lt;/strong&gt;。
+也就是说，一张猫的图片，无论变多模糊，它依然是猫。也就是:
+$f_S \approx f_T$, 但是 $D_s \neq D_T$&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;h3 id=&#34;什么是误差&#34;&gt;什么是误差？&lt;/h3&gt;
+&lt;p&gt;公式 ：
+&lt;/p&gt;
+$$ \epsilon(h, f; \mathcal{D}) = \mathbf{E}_{\mathbf{x} \sim \mathcal{D}}|h(\mathbf{x}) - f(\mathbf{x})| $$&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;$h$ (hypothesis，假设)&lt;/strong&gt;：学习函数，就是我们训练的模型网络。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;$f$&lt;/strong&gt;：真实标签。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;$\epsilon$ (error)&lt;/strong&gt;：误差。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这个公式大概是代码里写的 &lt;strong&gt;Loss 函数（或者说测试集上的错误率）&lt;/strong&gt;。
+它表示：在某种画风 $\mathcal{D}$ 下，你的模型 $h$ 预测的结果，和真实答案 $f$ 之间相差多少。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;$\epsilon_S(h)$：模型在源域（清晰图）上的错误率。&lt;/li&gt;
+&lt;li&gt;$\epsilon_T(h)$：模型在目标域（模糊图）上的错误率。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我们手里只有源域的标签，所以我们只能把 $\epsilon_S(h)$ 训练得很小。但我们&lt;strong&gt;真正想要的是，$\epsilon_T(h)$ 也很小&lt;/strong&gt;。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;h3 id=&#34;关键公式泛化误差上界&#34;&gt;关键公式：泛化误差上界&lt;/h3&gt;
+$$ \epsilon_T(h) \le \epsilon_S(h) + d_1(\mathcal{D}_S, \mathcal{D}_T) + \text{常量} $$&lt;p&gt;我们把这个公式拆成三块来看：
+你要想让&lt;strong&gt;目标域错误率 $\epsilon_T(h)$ 很小&lt;/strong&gt;（等号左边），你必须让等号右边的三项都很小：&lt;/p&gt;</description>
+    </item>
     <item>
       <title>关于大一下学期规划的思考</title>
-      <link>http://localhost:56153/thinking/fm_second_semester_intro/</link>
+      <link>http://localhost:1313/thinking/fm_second_semester_intro/</link>
       <pubDate>Thu, 05 Mar 2026 16:55:01 +0800</pubDate>
-      <guid>http://localhost:56153/thinking/fm_second_semester_intro/</guid>
+      <guid>http://localhost:1313/thinking/fm_second_semester_intro/</guid>
       <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
 &lt;p&gt;开学将近一周，科研申请、课程、学习、班级工作等事情接踵而至，学习方向的选择和压力也让我非常迷茫。一次偶然的机会，我了解到了知乎上一位&lt;strong&gt;执行力超强&lt;/strong&gt;、&lt;strong&gt;方法论独具特色&lt;/strong&gt;的学生博主&lt;a href=&#34;https://www.zhihu.com/people/23-65-18-56-56/&#34;&gt;东川路第一伊雷娜&lt;/a&gt;（后文简称yln），他的生活和学习方式深深震撼了我。于是我决定基于他学习方法论，提取一些和我契合的部分，对本学期进行学习和生活的规划。&lt;/p&gt;
 &lt;h2 id=&#34;背景分析&#34;&gt;背景分析&lt;/h2&gt;
@@ -101,18 +153,18 @@
     </item>
     <item>
       <title>深度学习入门：PyTorch零基础到多任务联合微调</title>
-      <link>http://localhost:56153/projects/multi-learning/</link>
+      <link>http://localhost:1313/projects/multi-learning/</link>
       <pubDate>Thu, 26 Feb 2026 18:39:55 +0800</pubDate>
-      <guid>http://localhost:56153/projects/multi-learning/</guid>
+      <guid>http://localhost:1313/projects/multi-learning/</guid>
       <description>基于超分辨率特征增强的图像分类多任务学习</description>
     </item>
     <item>
       <title>About</title>
-      <link>http://localhost:56153/about/</link>
+      <link>http://localhost:1313/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:56153/about/</guid>
+      <guid>http://localhost:1313/about/</guid>
       <description>&lt;div class=&#34;about-illustration&#34; aria-hidden=&#34;true&#34;&gt;
-  &lt;img src=&#34;http://localhost:56153/images/portrait.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34; draggable=&#34;false&#34;&gt;
+  &lt;img src=&#34;http://localhost:1313/images/portrait.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34; draggable=&#34;false&#34;&gt;
 &lt;/div&gt;
 &lt;div class=&#34;page-epigraph&#34;&gt;
   &lt;p class=&#34;epigraph-text&#34;&gt;照片为实拍：）&lt;/p&gt;

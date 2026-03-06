@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Tags | Arden&#39;s blog</title>
+<title>笔记 | Arden&#39;s blog</title>
 <meta name="keywords" content="">
 <meta name="description" content="Robotics · AI · Engineering">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/tags/">
+<link rel="canonical" href="http://localhost:1313/tags/%E7%AC%94%E8%AE%B0/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.4f58b5c67b6e2bde64a56f23e4dad964fa4361188ceeadc25376c7a9a05f3473.css" integrity="sha256-T1i1xntuK95kpW8j5NrZZPpDYRiM7q3CU3bHqaBfNHM=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
@@ -18,8 +18,8 @@
 <link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/tags/index.xml" title="rss">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/tags/">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/tags/%E7%AC%94%E8%AE%B0/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/tags/%E7%AC%94%E8%AE%B0/">
 <noscript>
     <style>
         #theme-toggle,
@@ -29,14 +29,14 @@
 
     </style>
 </noscript>
-<meta property="og:url" content="http://localhost:1313/tags/">
+<meta property="og:url" content="http://localhost:1313/tags/%E7%AC%94%E8%AE%B0/">
   <meta property="og:site_name" content="Arden&#39;s blog">
-  <meta property="og:title" content="Tags">
+  <meta property="og:title" content="笔记">
   <meta property="og:description" content="Robotics · AI · Engineering">
   <meta property="og:locale" content="zh-cn">
   <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tags">
+<meta name="twitter:title" content="笔记">
 <meta name="twitter:description" content="Robotics · AI · Engineering">
 
 </head>
@@ -75,30 +75,43 @@
     </nav>
 </header>
 <main class="main">
-<header class="page-header">
-    <h1>Tags</h1>
+
+
+
+
+<header class="page-header"><div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/tags/">Tags</a></div>
+  <h1>笔记
+  </h1>
 </header>
 
-<ul class="terms-tags">
-    <li>
-        <a href="http://localhost:1313/tags/%E4%BA%BA%E9%99%85%E5%85%B3%E7%B3%BB/">人际关系 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/%E5%8F%8D%E6%80%9D/">反思 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/%E5%9F%9F%E9%80%82%E5%BA%94/">域适应 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/%E7%AC%94%E8%AE%B0/">笔记 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉 <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-</ul>
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Domain adaptation入门笔记
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" fill="currentColor">
+          <path d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p> 本文为我入门域适应的一些随手记，按照时间顺序进行排序，包含了一些思考和反馈。 摘录我阅读的文章原文部分使用斜体，关于思考总结的部分使用正常字体。 第一遍阅读 阅读材料：迁移学习入门之一：域适应的背景，理论与方法
+在机器学习中，Domain Shift是一个很常见的问题，即在训练数据与真实场景来自于不同的分布。 如在医学深度学习模型中，用A医院的数据(Source Domain)训练的模型往往在B医院(Target Domain)预测不准。在摄像头行人重识别(Re-ID)问题中，多个摄像头捕捉的场景分布完全不一致，导致单个行人在多个摄像头中的&#34;重识别&#34;变得较为困难。在联邦学习中，不同客户的数据分布不一致（non-iid）也是最常见的全局模型训练问题。
+而domain adaptation即是对于domain shift的一种解决方案。与其他流派（如迁移学习和微调）不同的点在于，domain adaptation保留了在source domain上的高精度， 并通过一些方法缩小表示空间（将数据从原始输入形式“如图像、文本”转换后得到的特征向量所在的抽象空间，在当前语境下，它是源域与目标域数据通过特征提取层映射后的空间）上Source与target模型特征的距离。
+在了解大方向后，文章给出了一些数学推导，我感觉有点难以理解，这里先记录一些定义和简单的公式：
+文章定义一个domain由两个部分组成：$$
+$D$（分布函数）:可以理解为“画风“或数据长什么样。比如源域$D_S$是高清图，目标域$D_T$是高斯模糊图。 $f$（标签函数）:是数据的标签，如在二分类问题中输入一张图$x$,它到底是猫还是狗（0或1）。 在 Domain Adaptation 中，我们通常假设物体的本质不变，只是画风变了。 也就是说，一张猫的图片，无论变多模糊，它依然是猫。也就是: $f_S \approx f_T$, 但是 $D_s \neq D_T$
+什么是误差？
+公式 ： $$ \epsilon(h, f; \mathcal{D}) = \mathbf{E}_{\mathbf{x} \sim \mathcal{D}}|h(\mathbf{x}) - f(\mathbf{x})| $$ $h$ (hypothesis，假设)：学习函数，就是我们训练的模型网络。 $f$：真实标签。 $\epsilon$ (error)：误差。 这个公式大概是代码里写的 Loss 函数（或者说测试集上的错误率）。 它表示：在某种画风 $\mathcal{D}$ 下，你的模型 $h$ 预测的结果，和真实答案 $f$ 之间相差多少。
+$\epsilon_S(h)$：模型在源域（清晰图）上的错误率。 $\epsilon_T(h)$：模型在目标域（模糊图）上的错误率。 我们手里只有源域的标签，所以我们只能把 $\epsilon_S(h)$ 训练得很小。但我们真正想要的是，$\epsilon_T(h)$ 也很小。
+关键公式：泛化误差上界
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-03-06 09:29:23 +0800 CST'>March 6, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
+  <a class="entry-link" aria-label="post link to Domain adaptation入门笔记" href="http://localhost:1313/learning/domain_adaptation/"></a>
+</article>
+
+
     </main>
     
 <footer class="footer">

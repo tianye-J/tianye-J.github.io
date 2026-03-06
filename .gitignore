@@ -1,4 +1,14 @@
-README.md
+# Hugo 构建产物
+public/
+resources/_gen/
+.hugo_build.lock
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 个人笔记（不属于博客源码，仅保留在本地）
+drafts.md
 list.md
-copilot-instructions.md
 markdown_grammar.md
+latex_grammar.md

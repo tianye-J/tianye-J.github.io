@@ -14,11 +14,11 @@ logs = ["科研", "联邦域泛化（FedDG）"]
 
 ## 📌 全局视角：三篇"地基"论文定位
 
-| 论文 | 真实定位 | 错误标签（来自 Gemini） |
+| 论文 | 定位 |
 |---|---|---|
-| **PromptFL**（2023） | 方向一的起点 Baseline，"联邦 Prompt 学习的 FedAvg" | ❌ 被误标为最新代表作 |
-| **FedSR**（NeurIPS 2022） | 通用 FedDG Baseline，三方向都必须比较的对象 | ❌ 被误标为机器人专属论文 |
-| **SHOT**（ICML 2020） | 方向三的历史根源，Source-Free DA 的奠基之作 | ✅ 定位正确 |
+| **PromptFL**（2023） | 方向一的起点 Baseline，"联邦 Prompt 学习的 FedAvg" | 
+| **FedSR**（NeurIPS 2022） | 通用 FedDG Baseline，三方向都必须比较的对象 | 
+| **SHOT**（ICML 2020） | 方向三的历史根源，Source-Free DA 的奠基之作 | 
 
 这三篇是"祖师爷"级别——**必须理解，但你的工作要站在它们肩膀上，不是复现它们。**
 

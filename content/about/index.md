@@ -25,7 +25,7 @@ ShowToc = false
 
 ## 兴趣领域
 
-- **人工智能** — 深度学习、强化学习、计算机视觉
+- **人工智能** — RL、FedDG、Agent、TL
 - **工程实践** — 机械臂、ROS2
 - **研究方向** — Domain Adaptation/Generalization
 
@@ -34,4 +34,4 @@ ShowToc = false
 ## 联系方式
 
 - GitHub: [tianye-J](https://github.com/tianye-J)
-- Email: [jjh2444972201@gmail.com](mailto:jjh2444972201@gmail.com)
+- Email: [jjh2444972201@gmail.com](mailto:jjh2444972201@gmail.com)、[jjh2444972201@163.com](mailto:jjh2444972201@163.com)

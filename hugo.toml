@@ -42,6 +42,7 @@ theme = 'PaperMod'
     hideCopyright = false
     text = '*南方，某扇房门，某个街角* — 博尔赫斯'
 
+
 # ---------- Navigation ----------
 
 [[menu.main]]

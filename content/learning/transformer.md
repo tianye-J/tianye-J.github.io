@@ -2,6 +2,8 @@
 title = 'Self-Attention & Transformer 学习笔记'
 date = 2026-03-13T12:08:04+08:00
 draft = false
+description = "transformer原理与基本架构"
+logs = ["深度学习", ]
 +++
 
 ## 一、为什么你必须学这个？

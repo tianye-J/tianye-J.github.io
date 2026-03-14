@@ -16,7 +16,7 @@
   <span class="section-label">{{ upper .Title }}</span>
   {{- end }}
   <h1>
-    {{- if eq .Section "learning" }}学习笔记
+    {{- if eq .Section "learning" }}学习
     {{- else if eq .Section "projects" }}项目
     {{- else if eq .Section "thinking" }}随想
     {{- else }}{{ .Title }}
@@ -127,7 +127,7 @@
       {{- range first 3 $learning }}
       <article class="home-section-entry">
         <a href="{{ .Permalink }}">
-          <span class="entry-meta">{{ .Date.Format "Jan 2006" }}</span>
+          <span class="entry-meta">{{ .Date.Format "2006.01" }}</span>
           <h3>{{ .Title }}</h3>
           {{- if .Description }}
           <p class="entry-summary">{{ .Description }}</p>
@@ -157,7 +157,7 @@
       {{- range first 3 $projects }}
       <article class="home-section-entry">
         <a href="{{ .Permalink }}">
-          <span class="entry-meta">{{ .Date.Format "Jan 2006" }}</span>
+          <span class="entry-meta">{{ .Date.Format "2006.01" }}</span>
           <h3>{{ .Title }}</h3>
           {{- if .Description }}
           <p class="entry-summary">{{ .Description }}</p>
@@ -187,7 +187,7 @@
       {{- range first 3 $thinking }}
       <article class="home-section-entry">
         <a href="{{ .Permalink }}">
-          <span class="entry-meta">{{ .Date.Format "Jan 2006" }}</span>
+          <span class="entry-meta">{{ .Date.Format "2006.01" }}</span>
           <h3>{{ .Title }}</h3>
           {{- if .Description }}
           <p class="entry-summary">{{ .Description }}</p>
@@ -204,6 +204,8 @@
     {{- end }}
   </section>
 </div>
+
+{{- partial "home_heatmap.html" . }}
 
 {{- end }}{{/* end .IsHome */}}
 

@@ -1,5 +1,5 @@
 +++
-title = "Learning"
+title = "学习"
 description = "学习笔记与技术积累"
 +++
 

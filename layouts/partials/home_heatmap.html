@@ -1,0 +1,182 @@
+{{- $writingSections := slice "learning" "projects" "thinking" -}}
+{{- $posts := where site.RegularPages "Section" "in" $writingSections -}}
+{{- $dates := slice -}}
+{{- range $posts -}}
+  {{- if not .Date.IsZero -}}
+    {{- $dates = $dates | append (.Date.Format "2006-01-02") -}}
+  {{- end -}}
+{{- end -}}
+{{- $heatmapId := "writing-heatmap-data-zh" -}}
+
+<section
+  class="home-heatmap"
+  data-weeks="26"
+  data-summary="最近 {weeks} 周共写了 {count} 篇，分布在 {days} 天。"
+  data-summary-empty="最近 {weeks} 周还没有新的文章，下一篇会点亮这里。"
+  data-tooltip-empty="{date} · 暂无文章"
+  data-tooltip-single="{date} · 1 篇"
+  data-tooltip-multiple="{date} · {count} 篇"
+  data-aria-label="最近写作频率热力图"
+>
+  <div class="home-heatmap-header">
+    <span class="section-label">WRITING RHYTHM</span>
+  </div>
+
+  <div class="home-heatmap-meta">
+    <p class="home-heatmap-summary">正在整理最近的写作节奏...</p>
+    <div class="home-heatmap-legend" aria-hidden="true">
+      <span>少</span>
+      <span class="legend-cell level-0"></span>
+      <span class="legend-cell level-1"></span>
+      <span class="legend-cell level-2"></span>
+      <span class="legend-cell level-3"></span>
+      <span class="legend-cell level-4"></span>
+      <span>多</span>
+    </div>
+  </div>
+
+  <div class="home-heatmap-board">
+    <div class="home-heatmap-months" aria-hidden="true"></div>
+    <div class="home-heatmap-grid-shell">
+      <div class="home-heatmap-weekdays" aria-hidden="true"></div>
+      <div class="home-heatmap-grid" role="img" aria-label="最近写作频率热力图"></div>
+    </div>
+  </div>
+
+  <script id="{{ $heatmapId }}" type="application/json">{{ $dates | jsonify | safeJS }}</script>
+</section>
+
+<script>
+  (function () {
+    const root = document.currentScript.previousElementSibling;
+    if (!root || !root.classList.contains('home-heatmap')) return;
+
+    const dataNode = root.querySelector('script[type="application/json"]');
+    const grid = root.querySelector('.home-heatmap-grid');
+    const weekdays = root.querySelector('.home-heatmap-weekdays');
+    const months = root.querySelector('.home-heatmap-months');
+    const summary = root.querySelector('.home-heatmap-summary');
+    if (!dataNode || !grid || !weekdays || !months || !summary) return;
+
+    const rawDates = JSON.parse(dataNode.textContent || '[]');
+    const counts = new Map();
+    rawDates.forEach((dateKey) => {
+      counts.set(dateKey, (counts.get(dateKey) || 0) + 1);
+    });
+
+    const weeks = Number(root.dataset.weeks || 26);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const start = new Date(today);
+    start.setDate(start.getDate() - ((weeks - 1) * 7 + start.getDay()));
+
+    const totalCells = weeks * 7;
+    const dayFormatter = new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
+      month: 'short',
+      day: 'numeric'
+    });
+    const monthFormatter = new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
+      month: 'short'
+    });
+    const weekdayFormatter = new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
+      weekday: 'short'
+    });
+
+    const weekdaySeeds = [];
+    for (let i = 0; i < 7; i += 1) {
+      weekdaySeeds.push(new Date(Date.UTC(2024, 0, 7 + i)));
+    }
+    weekdaySeeds.forEach((date, index) => {
+      const label = document.createElement('span');
+      label.textContent = index % 2 === 1 ? weekdayFormatter.format(date) : '';
+      weekdays.appendChild(label);
+    });
+
+    let totalPosts = 0;
+    let activeDays = 0;
+    let peakCount = 0;
+    let previousMonth = '';
+
+    counts.forEach((count) => {
+      peakCount = Math.max(peakCount, count);
+    });
+
+    for (let week = 0; week < weeks; week += 1) {
+      const weekStart = new Date(start);
+      weekStart.setDate(start.getDate() + week * 7);
+
+      const monthLabel = document.createElement('span');
+      const currentMonth = `${weekStart.getFullYear()}-${weekStart.getMonth()}`;
+      if (week === 0 || currentMonth !== previousMonth) {
+        monthLabel.textContent = monthFormatter.format(weekStart);
+        previousMonth = currentMonth;
+      } else {
+        monthLabel.textContent = '';
+      }
+      months.appendChild(monthLabel);
+
+      for (let day = 0; day < 7; day += 1) {
+        const date = new Date(weekStart);
+        date.setDate(weekStart.getDate() + day);
+        const cell = document.createElement('span');
+        cell.className = 'home-heatmap-cell';
+
+        const dateKey = [
+          date.getFullYear(),
+          String(date.getMonth() + 1).padStart(2, '0'),
+          String(date.getDate()).padStart(2, '0')
+        ].join('-');
+
+        if (date > today) {
+          cell.classList.add('is-future');
+          grid.appendChild(cell);
+          continue;
+        }
+
+        const count = counts.get(dateKey) || 0;
+        const level = count === 0
+          ? 0
+          : Math.max(1, Math.ceil((count / Math.max(peakCount, 1)) * 4));
+        const labelDate = dayFormatter.format(date);
+        let tooltip = root.dataset.tooltipEmpty.replace('{date}', labelDate);
+        if (count === 1) {
+          tooltip = root.dataset.tooltipSingle.replace('{date}', labelDate);
+        } else if (count > 1) {
+          tooltip = root.dataset.tooltipMultiple
+            .replace('{date}', labelDate)
+            .replace('{count}', String(count));
+        }
+
+        cell.classList.add(`level-${level}`);
+        cell.setAttribute('title', tooltip);
+        cell.setAttribute('aria-label', tooltip);
+        cell.style.animationDelay = `${week * 22 + day * 12}ms`;
+
+        if (count > 0) {
+          totalPosts += count;
+          activeDays += 1;
+        }
+
+        grid.appendChild(cell);
+      }
+    }
+
+    const ariaLabel = totalPosts > 0
+      ? root.dataset.summary
+          .replace('{weeks}', String(weeks))
+          .replace('{count}', String(totalPosts))
+          .replace('{days}', String(activeDays))
+      : root.dataset.summaryEmpty.replace('{weeks}', String(weeks));
+    grid.setAttribute('aria-label', `${root.dataset.ariaLabel}. ${ariaLabel}`);
+
+    if (totalPosts > 0) {
+      summary.textContent = root.dataset.summary
+        .replace('{weeks}', String(weeks))
+        .replace('{count}', String(totalPosts))
+        .replace('{days}', String(activeDays));
+    } else {
+      summary.textContent = root.dataset.summaryEmpty.replace('{weeks}', String(weeks));
+    }
+  })();
+</script>

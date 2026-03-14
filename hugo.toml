@@ -1,14 +1,14 @@
-baseURL = 'https://ardenj.pages.dev/'
-languageCode = 'zh-cn'
+baseURL = "https://ardenj.pages.dev/"
+languageCode = "zh-cn"
 title = "Arden's blog"
-theme = 'PaperMod'
+theme = "PaperMod"
 
 [pagination]
   pagerSize = 8
 
 [params]
-  env = 'production'
-  defaultTheme = 'light'
+  env = "production"
+  defaultTheme = "light"
   disableThemeToggle = true
   disableScrollToTop = false
   ShowReadingTime = true
@@ -22,7 +22,7 @@ theme = 'PaperMod'
   description = "Robotics · AI · Engineering"
 
   [params.homeInfoParams]
-    Title = "Hello, I'm **Arden**"
+    Title = "Hello, I’m **Arden**"
     Content = "Robotics Engineering @ NJUPT · Exploring AI & Autonomous Systems"
 
   [[params.socialIcons]]
@@ -35,40 +35,36 @@ theme = 'PaperMod'
 
   [params.label]
     text = "Arden's blog"
-    icon = '/images/logo.png'
+    icon = "/images/logo.png"
     iconHeight = 28
 
   [params.footer]
     hideCopyright = false
-    text = '*南方，某扇房门，某个街角* — 博尔赫斯'
-
-# ---------- Navigation ----------
-
-[[menu.main]]
-  identifier = "projects"
-  name = "Projects"
-  url = "/projects/"
-  weight = 20
-
-[[menu.main]]
-  identifier = "Thinking"
-  name = "Thinking"
-  url = "/Thinking/"
-  weight = 30
+    text = "*南方，某扇房门，某个街角* — 博尔赫斯"
 
 [[menu.main]]
   identifier = "learning"
-  name = "Learning"
+  name = "LEARNING"
   url = "/learning/"
   weight = 10
 
 [[menu.main]]
+  identifier = "projects"
+  name = "PROJECTS"
+  url = "/projects/"
+  weight = 20
+
+[[menu.main]]
+  identifier = "thinking"
+  name = "THINKING"
+  url = "/thinking/"
+  weight = 30
+
+[[menu.main]]
   identifier = "about"
-  name = "About"
+  name = "ABOUT"
   url = "/about/"
   weight = 40
-
-# ---------- Markup ----------
 
 [markup]
   [markup.highlight]
@@ -78,8 +74,8 @@ theme = 'PaperMod'
   [markup.goldmark.extensions.passthrough]
     enable = true
     [markup.goldmark.extensions.passthrough.delimiters]
-      block = [['$$', '$$']]
-      inline = [['$', '$']]
+      block = [["$$", "$$"]]
+      inline = [["$", "$"]]
   [markup.tableOfContents]
     startLevel = 2
     endLevel = 4

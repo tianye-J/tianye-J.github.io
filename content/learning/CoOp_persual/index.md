@@ -2,7 +2,7 @@
 title = 'FedDG阅读：Learning to Prompt for Vision-Language Models'
 date = 2026-03-10T15:51:47+08:00
 draft = false
-tags = ["literature", "FedDG"]
+tags = ["literature", "联邦域泛化（FedDG）"]
 +++
 确定方向后第一篇论文精读笔记，随看随做。
 
@@ -39,4 +39,5 @@ CLIP是本文绕不开的一个话题。CLIP是openAI发布的开源模型，关
 
 ## 复现代码
 第一次尝试复现代码，流程实在是繁琐。首先下载代码后需要进行环境配置，环境配置好后，需要下载数据集。数据集需要放入指定文件夹，然后在脚本中修改路径。这两步用copilot可以快速完成。
-### 第一遍
+
+# 太tm难复现了这代码，到此为止。。。（3.12记）

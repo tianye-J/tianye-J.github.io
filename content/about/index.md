@@ -4,6 +4,7 @@ layout = "single"
 hideMeta = true
 hideFooter = false
 ShowToc = false
+comments = false
 +++
 
 <div class="about-illustration" aria-hidden="true">

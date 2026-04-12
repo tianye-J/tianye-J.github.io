@@ -72,6 +72,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-family-serif);
     font-weight: 500;
+    scroll-margin-top: 5rem;
 }
 
 /* Override PaperMod .list background */
@@ -636,130 +637,87 @@ body:not(.list) .post-content {
     .toc { display: none; }
 }
 
-/* Right-side timeline TOC (anchored to content edge) */
+/* Right-side timeline TOC — fixed list layout, no collision detection */
 .toc-timeline {
     position: fixed;
-    top: 0;
-    bottom: 0;
+    left: calc(50% + 424px);
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 50;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease;
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
 }
+.toc-timeline::-webkit-scrollbar { display: none; }
 .toc-timeline.visible {
     opacity: 1;
-}
-
-/* Timeline area (offset for sticky header) */
-.toc-timeline-area {
-    position: absolute;
-    left: 0;
-    top: max(16vh, 100px);
-    bottom: 12vh;
-    width: 260px;
     pointer-events: auto;
 }
 
+/* List container */
+.toc-tl-list {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+}
+
 /* Vertical axis line */
-.toc-timeline-line {
+.toc-tl-list::before {
+    content: '';
     position: absolute;
-    left: 0;
+    left: 3px;
     top: 0;
     bottom: 0;
     width: 1px;
     background: var(--border);
 }
 
-/* Reading progress indicator */
-.toc-timeline-progress {
+/* Progress indicator on the axis */
+.toc-tl-progress {
     position: absolute;
-    left: -3px;
+    left: 0;
     width: 7px;
     background: rgba(201, 100, 66, 0.2);
     border-radius: 4px;
-    transition: top 0.15s linear, height 0.15s linear;
+    transition: top 0.2s ease, height 0.2s ease;
     pointer-events: none;
+    z-index: 1;
 }
 
-/* Node (shared) */
-.toc-timeline-node {
-    position: absolute;
-    left: 0;
-    transform: translateY(-50%);
+/* Item (h2 level) */
+.toc-tl-item {
+    position: relative;
+    list-style: none;
+}
+
+/* Link row */
+.toc-tl-item > a {
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 5px 0;
     text-decoration: none;
     cursor: pointer;
 }
 
-/* h2 node dot */
-.toc-timeline-dot {
+/* Dot */
+.toc-tl-dot {
     width: 7px;
     height: 7px;
     border-radius: 50%;
     background: var(--border);
     flex-shrink: 0;
     z-index: 2;
-    margin-left: -3px;
     transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* h3/h4 sub-nodes */
-.toc-timeline-node.sub {
-    left: 16px;
-    gap: 8px;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-.toc-timeline-node.sub .toc-timeline-dot {
-    width: 5px;
-    height: 5px;
-    margin-left: 0;
-}
-/* Connector line */
-.toc-timeline-node.sub::before {
-    content: '';
-    position: absolute;
-    left: -16px;
-    top: 50%;
-    width: 16px;
-    height: 1px;
-    background: var(--border);
-    transition: opacity 0.2s ease, background 0.2s ease;
-}
-
-/* Collapsed sub-nodes */
-.toc-timeline-node.sub.toc-sub-collapsed {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-50%) scale(0.85);
-}
-.toc-timeline-node.sub.toc-sub-collapsed::before {
-    opacity: 0;
-}
-
-/* hover — dot */
-.toc-timeline-node:hover .toc-timeline-dot {
-    background: var(--secondary);
-    transform: scale(1.3);
-}
-/* active — dot */
-.toc-timeline-node.active .toc-timeline-dot {
-    background: var(--link);
-    transform: scale(1.5);
-    box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.12);
-}
-/* hover — connector */
-.toc-timeline-node.sub:hover::before {
-    background: var(--secondary);
-}
-/* active — connector */
-.toc-timeline-node.sub.active::before {
-    background: var(--link);
-}
-
-/* Node label */
-.toc-timeline-label {
+/* Label */
+.toc-tl-label {
     font-size: 0.72rem;
     font-family: var(--font-family);
     color: var(--tertiary);
@@ -767,31 +725,86 @@ body:not(.list) .post-content {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 180px;
-    text-align: left;
     transition: opacity 0.25s ease, color 0.2s ease;
 }
-.toc-timeline-node.sub .toc-timeline-label {
+
+/* Sub-node children container — collapsed by default */
+.toc-tl-children {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+}
+
+/* Sub-node items */
+.toc-tl-item.sub > a {
+    gap: 8px;
+    padding: 3px 0;
+}
+.toc-tl-item.sub .toc-tl-dot {
+    width: 5px;
+    height: 5px;
+}
+.toc-tl-item.sub .toc-tl-label {
     font-size: 0.68rem;
-    color: var(--tertiary);
     max-width: 160px;
 }
-.toc-timeline-node:hover .toc-timeline-label {
+
+/* Sub-node connector line */
+.toc-tl-item.sub > a::before {
+    content: '';
+    position: absolute;
+    left: -13px;
+    top: 50%;
+    width: 13px;
+    height: 1px;
+    background: var(--border);
+    transition: background 0.2s ease;
+}
+
+/* ── Expand children: via .expanded (JS active) or :hover (CSS) ── */
+.toc-tl-item.expanded > .toc-tl-children,
+.toc-tl-item:hover > .toc-tl-children {
+    max-height: 500px;
+}
+
+/* ── Hover states ── */
+.toc-tl-item > a:hover .toc-tl-dot {
+    background: var(--secondary);
+    transform: scale(1.3);
+}
+.toc-tl-item > a:hover .toc-tl-label {
     color: var(--primary);
 }
-.toc-timeline-node.active .toc-timeline-label {
+
+/* ── Active state ── */
+.toc-tl-item.active > a .toc-tl-dot {
+    background: var(--link);
+    transform: scale(1.5);
+    box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.12);
+}
+.toc-tl-item.active > a .toc-tl-label {
     color: var(--primary);
     font-weight: 500;
 }
+.toc-tl-item.sub.active > a::before {
+    background: var(--link);
+}
 
-/* Scroll state: hide inactive labels */
-.toc-timeline.scrolled .toc-timeline-label {
+/* ── Scroll state: dim inactive labels ── */
+.toc-timeline.scrolled .toc-tl-label {
+    opacity: 0.4;
+}
+.toc-timeline.scrolled .toc-tl-item.sub .toc-tl-label {
     opacity: 0;
 }
-.toc-timeline.scrolled .toc-timeline-node.active .toc-timeline-label {
+.toc-timeline.scrolled .toc-tl-item.active > a .toc-tl-label {
     opacity: 1;
 }
-/* Hover on timeline area restores all labels */
-.toc-timeline-area:hover .toc-timeline-label {
+/* Hover on timeline restores all labels */
+.toc-timeline:hover .toc-tl-label {
     opacity: 1 !important;
 }
 
@@ -1324,4 +1337,150 @@ body:not(.list) .post-content {
     .typewriter-cursor {
         animation: none;
     }
+}
+
+/* ---- 24. Custom 404 Page ---- */
+.not-found-content {
+    text-align: center;
+    padding: 6rem 2rem;
+}
+
+.not-found-code {
+    font-size: 6rem;
+    font-weight: 500;
+    color: var(--tertiary);
+    margin: 0 0 1rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.not-found-message {
+    font-size: 1.1rem;
+    color: var(--secondary);
+    margin-bottom: 2rem;
+}
+
+.not-found-link {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    background: var(--link);
+    color: var(--background);
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+}
+
+.not-found-link:hover {
+    opacity: 0.85;
+}
+
+/* ---- 25. Code Block Enhancements ---- */
+
+/* Language label */
+.highlight {
+    position: relative;
+}
+
+.code-lang-label {
+    position: absolute;
+    top: 6px;
+    right: 48px;
+    font-size: 0.68rem;
+    font-family: var(--font-family);
+    color: var(--tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Line numbers */
+.highlight .lnt {
+    color: var(--tertiary);
+    opacity: 0.5;
+    padding-right: 1em;
+    user-select: none;
+}
+
+.highlight table {
+    border-spacing: 0;
+    border: none;
+    width: 100%;
+}
+
+.highlight table td {
+    padding: 0;
+    border: none;
+}
+
+.highlight table td:first-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.highlight table pre {
+    margin: 0;
+}
+
+/* ---- 26. Series Navigation ---- */
+.series-nav {
+    margin: 2.5rem 0;
+    padding: 1.2rem 1.5rem;
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.series-nav-title {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tertiary);
+    margin: 0 0 0.8rem;
+}
+
+.series-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.series-nav-list li {
+    padding: 0.35rem 0;
+    font-size: 0.88rem;
+}
+
+.series-nav-list li a {
+    color: var(--secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.series-nav-list li a:hover {
+    color: var(--link);
+}
+
+.series-nav-list li.current {
+    font-weight: 500;
+}
+
+.series-nav-list li.current a {
+    color: var(--link);
+}
+
+.series-nav-list li.current::before {
+    content: '›';
+    color: var(--link);
+    margin-right: 0.4rem;
+    font-weight: 700;
+}
+
+/* ---- 27. Comments (Giscus) ---- */
+.comments {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
 }

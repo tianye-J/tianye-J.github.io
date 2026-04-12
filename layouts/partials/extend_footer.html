@@ -1,10 +1,10 @@
-{{- /* 右侧时间轴 TOC — 贴近文本右侧，标签在轴右方，子节点折叠/展开 */ -}}
+{{- /* Right-side timeline TOC — list-based layout, no collision detection */ -}}
 {{- if (.Param "ShowToc") -}}
 <script>
 (function () {
   'use strict';
 
-  /* ── 条件检查 ── */
+  /* ── Guards ── */
   var mq = window.matchMedia('(min-width: 1440px)');
   var postContent = document.querySelector('.post-content');
   if (!postContent) return;
@@ -12,29 +12,7 @@
   var allH = postContent.querySelectorAll('h2[id], h3[id], h4[id]');
   if (allH.length < 2) return;
 
-  /* ── 构建 DOM ── */
-  var tl = document.createElement('nav');
-  tl.className = 'toc-timeline';
-  tl.setAttribute('aria-label', 'Table of Contents');
-
-  var area = document.createElement('div');
-  area.className = 'toc-timeline-area';
-
-  var line = document.createElement('div');
-  line.className = 'toc-timeline-line';
-  area.appendChild(line);
-
-  var prog = document.createElement('div');
-  prog.className = 'toc-timeline-progress';
-  area.appendChild(prog);
-
-  /* ── 内容区指标 ── */
-  function getContentMetrics() {
-    var r = postContent.getBoundingClientRect();
-    return { top: r.top + window.scrollY, height: postContent.offsetHeight, right: r.right };
-  }
-
-  /* ── 提取标题纯文本（排除 PaperMod 锚点 #） ── */
+  /* ── Extract heading plain text (strip PaperMod anchor #) ── */
   function headingText(h) {
     var clone = h.cloneNode(true);
     var anchor = clone.querySelector('.anchor');
@@ -42,279 +20,221 @@
     return clone.textContent.trim();
   }
 
-  var nodes  = [];
-  var groups = [];    // { h2Idx: number, children: number[] }
-  var cm = getContentMetrics();
-  var MIN_GAP = 28;  // 可见节点之间的最小像素间距
+  /* ── Build DOM — nested ul/li structure ── */
+  var tl = document.createElement('nav');
+  tl.className = 'toc-timeline';
+  tl.setAttribute('aria-label', 'Table of Contents');
+
+  var list = document.createElement('ul');
+  list.className = 'toc-tl-list';
+
+  var prog = document.createElement('div');
+  prog.className = 'toc-tl-progress';
+  list.appendChild(prog);
+
+  var items = [];       // { el: heading, li: li element, isSub: bool, parentIdx: number }
+  var currentH2Idx = -1;
+  var currentChildren = null;
 
   allH.forEach(function (h) {
-    var hTop = h.getBoundingClientRect().top + window.scrollY;
-    var rel  = (hTop - cm.top) / cm.height;
-    rel = Math.max(0, Math.min(1, rel));
-
     var isSub = h.tagName !== 'H2';
 
-    var node = document.createElement('a');
-    node.className = 'toc-timeline-node';
-    if (isSub) {
-      node.classList.add('sub');
-      node.classList.add('toc-sub-collapsed'); // 默认折叠
-    }
-    node.href = '#' + h.id;
-    node.style.top = (rel * 100) + '%';
+    var li = document.createElement('li');
+    li.className = 'toc-tl-item' + (isSub ? ' sub' : '');
 
-    var dot = document.createElement('span');
-    dot.className = 'toc-timeline-dot';
-
-    var label = document.createElement('span');
-    label.className = 'toc-timeline-label';
-    label.textContent = headingText(h);
-
-    /* 顺序：dot（贴轴） → label（轴右侧） */
-    node.appendChild(dot);
-    node.appendChild(label);
-    area.appendChild(node);
-
-    node.addEventListener('click', function (e) {
+    var a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.addEventListener('click', function (e) {
       e.preventDefault();
       h.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    var nodeIdx = nodes.length;
-    nodes.push({ el: h, node: node, rel: rel, isSub: isSub, groupIdx: -1, displayTop: rel });
+    var dot = document.createElement('span');
+    dot.className = 'toc-tl-dot';
 
-    /* 分组：h2 开新组，h3/h4 归入当前组 */
+    var label = document.createElement('span');
+    label.className = 'toc-tl-label';
+    label.textContent = headingText(h);
+
+    a.appendChild(dot);
+    a.appendChild(label);
+    li.appendChild(a);
+
+    var idx = items.length;
+
     if (!isSub) {
-      groups.push({ h2Idx: nodeIdx, children: [] });
-      nodes[nodeIdx].groupIdx = groups.length - 1;
-    } else if (groups.length > 0) {
-      groups[groups.length - 1].children.push(nodeIdx);
-      nodes[nodeIdx].groupIdx = groups.length - 1;
+      /* h2: append to main list, create children container */
+      currentChildren = document.createElement('ul');
+      currentChildren.className = 'toc-tl-children';
+      li.appendChild(currentChildren);
+      list.appendChild(li);
+      currentH2Idx = idx;
+      items.push({ el: h, li: li, isSub: false, parentIdx: -1 });
+    } else {
+      /* h3/h4: append to current h2's children */
+      if (currentChildren) {
+        currentChildren.appendChild(li);
+      } else {
+        list.appendChild(li);
+      }
+      items.push({ el: h, li: li, isSub: true, parentIdx: currentH2Idx });
     }
   });
 
-  tl.appendChild(area);
+  tl.appendChild(list);
   document.body.appendChild(tl);
 
-  /* ── 分组展开/折叠管理 ── */
-  var activeGroupIdx = -1;
-  var hoverGroupIdx  = -1;
-
-  function updateGroupVisibility() {
-    groups.forEach(function (g, gIdx) {
-      var expanded = (gIdx === activeGroupIdx || gIdx === hoverGroupIdx);
-      g.children.forEach(function (childIdx) {
-        if (expanded) {
-          nodes[childIdx].node.classList.remove('toc-sub-collapsed');
-        } else {
-          nodes[childIdx].node.classList.add('toc-sub-collapsed');
-        }
-      });
-    });
-  }
-
-  /* h2 节点 hover：临时展开该组子节点 */
-  groups.forEach(function (g, gIdx) {
-    var h2El = nodes[g.h2Idx].node;
-    h2El.addEventListener('mouseenter', function () {
-      hoverGroupIdx = gIdx;
-      updateGroupVisibility();
-      resolveCollisions();
-    });
-    h2El.addEventListener('mouseleave', function () {
-      if (hoverGroupIdx === gIdx) {
-        hoverGroupIdx = -1;
-        updateGroupVisibility();
-        resolveCollisions();
-      }
-    });
-  });
-
-  /* ── 碰撞检测：最小间距防重叠 ── */
-  function resolveCollisions() {
-    var areaH = area.offsetHeight;
-    if (areaH <= 0) return;
-
-    /* 收集可见节点（未折叠的） */
-    var vis = [];
-    nodes.forEach(function (n, idx) {
-      if (n.isSub && n.node.classList.contains('toc-sub-collapsed')) return;
-      vis.push({ idx: idx, topPx: n.displayTop * areaH });
-    });
-    if (vis.length < 2) return;
-    vis.sort(function (a, b) { return a.topPx - b.topPx; });
-
-    /* 从上到下：间距不足则下推 */
-    for (var i = 1; i < vis.length; i++) {
-      if (vis[i].topPx - vis[i - 1].topPx < MIN_GAP) {
-        vis[i].topPx = vis[i - 1].topPx + MIN_GAP;
-      }
-    }
-
-    /* 从下到上：超出底部则上推 */
-    var maxPx = areaH;
-    for (var i = vis.length - 1; i >= 0; i--) {
-      if (vis[i].topPx > maxPx) vis[i].topPx = maxPx;
-      maxPx = vis[i].topPx - MIN_GAP;
-    }
-
-    /* 写回位置 */
-    vis.forEach(function (v) {
-      nodes[v.idx].node.style.top = (v.topPx / areaH * 100) + '%';
-    });
-  }
-
-  /* ── 定位：贴近文本右侧 ── */
-  function updateTimelinePosition() {
-    var rect = postContent.getBoundingClientRect();
-    tl.style.left = (rect.right + 24) + 'px';
-  }
-
-  /* ── 滚动逻辑 ── */
+  /* ── Scroll handler ── */
   var isScrolled = false;
-  var activeIdx  = -1;
+  var activeIdx = -1;
+  var expandedH2 = null;
+  var contentTop = 0;
+  var contentHeight = 1;
+
+  function refreshMetrics() {
+    var r = postContent.getBoundingClientRect();
+    contentTop = r.top + window.scrollY;
+    contentHeight = Math.max(postContent.offsetHeight, 1);
+  }
 
   function onScroll() {
     var sy = window.scrollY;
     var vh = window.innerHeight;
-    var c  = getContentMetrics();
-    var cBottom = c.top + c.height;
 
-    /* 文章可见时显示时间轴 */
-    var visible = sy + vh > c.top + 60 && sy < cBottom - 60;
+    /* Refresh content position (cheap: one getBoundingClientRect) */
+    refreshMetrics();
+    var cBottom = contentTop + contentHeight;
+
+    /* Show/hide timeline based on content visibility */
+    var visible = sy + vh > contentTop + 60 && sy < cBottom - 60;
     tl.classList.toggle('visible', visible);
     if (!visible) return;
 
-    /* 计算滑块比例 */
-    var sliderH = Math.min((vh / c.height) / 3, 0.5);
-    var halfS   = sliderH / 2;
-
-    /* 更新所有节点的自然位置 */
-    nodes.forEach(function (n) {
-      var hTop = n.el.getBoundingClientRect().top + sy;
-      n.rel = Math.max(0, Math.min(1, (hTop - c.top) / c.height));
-      n.displayTop = halfS + n.rel * (1 - sliderH);
-      n.node.style.top = (n.displayTop * 100) + '%';
-    });
-
-    /* 滚动状态：是否离开文章顶部 */
-    var nowScrolled = sy > c.top + 120;
+    /* Scrolled state */
+    var nowScrolled = sy > contentTop + 120;
     if (nowScrolled !== isScrolled) {
       isScrolled = nowScrolled;
       tl.classList.toggle('scrolled', isScrolled);
     }
 
-    /* 当前活跃标题 */
+    /* Find active heading */
     var newIdx = -1;
-    for (var i = nodes.length - 1; i >= 0; i--) {
-      if (nodes[i].el.getBoundingClientRect().top <= vh * 0.25) {
+    for (var i = items.length - 1; i >= 0; i--) {
+      if (items[i].el.getBoundingClientRect().top <= vh * 0.25) {
         newIdx = i;
         break;
       }
     }
+
     if (newIdx !== activeIdx) {
-      if (activeIdx >= 0) nodes[activeIdx].node.classList.remove('active');
-      if (newIdx >= 0)     nodes[newIdx].node.classList.add('active');
+      /* Remove old active */
+      if (activeIdx >= 0) items[activeIdx].li.classList.remove('active');
+      /* Set new active */
+      if (newIdx >= 0) items[newIdx].li.classList.add('active');
       activeIdx = newIdx;
-    }
 
-    /* 更新活跃分组 — 展开当前章节子节点，折叠其余 */
-    var newGroupIdx = -1;
-    if (newIdx >= 0) newGroupIdx = nodes[newIdx].groupIdx;
-    if (newGroupIdx !== activeGroupIdx) {
-      activeGroupIdx = newGroupIdx;
-      updateGroupVisibility();
-    }
-
-    /* 碰撞检测 */
-    resolveCollisions();
-
-    /* 进度滑块 — 基于活跃节点做章节内插值 */
-    var sliderCenter;
-    if (newIdx < 0) {
-      sliderCenter = halfS + nodes[0].rel * (1 - sliderH);
-    } else {
-      var curDisplay = halfS + nodes[newIdx].rel * (1 - sliderH);
-      var nextDisplay;
-      if (newIdx + 1 < nodes.length) {
-        nextDisplay = halfS + nodes[newIdx + 1].rel * (1 - sliderH);
-      } else {
-        nextDisplay = 1 - halfS;
+      /* Expand active h2's children, collapse others */
+      var newH2 = null;
+      if (newIdx >= 0) {
+        newH2 = items[newIdx].isSub
+          ? (items[newIdx].parentIdx >= 0 ? items[items[newIdx].parentIdx].li : null)
+          : items[newIdx].li;
       }
-      var curAbs  = nodes[newIdx].el.getBoundingClientRect().top + sy;
-      var nextAbs = (newIdx + 1 < nodes.length)
-        ? nodes[newIdx + 1].el.getBoundingClientRect().top + sy
-        : c.top + c.height;
-      var sectionLen  = nextAbs - curAbs;
-      var scrolledPast = Math.max(0, sy - curAbs);
-      var t = sectionLen > 0 ? Math.max(0, Math.min(1, scrolledPast / sectionLen)) : 0;
-      sliderCenter = curDisplay + t * (nextDisplay - curDisplay);
+      if (newH2 !== expandedH2) {
+        if (expandedH2) expandedH2.classList.remove('expanded');
+        if (newH2) newH2.classList.add('expanded');
+        expandedH2 = newH2;
+      }
     }
-    var sliderTop = sliderCenter - halfS;
-    sliderTop = Math.max(0, Math.min(1 - sliderH, sliderTop));
-    prog.style.top    = (sliderTop * 100) + '%';
-    prog.style.height = (sliderH * 100) + '%';
+
+    /* Update progress indicator position */
+    if (newIdx >= 0) {
+      var itemEl = items[newIdx].li;
+      var linkEl = itemEl.querySelector('a');
+      var dotTop = linkEl.offsetTop + linkEl.offsetHeight / 2;
+      prog.style.top = (dotTop - 10) + 'px';
+      prog.style.height = '20px';
+    }
   }
 
-  /* ── 响应式显隐 + 位置更新 ── */
+  /* ── Responsive show/hide ── */
   function checkMQ() {
     tl.style.display = mq.matches ? '' : 'none';
-    if (mq.matches) updateTimelinePosition();
   }
   mq.addEventListener('change', checkMQ);
   checkMQ();
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', function () {
-    updateTimelinePosition();
-    onScroll();
-  });
 
-  /* 初始渲染 */
-  requestAnimationFrame(function () {
-    updateTimelinePosition();
-    onScroll();
-  });
+  /* Initial render */
+  requestAnimationFrame(onScroll);
 })();
 </script>
 {{- end -}}
 
-{{- /* 打字机入场效果 — 仅首页 */ -}}
+{{- /* Code block language labels */ -}}
+<script>
+(function () {
+  var langMap = {
+    py: 'Python', python: 'Python', js: 'JavaScript', javascript: 'JavaScript',
+    ts: 'TypeScript', typescript: 'TypeScript', go: 'Go', rust: 'Rust',
+    java: 'Java', cpp: 'C++', c: 'C', cs: 'C#', rb: 'Ruby', ruby: 'Ruby',
+    sh: 'Shell', bash: 'Bash', zsh: 'Zsh', html: 'HTML', css: 'CSS',
+    json: 'JSON', yaml: 'YAML', yml: 'YAML', toml: 'TOML', xml: 'XML',
+    sql: 'SQL', md: 'Markdown', markdown: 'Markdown', tex: 'LaTeX',
+    latex: 'LaTeX', r: 'R', lua: 'Lua', swift: 'Swift', kotlin: 'Kotlin',
+    dart: 'Dart', php: 'PHP', dockerfile: 'Dockerfile', makefile: 'Makefile'
+  };
+  document.querySelectorAll('.highlight code[class*="language-"]').forEach(function (code) {
+    var match = code.className.match(/language-(\w+)/);
+    if (!match) return;
+    var lang = match[1].toLowerCase();
+    var display = langMap[lang] || lang.toUpperCase();
+    var label = document.createElement('span');
+    label.className = 'code-lang-label';
+    label.textContent = display;
+    var highlight = code.closest('.highlight');
+    if (highlight) highlight.appendChild(label);
+  });
+})();
+</script>
+
+{{- /* Typewriter entrance effect — homepage only */ -}}
 {{- if .IsHome -}}
 <script>
 (function () {
   'use strict';
 
-  // 仅首页、不影响其他页面
+  // Homepage only, no effect on other pages
   var h1 = document.querySelector('.home-info .entry-header h1');
   if (!h1) return;
 
-  // 尊重系统减少动画偏好
+  // Respect reduced-motion preference
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // 读取原始文字，清空 h1 内容
+  // Read original text, clear h1 content
   var fullText = h1.innerText || h1.textContent || '';
   h1.textContent = '';
 
-  // 插入闪烁光标
+  // Insert blinking cursor
   var cursor = document.createElement('span');
   cursor.className = 'typewriter-cursor';
   cursor.setAttribute('aria-hidden', 'true');
   cursor.textContent = '|';
   h1.appendChild(cursor);
 
-  // 延迟与 hero-pop 动画协调
-  // hero-pop: 0.12s delay + 约 0.5s 弹出完成 ≈ 0.62s 后启动打字
+  // Delay to coordinate with hero-pop animation
+  // hero-pop: 0.12s delay + ~0.5s pop complete ≈ 0.62s before typing starts
   var i = 0;
   setTimeout(function () {
     var interval = setInterval(function () {
       if (i < fullText.length) {
-        // 在光标前逐字插入
+        // Insert characters one by one before the cursor
         h1.insertBefore(document.createTextNode(fullText[i]), cursor);
         i++;
       } else {
         clearInterval(interval);
-        // 打字结束：1s 后光标渐隐消失
+        // Typing done: fade out cursor after 1s
         setTimeout(function () {
           cursor.style.transition = 'opacity 0.5s ease';
           cursor.style.opacity = '0';
@@ -324,7 +244,7 @@
           if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
         }, 1550);
       }
-    }, 78); // 每字约 78ms，"Arden J" 约 0.55s 打完
+    }, 78); // ~78ms per char, "Arden J" takes ~0.55s
   }, 620);
 })();
 </script>

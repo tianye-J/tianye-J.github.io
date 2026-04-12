@@ -1,10 +1,17 @@
 baseURL = "https://ardenj.pages.dev/"
 languageCode = "zh-cn"
-title = "Arden's blog"
+title = "Arden’s blog"
 theme = "PaperMod"
 
 [pagination]
   pagerSize = 8
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[taxonomies]
+  tag = "tags"
+  series = "series"
 
 [params]
   env = "production"
@@ -15,11 +22,12 @@ theme = "PaperMod"
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
-  ShowRssButtonInSectionTermList = false
+  ShowRssButtonInSectionTermList = true
   ShowToc = true
   TocOpen = true
   UseHugoToc = true
-  description = "Robotics · AI · Engineering"
+  comments = true
+  description = "Arden’s blog — Federated Learning & Domain Generalization"
 
   [params.homeInfoParams]
     Title = "Hello, I’m **Arden**"
@@ -29,18 +37,31 @@ theme = "PaperMod"
     name = "github"
     url = "https://github.com/tianye-J"
 
+  [[params.socialIcons]]
+    name = "rss"
+    url = "/index.xml"
+
   [params.cover]
     hiddenInList = false
     hiddenInSingle = true
 
   [params.label]
-    text = "Arden's blog"
+    text = "Arden’s blog"
     icon = "/images/logo.png"
     iconHeight = 28
 
   [params.footer]
     hideCopyright = false
     text = "*南方，某扇房门，某个街角* — 博尔赫斯"
+
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 0
+    keys = ["title", "permalink", "summary", "content"]
 
 [[menu.main]]
   identifier = "learning"
@@ -66,9 +87,17 @@ theme = "PaperMod"
   url = "/about/"
   weight = 40
 
+[[menu.main]]
+  identifier = "search"
+  name = "SEARCH"
+  url = "/search/"
+  weight = 50
+
 [markup]
   [markup.highlight]
     noClasses = false
+    lineNos = true
+    lineNumbersInTable = true
   [markup.goldmark.renderer]
     unsafe = true
   [markup.goldmark.extensions.passthrough]

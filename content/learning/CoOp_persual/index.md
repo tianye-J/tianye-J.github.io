@@ -3,6 +3,7 @@ title = 'FedDG阅读：Learning to Prompt for Vision-Language Models'
 date = 2026-03-10T15:51:47+08:00
 draft = false
 tags = ["literature", "联邦域泛化（FedDG）"]
+series = ["联邦域泛化"]
 +++
 确定方向后第一篇论文精读笔记，随看随做。
 

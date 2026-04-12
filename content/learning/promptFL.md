@@ -4,6 +4,7 @@ date = 2026-03-15T09:48:51+08:00
 draft = false
 description = "文献随记"
 tags = ["联邦域泛化（FedDG）", "literature"]
+series = ["联邦域泛化"]
 +++
 
 > 经过CoOp的阅读，我们了解到了在单机上如何通过机器自己优化“soft prompt”来提高图像的识别，而promptFL则是在此基础上更进一步，将CoOp展现的强大迁移能力应用至联邦学习领域。

@@ -3,6 +3,7 @@ title = 'Domain adaptation入门笔记（1.超基础知识篇）'
 date = 2026-03-06T09:29:23+08:00
 draft = false
 tags = ["域适应", "笔记"]
+series = ["联邦域泛化"]
 math = true
 +++
 > - 本文为我入门域适应的一些随手记，按照时间顺序进行排序，包含了一些思考和反馈。

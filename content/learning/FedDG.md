@@ -2,7 +2,8 @@
 title = 'FedDG论文导读'
 date = 2026-03-07T21:22:43+08:00
 draft = false
-logs = ["科研", "联邦域泛化（FedDG）"]
+tags = ["科研", "联邦域泛化（FedDG）"]
+series = ["联邦域泛化"]
 +++
 > **注意**：本篇文章由Claude总结
 

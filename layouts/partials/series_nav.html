@@ -1,0 +1,18 @@
+{{- $series := .Params.series -}}
+{{- if $series -}}
+{{- range $seriesName := $series -}}
+{{- $seriesPages := where site.RegularPages "Params.series" "intersect" (slice $seriesName) -}}
+{{- if gt (len $seriesPages) 1 -}}
+<nav class="series-nav" aria-label="Article series">
+  <p class="series-nav-title">Series: {{ $seriesName }}</p>
+  <ol class="series-nav-list">
+    {{- range $seriesPages.ByDate -}}
+    <li{{ if eq .Permalink $.Permalink }} class="current"{{ end }}>
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </li>
+    {{- end }}
+  </ol>
+</nav>
+{{- end -}}
+{{- end -}}
+{{- end -}}

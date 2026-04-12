@@ -1,47 +1,37 @@
 +++
-title = 'FedDG论文导读'
+title = 'FedDG 论文导读'
 date = 2026-03-07T21:22:43+08:00
 draft = false
 tags = ["科研", "联邦域泛化（FedDG）"]
 series = ["联邦域泛化"]
 +++
-> **注意**：本篇文章由Claude总结
 
-> **项目**：FedDG for Robotics（ICASSP 2026 准备）  
-> **阅读策略**：先啃"地基"（入门论文），再看"当前楼层"（进阶论文），最后找"裂缝"（你的 idea 空间）  
-> **更新日期**：2026-03-07
 
----
-
-## 📌 全局视角：三篇"地基"论文定位
+## 全局视角：三篇"地基"论文
 
 | 论文 | 定位 |
-|---|---|---|
-| **PromptFL**（2023） | 方向一的起点 Baseline，"联邦 Prompt 学习的 FedAvg" | 
-| **FedSR**（NeurIPS 2022） | 通用 FedDG Baseline，三方向都必须比较的对象 | 
-| **SHOT**（ICML 2020） | 方向三的历史根源，Source-Free DA 的奠基之作 | 
+|---|---|
+| **PromptFL**（2023） | 方向一的起点 Baseline，"联邦 Prompt 学习的 FedAvg" |
+| **FedSR**（NeurIPS 2022） | 通用 FedDG Baseline，三个方向都必须比较的对象 |
+| **SHOT**（ICML 2020） | 方向三的历史根源，Source-Free DA 的奠基之作 |
 
-这三篇是"祖师爷"级别——**必须理解，但你的工作要站在它们肩膀上，不是复现它们。**
-
----
+这三篇是"祖师爷"级别——必须理解，但后续工作要站在它们肩膀上，不是复现它们。
 
 ---
 
-# 🏛️ 方向一：CLIP / LLM + 联邦提示微调
+# 方向一：CLIP / LLM + 联邦提示微调
 
-## 📖 入门论文（必读，详细介绍）
+## 入门论文
 
----
-
-### 入门论文 1：CoOp — Prompt Learning for Vision-Language Models
+### CoOp — Prompt Learning for Vision-Language Models
 
 > **会议**：IJCV 2022（原版 ICCV 2021）  
 > **关键词**：Soft Prompt, CLIP, Context Optimization  
-> **为什么先读这篇**：PromptFL 是"把 CoOp 塞进联邦框架"，不懂 CoOp 就不懂 PromptFL。
+> 读这篇是因为 PromptFL 本质上就是"把 CoOp 塞进联邦框架"，不懂 CoOp 就没法理解 PromptFL。
 
-**核心问题**：CLIP 用"a photo of a [CLASS]"这样的手工文本做零样本分类，但手工模板很依赖玄学——换一句话描述，准确率可能差 10%。CoOp 的解决方案是：**别手写模板，让模型自己学出来**。
+CLIP 用"a photo of a [CLASS]"这样的手工文本做零样本分类，但手工模板很依赖玄学——换一句话描述，准确率可能差 10%。CoOp 的解决方案很直接：**别手写模板，让模型自己学出来**。
 
-**Soft Prompt 是什么？**
+**Soft Prompt 的核心机制**
 
 ```
 手工 Prompt（Hard Prompt）：
@@ -54,9 +44,11 @@ Soft Prompt（CoOp 的做法）：
         训练时只更新这 4 个向量，CLIP 的其余参数全部冻结
 ```
 
-**生活类比**：CLIP 是一个很聪明但很挑食的翻译官，它能把任何图片"翻译"成概念。Soft Prompt 就是你找到了一套"魔法咒语开头语"，每次跟翻译官说话之前先念这串咒语，翻译官就会以最利于你任务的方式工作。你不需要懂翻译原理，只需要学会"什么开场白最有效"。
+**Soft Prompt 就是在类别词前面拼几个可学习的浮点向量**，训练时只更新这几个向量，CLIP 其余参数全部冻结。
 
-**训练目标**（对应 PyTorch 伪代码）：
+**生活类比**：CLIP 是一个很聪明但很挑食的翻译官，Soft Prompt 就是你摸索出的一套"最佳开场白"，每次跟翻译官说话前先念这串开场白，它就会以最利于你任务的方式工作。
+
+**训练目标**（PyTorch 伪代码）：
 
 ```python
 import torch
@@ -83,20 +75,19 @@ class CoOp(nn.Module):
         return logits
 ```
 
-**结论（带入方向一的视角）**：CoOp 证明了 Soft Prompt 在单机场景有效。PromptFL 的核心贡献就是"把这个 ctx 向量的训练过程改成联邦聚合"。
+CoOp 证明了 Soft Prompt 在单机场景有效。PromptFL 的核心贡献就是"把这个 ctx 向量的训练过程改成联邦聚合"——理解了这一点，下面这篇就很自然了。
 
 ---
 
-### 入门论文 2：PromptFL — Let Federated Participants Cooperatively Learn Prompts Instead of Models
+### PromptFL — Let Federated Participants Cooperatively Learn Prompts Instead of Models
 
 > **期刊**：IEEE Transactions on Mobile Computing, 2023  
-> **arXiv**：搜 "PromptFL Guo 2023"  
 > **关键词**：Federated Prompt Learning, Communication Efficiency  
-> **阅读顺序**：读完 CoOp 后再读
+> 读完 CoOp 之后接着读这篇。
 
-**核心问题**：标准联邦学习（FedAvg）要在每轮通信中同步整个模型的梯度，对于 ViT-B/16 这种大模型（约 86M 参数），通信代价极高。PromptFL 的解法：**只让客户端训练 Soft Prompt，把模型变成不动的"公共基础设施"**。
+**核心问题**：标准联邦学习（FedAvg）每轮要同步整个模型的梯度，对 ViT-B/16 这种 86M 参数的大模型来说通信代价极高。PromptFL 的思路很简单：**只让客户端训练 Soft Prompt，模型本身变成不动的"公共基础设施"**。
 
-**通信量对比**：
+**通信量差距有多大？**
 
 ```
 FedAvg（同步全模型）：
@@ -140,41 +131,37 @@ for x, y in local_dataloader:
     optimizer.step()
 ```
 
-**PromptFL 的局限（= 你需要超越的地方）**：
+**PromptFL 的局限（后续工作要超越的地方）**：
 - 所有客户端学出来的是**同一个** Global Prompt，不区分客户端的域差异
-- 没有考虑 Prompt 的跨域泛化性（在训练过的域上好，但遇到新域就不行）
+- 没有考虑 Prompt 的跨域泛化性——在训练过的域上好，但遇到新域就不行
 - 2023 年的工作，后续 CVPR/ICML 已经在此基础上叠了很多层
 
 ---
 
-## 🚀 进阶阅读（精简提及）
+## 进阶阅读
 
-| 论文 | 会议 | 一句话贡献 | 与你的关系 |
+| 论文 | 会议 | 一句话贡献 | 和我的关系 |
 |---|---|---|---|
-| **DiPrompT** | CVPR 2024 | 把 Prompt 解耦成"通用知识"和"域特有风格"两部分 | 直接 Baseline，你要超越它 |
+| **DiPrompT** | CVPR 2024 | 把 Prompt 解耦成"通用知识"和"域特有风格"两部分 | 直接 Baseline，需要超越 |
 | **FedPGP** | ICML 2024 (arXiv:2405.09771) | LoRA 风格个性化 Prompt + CLIP 泛化约束 | 理解个性化 vs. 泛化的 trade-off |
 | **FedTPG** | ICLR 2024 | 文本驱动的 Prompt Generator，让 Prompt 能泛化到未见类别 | Generator 思路可借鉴 |
 | **FedDSPG** | arXiv 2025/09 (arXiv:2509.20807) | 生成式视角：训练 Generator 为未见域动态生成 Prompt | 最新 SOTA，找它的裂缝 |
 | **FedMVP** | ICCV 2025 | 多模态（图像+属性）注入 Prompt，超越纯文本 Prompt | 拓展视野用 |
 
-**阅读建议**：PromptFL → DiPrompT → FedDSPG，三篇连起来看就能理解这个子方向的进化主线。
+PromptFL → DiPrompT → FedDSPG，三篇连起来看就能理解这个子方向的进化主线。
 
 ---
 
----
+# 方向二：机器人 Sim-to-Real + FedDG
 
-# 🤖 方向二：机器人 Sim-to-Real + FedDG
+## 入门论文
 
-## 📖 入门论文（必读，详细介绍）
-
----
-
-### 入门论文 1：FedSR — A Simple and Effective Domain Generalization Method for Federated Learning
+### FedSR — A Simple and Effective Domain Generalization Method for Federated Learning
 
 > **会议**：NeurIPS 2022  
 > **作者**：A. Tuan Nguyen, Philip Torr, Ser-Nam Lim（牛津 + Meta AI）  
 > **代码**：github.com/atuannguyen/FedSR  
-> **注意**：这是通用 FedDG Baseline，不是机器人专属——但它是方向二实验对比中**必须出现**的对手
+> 这是通用 FedDG Baseline，不是机器人专属——但方向二实验对比中必须出现它。
 
 **核心问题**：大多数联邦学习方法只关心在现有客户端上表现好，完全忽视"来了一个从没见过的新客户端（新域）该怎么办"。FedSR 把 Domain Generalization 的目标正式嫁接进联邦框架。
 
@@ -215,16 +202,15 @@ def fesr_loss(z, y, z_dist, lambda_l2r=0.01, lambda_cmi=0.001):
 
 **生活类比**：FedSR 就像考前只记最核心的知识点，不背偏题。每个学生（客户端）用自己的笔记学习，但大家都遵循"只记主干，不记杂枝"的原则，最后合并的全局模型在任何新考场（新域）都有基础分保底。
 
-**为什么方向二必须用 FedSR 做 Baseline**：  
-FedSR 是学术界公认的 FedDG 通用 Baseline，你的论文如果不包含 FedSR 的比较结果，审稿人大概率会要求补充。它有**官方开源代码**，在 PACS/VLCS/Office-Home/DomainNet 上都有报告数字，可以直接用于对比实验。
+**为什么方向二必须用 FedSR 做 Baseline**：它是学术界公认的 FedDG 通用 Baseline。论文如果不包含 FedSR 的比较结果，审稿人大概率会要求补充。它有**官方开源代码**，在 PACS/VLCS/Office-Home/DomainNet 上都有报告数字，可以直接拿来对比。
 
 ---
 
-### 入门论文 2：Sim-to-Real Transfer via Language（非联邦版原型）
+### Sim-to-Real Transfer via Language（非联邦版原型）
 
 > **会议**：RSS 2024（Robotics: Science and Systems）  
 > **关键词**：CLIP semantic anchor, Sim-to-Real, Domain-invariant representation  
-> **为什么读**：这篇是方向二 Idea 的直接前身——无联邦版本的 CLIP 语义锚对齐
+> 这篇是方向二 idea 的直接前身——无联邦版本的 CLIP 语义锚对齐。
 
 **核心思路**：仿真图和真实图长得完全不同，但它们描述的是**同一个物理概念**（"一个红色积木"）。CLIP 的文字端天然理解这些概念，因此可以作为"跨域语义锚点"。
 
@@ -240,44 +226,38 @@ FedSR 是学术界公认的 FedDG 通用 Baseline，你的论文如果不包含 
   文字锚点   → [CLIP Text Enc]  → 向量 T（"a red cube on a table"）
 ```
 
-**这篇论文的"裂缝"**：
-
-它完全没有考虑联邦场景。多台机器人的数据如果放到同一台机器上做这个对齐，就违反了数据隐私原则。**如何在各客户端数据不能共享的情况下，用 CLIP 文字端做分布式的语义锚对齐？——这就是方向二 Idea 的切入点。**
+**这篇论文的"裂缝"**：它完全没有考虑联邦场景。多台机器人的数据如果放到同一台机器上做对齐，就违反了数据隐私原则。**如何在各客户端数据不能共享的情况下，用 CLIP 文字端做分布式的语义锚对齐？**——这就是方向二 idea 的切入点。
 
 ---
 
-## 🚀 进阶阅读（精简提及）
+## 进阶阅读
 
-| 论文 | 会议 | 一句话贡献 | 与你的关系 |
+| 论文 | 会议 | 一句话贡献 | 和我的关系 |
 |---|---|---|---|
-| **gPerXAN** | CVPR 2024 | 个性化重组 BN 层过滤域偏见，论文直接提机器人应用 | 方向二的专属 Baseline |
+| **gPerXAN** | CVPR 2024 | 个性化重组 BN 层过滤域偏见，论文直接提机器人应用 | 方向二专属 Baseline |
 | **FedDG（Liu et al.）** | CVPR 2021 | FedDG 开山之作：频域风格迁移生成跨域样本 | 理解数据操作分支的奠基逻辑 |
 | **StableFDG** | NeurIPS 2023 | 风格+注意力双路联合联邦域泛化 | 参考数据增强策略 |
 | **FedADG** | arXiv 2021 | 对抗联邦域对齐，用参考分布做分布匹配 | 理解域对齐分支的基本方法 |
 | **VisDA-2017 数据集论文** | arXiv 2017 | 152K 仿真 + 55K 真实，Sim-to-Real 标准 Benchmark | 方向二的首选数据集 |
 
-**阅读建议**：FedSR → gPerXAN → Sim2Real with Language，再看 FedDG(CVPR 2021)了解数据操作分支的历史。
+FedSR → gPerXAN → Sim2Real with Language，再看 FedDG (CVPR 2021) 了解数据操作分支的历史。
 
 ---
 
----
+# 方向三：Source-Free FedDG + 不确定性感知聚合（蔡老师主场）
 
-# 👴 方向三：Source-Free FedDG + 不确定性感知聚合（蔡老师主场）
+## 入门论文
 
-## 📖 入门论文（必读，详细介绍）
-
----
-
-### 入门论文 1：SHOT — Do We Really Need to Access the Source Data? Source Hypothesis Transfer for Unsupervised Domain Adaptation
+### SHOT — Do We Really Need to Access the Source Data?
 
 > **会议**：ICML 2020  
 > **作者**：Liang et al.  
 > **关键词**：Source-Free DA, Pseudo-label, Information Maximization  
-> **地位**：Source-Free Domain Adaptation 领域的开山之作，蔡老师方向的"祖师爷"
+> Source-Free Domain Adaptation 领域的开山之作，也是蔡老师方向的"祖师爷"。
 
 **核心问题**：传统域自适应（DA）假设源域数据和目标域数据同时可访问，但现实中源域数据往往因为**隐私或版权**被销毁。SHOT 首次提出：**只用预训练好的源域模型 + 无标注目标域数据，能否完成自适应？**
 
-**SHOT 的两把刀**：
+**SHOT 的两个核心 loss**：
 
 ```python
 def shot_loss(features, pseudo_labels, predictions):
@@ -305,22 +285,22 @@ def shot_loss(features, pseudo_labels, predictions):
     return im_loss + pseudo_loss
 ```
 
-**生活类比**：SHOT 就像一个"只带毕业证书（模型）、没带过去卷子（源数据）"被调往新城市的医生。他的自适应策略是：先给所有病人快速诊断（生成伪标签），然后只相信自己"最有把握"的判断（高置信度），用这些判断来调整自己的诊断风格（模型微调）。同时他会主动确保自己的诊断不要出现"所有人都是感冒"这种懈怠（多样性约束）。
+**生活类比**：SHOT 就像一个"只带毕业证书（模型）、没带过去卷子（源数据）"被调往新城市的医生。他的自适应策略是：先给所有病人快速诊断（生成伪标签），只相信自己最有把握的判断（高置信度），用这些判断来调整诊断风格（模型微调），同时确保诊断结果不会退化成"所有人都是感冒"（多样性约束）。
 
-**SHOT 的历史地位**：它是蔡老师研究链的"源头"。蔡老师后续工作（如 UCon-SFDA）是在 SHOT 基础上，用更精确的不确定性建模来改进"如何判断哪些伪标签值得信任"这个核心问题。
+**SHOT 的历史地位**：它是蔡老师研究链的"源头"。后续工作（如 UCon-SFDA）是在 SHOT 基础上，用更精确的不确定性建模来改进"如何判断哪些伪标签值得信任"这个核心问题。
 
 **关键局限**：SHOT 是**单机版本**，源数据销毁发生在单台机器上。如何把这个框架推广到多客户端的联邦设置？——这就是方向三的研究动机。
 
 ---
 
-### 入门论文 2：FedWCA — Federated Source-Free Domain Adaptation via Weighted Cluster Aggregation
+### FedWCA — Federated Source-Free Domain Adaptation via Weighted Cluster Aggregation
 
 > **会议**：WACV 2025  
 > **arXiv**：arXiv:2412.13757  
 > **关键词**：Source-Free, Federated, Weighted Aggregation, Pseudo-label  
-> **地位**：目前最接近方向三 Idea 的前驱论文，也是最直接的超越对象
+> 目前最接近方向三 idea 的前驱论文，也是最直接的超越对象。
 
-**FedWCA 做了什么**：把 Source-Free DA 真正搬进联邦框架，并提出了第一个有理论支撑的联邦加权聚合方法。
+FedWCA 把 Source-Free DA 真正搬进了联邦框架，并提出了第一个有理论支撑的联邦加权聚合方法。
 
 **三阶段流程**：
 
@@ -373,22 +353,22 @@ def weighted_cluster_aggregation(client_models, client_features, global_model):
     return new_state
 ```
 
-**FedWCA 的致命裂缝（= 你的 Idea 入口）**：
+**FedWCA 的致命裂缝**（也是 idea 入口）：
 
 > **权重是静态的。** 对齐程度一旦计算完毕，在整个聚合过程中就固定了。但真实场景中，同一个客户端的数据里同时存在"高置信度样本"（白天光线充足）和"低置信度样本"（夜间、遮挡），静态权重无法区分这两类样本。**把动态不确定性估计引入聚合权重计算，就是填补 FedWCA 最大裂缝的方向。**
 
 ---
 
-### 入门论文 3：UCon-SFDA — Revisiting Source-Free Domain Adaptation: Uncertainty Control Perspective
+### UCon-SFDA — Revisiting Source-Free Domain Adaptation: Uncertainty Control Perspective
 
 > **会议**：ICLR 2025  
 > **OpenReview ID**：nx9Z5Kva96  
 > **关键词**：DRO, Uncertainty Control, Partial Label, Source-Free  
-> **地位**：蔡老师研究方向的最新代表作，你的 Idea 的技术提供方
+> 蔡老师研究方向的最新代表作，方向三 idea 的技术提供方。
 
-**UCon-SFDA 做了什么**：用 Distributionally Robust Optimization（DRO）理论来**精确建模**哪些样本是"不确定的"，并为不确定样本设计专门的"宽松监督"策略。
+UCon-SFDA 用 Distributionally Robust Optimization（DRO）理论来精确建模哪些样本是"不确定的"，并为不确定样本设计专门的"宽松监督"策略。
 
-**不确定性的来源（UCon-SFDA 的理论贡献）**：
+**不确定性的三个来源**：
 
 ```
 UCon-SFDA 把不确定性分成三类：
@@ -396,10 +376,10 @@ UCon-SFDA 把不确定性分成三类：
   2. 域偏移导致的不确定性（从源域到目标域的分布变化）
   3. 模型容量导致的不确定性（模型本身的预测置信度）
 
-→ 对不同来源的不确定性，分别设计不同的监督信号强度
+对不同来源的不确定性，分别设计不同的监督信号强度。
 ```
 
-**关键创新：Partial Label（偏标签）**
+**关键创新：Partial Label（偏标签）**——对高置信度样本用 hard pseudo-label 强监督，对低置信度样本只要求 top-K 个最可能的类别都算对，不强迫选一个。
 
 ```python
 def uncertainty_aware_loss(predictions, uncertainty_scores, threshold=0.3):
@@ -425,22 +405,20 @@ def uncertainty_aware_loss(predictions, uncertainty_scores, threshold=0.3):
     return hard_loss + 0.5 * partial_loss
 ```
 
-**UCon-SFDA 的裂缝（= 你的 Idea 的另一半）**：
-
-> **这是单机版本。** UCon-SFDA 假设只有一台机器，没有联邦多客户端场景。它无法处理"如何在不共享数据的情况下，让多个客户端的不确定性信息指导服务器聚合"这个问题。
+**UCon-SFDA 的裂缝**：这是**单机版本**，假设只有一台机器，没有联邦多客户端场景。它无法处理"如何在不共享数据的情况下，让多个客户端的不确定性信息指导服务器聚合"。
 
 ---
 
-## ⚡ 你的核心 Idea（两篇论文的"乐高拼接"）
+## 核心 Idea：两篇论文的"乐高拼接"
 
 ```
 UCon-SFDA（ICLR 2025）         FedWCA（WACV 2025）
   ↓                               ↓
   动态不确定性估计               联邦 Source-Free 加权聚合
-  精确的样本级不确定性建模        但权重是静态的（致命弱点）
-  单机版本（无联邦场景）          无动态不确定性感知（致命弱点）
+  精确的样本级不确定性建模        但权重是静态的
+  单机版本（无联邦场景）          无动态不确定性感知
            ↓
-           你的 Idea：
+           Idea：
     Dynamic Uncertainty-Aware
     Federated Aggregation
    （动态不确定性感知联邦聚合）
@@ -448,23 +426,21 @@ UCon-SFDA（ICLR 2025）         FedWCA（WACV 2025）
 
 ---
 
-## 🚀 进阶阅读（精简提及）
+## 进阶阅读
 
-| 论文 | 会议 | 一句话贡献 | 与你的关系 |
+| 论文 | 会议 | 一句话贡献 | 和我的关系 |
 |---|---|---|---|
-| **SHOT++** | TPAMI 2023 | SHOT 的增强版，加入目标域类别均衡约束 | 理解 SHOT 系列的演化 |
-| **NRC** | NeurIPS 2021 | 利用近邻关系图做 Source-Free DA | 理解邻域一致性思路 |
+| **SHOT++** | TPAMI 2023 | SHOT 的增强版，加入目标域类别均衡约束 | 理解 SHOT 系列演化 |
+| **NRC** | NeurIPS 2021 | 利用近邻关系图做 Source-Free DA | 邻域一致性思路 |
 | **AaD** | NeurIPS 2022 | 对抗式 Source-Free DA，无需源域数据做域对齐 | 另一类 SFDA 方法视角 |
-| **FedBN** | ICLR 2021 | 保留本地 BN 层不聚合，处理客户端间分布偏移 | 联邦个性化的经典工作 |
+| **FedBN** | ICLR 2021 | 保留本地 BN 层不聚合，处理客户端间分布偏移 | 联邦个性化经典工作 |
 | **SCAFFOLD** | ICML 2020 | 用控制变量纠正 client drift，FedAvg 的重要改进 | 方向三实验的联邦优化 Baseline |
 
 **阅读建议**：SHOT → FedWCA（arXiv:2412.13757）→ UCon-SFDA（ICLR 2025）。三篇连起来就是方向三的完整故事线。
 
 ---
 
----
-
-# 🗺️ 三方向论文全局索引
+# 三方向论文全局索引
 
 | 论文简称 | 全名关键词 | 会议/期刊 | 可查找方式 | 方向归属 |
 |---|---|---|---|---|
@@ -484,24 +460,23 @@ UCon-SFDA（ICLR 2025）         FedWCA（WACV 2025）
 
 ---
 
-## 📋 阅读优先级建议
+## 阅读优先级建议
 
-**如果你选择方向三（推荐）**：
-1. 🔴 优先：SHOT → FedWCA → UCon-SFDA（理解你的 Idea 的来龙去脉）
-2. 🟡 之后：FedSR（实验对比 Baseline），FedBN、SCAFFOLD（联邦优化基础）
-3. 🟢 有余力：NRC、AaD（丰富 Related Work）
+**方向三（推荐）**：
+1. 优先：SHOT → FedWCA → UCon-SFDA（理解 idea 的来龙去脉）
+2. 之后：FedSR（实验对比 Baseline），FedBN、SCAFFOLD（联邦优化基础）
+3. 有余力：NRC、AaD（丰富 Related Work）
 
-**如果你选择方向一**：
-1. 🔴 优先：CoOp → PromptFL → DiPrompT → FedDSPG
-2. 🟡 之后：FedSR（对比 Baseline），FedTPG（Generator 思路参考）
-3. 🟢 有余力：FedMVP（最新 SOTA）
+**方向一**：
+1. 优先：CoOp → PromptFL → DiPrompT → FedDSPG
+2. 之后：FedSR（对比 Baseline），FedTPG（Generator 思路参考）
+3. 有余力：FedMVP（最新 SOTA）
 
-**如果你选择方向二**：
-1. 🔴 优先：FedSR → gPerXAN → Sim2Real with Language
-2. 🟡 之后：FedDG(CVPR 2021)（了解数据操作分支），FedADG（域对齐分支）
-3. 🟢 有余力：VisDA-2017 数据集论文，GraspNet-1Billion
+**方向二**：
+1. 优先：FedSR → gPerXAN → Sim2Real with Language
+2. 之后：FedDG (CVPR 2021)（了解数据操作分支），FedADG（域对齐分支）
+3. 有余力：VisDA-2017 数据集论文，GraspNet-1Billion
 
 ---
 
-*整理者：Arden 江 | NJUPT 机器人工程 2025级*  
-*AI 助手整理 | 更新于：2026-03-07*
+*整理者：Arden 江 | NJUPT 机器人工程 2025 级*

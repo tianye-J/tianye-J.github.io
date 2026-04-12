@@ -1,4 +1,4 @@
 +++
 title = "Project"
-description = "我参与的项目与工程实践"
+description = "Projects and engineering practice"
 +++

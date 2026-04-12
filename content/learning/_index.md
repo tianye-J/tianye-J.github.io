@@ -1,9 +1,9 @@
 +++
 title = "Learning"
-description = "学习笔记与技术积累"
+description = "Learning notes and technical accumulation"
 +++
 
 <div class="page-epigraph">
-  <p class="epigraph-text">你是云、是海、是忘却，你也是曾失去的每一个自己</p>
-  <p class="epigraph-source">— 博尔赫斯《云团》</p>
+  <p class="epigraph-text">You are the cloud, the sea, oblivion. You are also each self you have lost.</p>
+  <p class="epigraph-source">— Jorge Luis Borges, <em>Clouds</em></p>
 </div>

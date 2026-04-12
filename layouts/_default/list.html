@@ -16,9 +16,9 @@
   <span class="section-label">{{ upper .Title }}</span>
   {{- end }}
   <h1>
-    {{- if eq .Section "learning" }}学习
-    {{- else if eq .Section "projects" }}项目
-    {{- else if eq .Section "thinking" }}随想
+    {{- if eq .Section "learning" }}Learning
+    {{- else if eq .Section "projects" }}Projects
+    {{- else if eq .Section "thinking" }}Thinking
     {{- else }}{{ .Title }}
     {{- end }}
     {{- if and (or (eq .Kind `term`) (eq .Kind `section`)) (.Param "ShowRssButtonInSectionTermList") }}
@@ -120,8 +120,8 @@
   <section class="home-section">
     <div class="home-section-header">
       <span class="section-label">LEARNING</span>
-      <h2><a href="{{ "learning/" | absURL }}">学习笔记</a></h2>
-      <p class="home-section-desc">技术积累与知识沉淀</p>
+      <h2><a href="{{ "learning/" | absURL }}">Learning Notes</a></h2>
+      <p class="home-section-desc">Technical accumulation and knowledge distillation</p>
     </div>
     <div class="home-section-list">
       {{- range first 3 $learning }}
@@ -136,11 +136,11 @@
       </article>
       {{- end }}
       {{- if eq (len $learning) 0 }}
-      <p class="home-section-empty">暂无文章</p>
+      <p class="home-section-empty">No posts yet</p>
       {{- end }}
     </div>
     {{- if gt (len $learning) 3 }}
-    <a class="home-section-more" href="{{ "learning/" | absURL }}">查看全部 ›</a>
+    <a class="home-section-more" href="{{ "learning/" | absURL }}">View all ›</a>
     {{- end }}
   </section>
   
@@ -150,8 +150,8 @@
   <section class="home-section">
     <div class="home-section-header">
       <span class="section-label">PROJECTS</span>
-      <h2><a href="{{ "projects/" | absURL }}">项目</a></h2>
-      <p class="home-section-desc">工程实践与作品集</p>
+      <h2><a href="{{ "projects/" | absURL }}">Projects</a></h2>
+      <p class="home-section-desc">Engineering practice and portfolio</p>
     </div>
     <div class="home-section-list">
       {{- range first 3 $projects }}
@@ -166,11 +166,11 @@
       </article>
       {{- end }}
       {{- if eq (len $projects) 0 }}
-      <p class="home-section-empty">暂无文章</p>
+      <p class="home-section-empty">No posts yet</p>
       {{- end }}
     </div>
     {{- if gt (len $projects) 3 }}
-    <a class="home-section-more" href="{{ "projects/" | absURL }}">查看全部 ›</a>
+    <a class="home-section-more" href="{{ "projects/" | absURL }}">View all ›</a>
     {{- end }}
   </section>
 
@@ -180,8 +180,8 @@
   <section class="home-section">
     <div class="home-section-header">
       <span class="section-label">THINKING</span>
-      <h2><a href="{{ "thinking/" | absURL }}">随想</a></h2>
-      <p class="home-section-desc">阶段性反思与计划</p>
+      <h2><a href="{{ "thinking/" | absURL }}">Reflections</a></h2>
+      <p class="home-section-desc">Periodic reflections and plans</p>
     </div>
     <div class="home-section-list">
       {{- range first 3 $thinking }}
@@ -196,11 +196,11 @@
       </article>
       {{- end }}
       {{- if eq (len $thinking) 0 }}
-      <p class="home-section-empty">暂无文章</p>
+      <p class="home-section-empty">No posts yet</p>
       {{- end }}
     </div>
     {{- if gt (len $thinking) 3 }}
-    <a class="home-section-more" href="{{ "thinking/" | absURL }}">查看全部 ›</a>
+    <a class="home-section-more" href="{{ "thinking/" | absURL }}">View all ›</a>
     {{- end }}
   </section>
 </div>

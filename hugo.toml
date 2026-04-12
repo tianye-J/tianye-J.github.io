@@ -23,7 +23,7 @@ theme = "PaperMod"
 
   [params.homeInfoParams]
     Title = "Hello, I’m **Arden**"
-    Content = "Robotics Engineering @ NJUPT · Exploring AI & Autonomous Systems"
+    Content = "Robotics Engineering @ NJUPT · Exploring Federated Learning & Domain Generalization"
 
   [[params.socialIcons]]
     name = "github"

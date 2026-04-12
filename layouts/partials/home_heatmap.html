@@ -11,27 +11,27 @@
 <section
   class="home-heatmap"
   data-weeks="26"
-  data-summary="最近 {weeks} 周共写了 {count} 篇，分布在 {days} 天。"
-  data-summary-empty="最近 {weeks} 周还没有新的文章，下一篇会点亮这里。"
-  data-tooltip-empty="{date} · 暂无文章"
-  data-tooltip-single="{date} · 1 篇"
-  data-tooltip-multiple="{date} · {count} 篇"
-  data-aria-label="最近写作频率热力图"
+  data-summary="{count} posts across {days} days in the past {weeks} weeks."
+  data-summary-empty="No new posts in the past {weeks} weeks. The next one will light up here."
+  data-tooltip-empty="{date} · No posts"
+  data-tooltip-single="{date} · 1 post"
+  data-tooltip-multiple="{date} · {count} posts"
+  data-aria-label="Recent writing frequency heatmap"
 >
   <div class="home-heatmap-header">
     <span class="section-label">WRITING RHYTHM</span>
   </div>
 
   <div class="home-heatmap-meta">
-    <p class="home-heatmap-summary">正在整理最近的写作节奏...</p>
+    <p class="home-heatmap-summary">Loading recent writing rhythm...</p>
     <div class="home-heatmap-legend" aria-hidden="true">
-      <span>少</span>
+      <span>Less</span>
       <span class="legend-cell level-0"></span>
       <span class="legend-cell level-1"></span>
       <span class="legend-cell level-2"></span>
       <span class="legend-cell level-3"></span>
       <span class="legend-cell level-4"></span>
-      <span>多</span>
+      <span>More</span>
     </div>
   </div>
 
@@ -39,7 +39,7 @@
     <div class="home-heatmap-months" aria-hidden="true"></div>
     <div class="home-heatmap-grid-shell">
       <div class="home-heatmap-weekdays" aria-hidden="true"></div>
-      <div class="home-heatmap-grid" role="img" aria-label="最近写作频率热力图"></div>
+      <div class="home-heatmap-grid" role="img" aria-label="Recent writing frequency heatmap"></div>
     </div>
   </div>
 

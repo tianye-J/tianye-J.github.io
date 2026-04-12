@@ -1,57 +1,57 @@
 /* ============================================================
    语法高亮 — 暖色浅底方案
-   配合站点 #FAFAF7 代码块背景
+   配合站点 #faf9f5 代码块背景
    ============================================================ */
 
 /* 背景 */
-.bg { color: #2C2824; background-color: #FAFAF7; }
-.chroma { color: #2C2824; background-color: #FAFAF7; }
+.bg { color: #2C2824; background-color: #faf9f5; }
+.chroma { color: #2C2824; background-color: #faf9f5; }
 
 /* 行相关 */
 .chroma .x { }
 .chroma .lnlinks { outline: none; text-decoration: none; color: inherit; }
 .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
 .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
-.chroma .hl { background-color: rgba(200, 121, 90, 0.1); }
-.chroma .lnt { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em; color: #B5C5BE; }
-.chroma .ln { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em; color: #B5C5BE; }
+.chroma .hl { background-color: rgba(201, 100, 66, 0.1); }
+.chroma .lnt { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em; color: #b0aea5; }
+.chroma .ln { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em; color: #b0aea5; }
 .chroma .line { display: flex; }
 .chroma .cl { color: #2C2824; }
 
 /* 错误 */
-.chroma .err { color: #C8795A; }
+.chroma .err { color: #c96442; }
 
-/* 关键字 — 橄榄绿 */
-.chroma .k  { color: #6B8A5E; font-weight: 600; }
-.chroma .kc { color: #6B8A5E; font-weight: 600; }
-.chroma .kd { color: #6B8A5E; font-weight: 600; }
-.chroma .kn { color: #6B8A5E; font-weight: 600; }
-.chroma .kp { color: #6B8A5E; }
-.chroma .kr { color: #6B8A5E; font-weight: 600; }
-.chroma .kt { color: #7A8F6E; }
+/* 关键字 — 暖棕 */
+.chroma .k  { color: #8B6B4A; font-weight: 600; }
+.chroma .kc { color: #8B6B4A; font-weight: 600; }
+.chroma .kd { color: #8B6B4A; font-weight: 600; }
+.chroma .kn { color: #8B6B4A; font-weight: 600; }
+.chroma .kp { color: #8B6B4A; }
+.chroma .kr { color: #8B6B4A; font-weight: 600; }
+.chroma .kt { color: #8B7355; }
 
 /* 名称 — 深暖灰 */
 .chroma .n  { color: #2C2824; }
-.chroma .na { color: #7A8F6E; }         /* 属性名 — 橄榄绿 */
+.chroma .na { color: #8B7355; }         /* 属性名 — 深棕 */
 .chroma .nb { color: #8B7355; }         /* 内置名 — 深棕 */
 .chroma .bp { color: #8B7355; }         /* 内置伪名 */
-.chroma .nc { color: #B5704F; }         /* 类名 — 赤陶 */
-.chroma .no { color: #B5704F; }         /* 常量 */
+.chroma .nc { color: #c96442; }         /* 类名 — 赤陶 */
+.chroma .no { color: #c96442; }         /* 常量 */
 .chroma .nd { color: #8B7355; }         /* 装饰器 */
 .chroma .ni { color: #2C2824; }
-.chroma .ne { color: #B5704F; }         /* 异常 */
-.chroma .nf { color: #6B7B5E; }         /* 函数名 — 柔橄榄 */
-.chroma .fm { color: #6B7B5E; }         /* 魔术方法 */
-.chroma .nl { color: #7A8F6E; }
+.chroma .ne { color: #c96442; }         /* 异常 */
+.chroma .nf { color: #7A6B55; }         /* 函数名 — 柔棕 */
+.chroma .fm { color: #7A6B55; }         /* 魔术方法 */
+.chroma .nl { color: #8B7355; }
 .chroma .nn { color: #8B7355; }         /* 模块名 */
 .chroma .nx { color: #2C2824; }
 .chroma .py { color: #2C2824; }
-.chroma .nt { color: #6B8A5E; }         /* 标签名 */
-.chroma .nv { color: #5C6B5A; }         /* 变量 */
-.chroma .vc { color: #5C6B5A; }
-.chroma .vg { color: #5C6B5A; }
-.chroma .vi { color: #5C6B5A; }
-.chroma .vm { color: #5C6B5A; }
+.chroma .nt { color: #8B6B4A; }         /* 标签名 */
+.chroma .nv { color: #5e5d59; }         /* 变量 */
+.chroma .vc { color: #5e5d59; }
+.chroma .vg { color: #5e5d59; }
+.chroma .vi { color: #5e5d59; }
+.chroma .vm { color: #5e5d59; }
 
 /* 字面量 */
 .chroma .l  { color: #A0784A; }
@@ -65,9 +65,9 @@
 .chroma .dl { color: #A0784A; }
 .chroma .sd { color: #A0784A; }
 .chroma .s2 { color: #A0784A; }
-.chroma .se { color: #C8795A; }         /* 转义 — 赤陶 */
+.chroma .se { color: #c96442; }         /* 转义 — 赤陶 */
 .chroma .sh { color: #A0784A; }
-.chroma .si { color: #C8795A; }         /* 插值 */
+.chroma .si { color: #c96442; }         /* 插值 */
 .chroma .sx { color: #A0784A; }
 .chroma .sr { color: #A0784A; }
 .chroma .s1 { color: #A0784A; }
@@ -84,30 +84,30 @@
 
 /* 运算符 — 中灰 */
 .chroma .o  { color: #7A7A72; }
-.chroma .ow { color: #6B8A5E; font-weight: 600; }
+.chroma .ow { color: #8B6B4A; font-weight: 600; }
 
 /* 标点 */
 .chroma .p { color: #5C5650; }
 
-/* 注释 — 薄荷灰绿 + 斜体 */
-.chroma .c  { color: #9BAFA3; font-style: italic; }
-.chroma .ch { color: #9BAFA3; font-style: italic; }
-.chroma .cm { color: #9BAFA3; font-style: italic; }
-.chroma .c1 { color: #9BAFA3; font-style: italic; }
-.chroma .cs { color: #9BAFA3; font-style: italic; font-weight: 600; }
-.chroma .cp { color: #9BAFA3; }
-.chroma .cpf { color: #9BAFA3; }
+/* 注释 — Stone Gray + 斜体 */
+.chroma .c  { color: #87867f; font-style: italic; }
+.chroma .ch { color: #87867f; font-style: italic; }
+.chroma .cm { color: #87867f; font-style: italic; }
+.chroma .c1 { color: #87867f; font-style: italic; }
+.chroma .cs { color: #87867f; font-style: italic; font-weight: 600; }
+.chroma .cp { color: #87867f; }
+.chroma .cpf { color: #87867f; }
 
 /* 泛型 */
 .chroma .g  { }
-.chroma .gd { color: #C8795A; }         /* diff 删除 */
+.chroma .gd { color: #c96442; }         /* diff 删除 */
 .chroma .ge { font-style: italic; }
-.chroma .gr { color: #C8795A; }
+.chroma .gr { color: #c96442; }
 .chroma .gh { color: #2C2824; font-weight: 700; }
-.chroma .gi { color: #6B8A5E; }         /* diff 新增 */
+.chroma .gi { color: #8B6B4A; }         /* diff 新增 */
 .chroma .go { color: #7A7A72; }
-.chroma .gp { color: #9BAFA3; font-weight: 700; }
+.chroma .gp { color: #87867f; font-weight: 700; }
 .chroma .gs { font-weight: 700; }
-.chroma .gu { color: #9BAFA3; }
+.chroma .gu { color: #87867f; }
 .chroma .gl { text-decoration: underline; }
-.chroma .w  { color: #B5C5BE; }
+.chroma .w  { color: #b0aea5; }

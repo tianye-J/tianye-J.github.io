@@ -1,72 +1,89 @@
 /* ============================================================
-   Arden J — 极简人文主义主题
+   Arden J — Warm Humanist Theme
    Design language: claude.ai inspired warm minimalism
    ============================================================ */
 
-/* 1. 字体引入 */
-/* 英文衬线：Noto Serif */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap');
-/* 代码字体：JetBrains Mono */
+/* 1. Font Imports */
+/* Serif: Noto Serif */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;1,400&display=swap');
+/* Code: JetBrains Mono */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-/* 中文字体：霞鹜文楷（国内 CDN） */
+/* Chinese: LXGW WenKai */
 @import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@latest/style.css');
 
-/* ---- 2. 设计令牌（Design Tokens） ---- */
+/* ---- 2. Design Tokens ---- */
 :root {
-    /* 色板 — 中性暖灰 / 橄榄绿 / 赤陶 / 薄荷灰绿 */
-    --theme:        #D8D4CE;        /* 暖灰色 — PaperMod 主题色 */
-    --background:   #F5F3F0;        /* 中性灰白 — 页面背景 */
-    --entry:        #FAFAF8;        /* 卡片底色：微暖白 */
-    --code-bg:      #EDECEA;        /* 行内代码背景 */
-    --code-block-bg:#FAFAF8;        /* 代码块背景 */
-    --border:       #E0DDD8;        /* 统一边框色（中性灰） */
-    --header-bg:    rgba(250, 250, 248, 0.92); /* 导航栏背景（半透明白，配合毛玻璃） */
+    /* Palette — Parchment / Terracotta / Warm Neutrals */
+    --theme:        #D8D4CE;        /* PaperMod theme color */
+    --background:   #f5f4ed;        /* Parchment */
+    --entry:        #faf9f5;        /* Ivory */
+    --code-bg:      #edebe3;        /* Inline code background */
+    --code-block-bg:#faf9f5;        /* Code block background (Ivory) */
+    --border:       #f0eee6;        /* Border Cream */
+    --header-bg:    rgba(250, 249, 245, 0.92); /* Ivory semi-transparent */
 
-    /* 文字层级 */
-    --primary:      #1A1A1A;        /* 标题、正文：纯正深灰 */
-    --secondary:    #5C6B5A;        /* 辅助文字：橄榄绿色调 */
-    --tertiary:     #9BAFA3;        /* 更轻的提示：薄荷灰绿色调 */
-    --content:      #2D2D2D;        /* 文章正文：中性深灰 */
+    /* Text hierarchy — warm grays only */
+    --primary:      #141413;        /* Anthropic Near Black */
+    --secondary:    #5e5d59;        /* Olive Gray */
+    --tertiary:     #87867f;        /* Stone Gray */
+    --content:      #4d4c48;        /* Charcoal Warm */
 
-    /* 交互色 */
-    --link:         #7A8F6E;        /* 橄榄绿 — 链接 */
-    --link-hover:   #5C6B52;        /* 橄榄绿深色 — hover */
-    --accent:       #C8795A;        /* 赤陶色 — 高亮 / 强调 */
-    --accent-hover: #A8603E;        /* 赤陶深色 */
-    --sage:         #B5C5BE;        /* 薄荷灰绿 — 标签 / hover 背景 */
+    /* Interactive — Terracotta */
+    --link:         #c96442;        /* Terracotta Brand */
+    --link-hover:   #a84e2e;        /* Deep Terracotta */
+    --accent:       #c96442;        /* Terracotta Brand */
+    --accent-hover: #a84e2e;        /* Deep Terracotta */
+    --sage:         #e8e6dc;        /* Warm Sand */
 
-    /* 字体 */
-    --font-family:      'Noto Serif', 'LXGW WenKai', Georgia, 'Times New Roman', serif;
-    --font-family-code: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+    /* Extended tokens */
+    --dark-warm:    #3d3d3a;
+    --border-warm:  #e8e6dc;        /* Prominent borders / dividers */
+    --ring-warm:    #d1cfc5;        /* Ring shadow */
+    --ring-deep:    #c2c0b6;        /* Active/pressed ring */
 
-    /* 圆角 — 克制化 */
+    /* Typography — dual system: serif headings + sans body */
+    --font-family-serif: 'Noto Serif', 'LXGW WenKai', Georgia, serif;
+    --font-family-sans:  'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-family:       var(--font-family-sans);
+    --font-family-code:  'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+
+    /* Border radius */
     --radius:       8px;
 
-    /* 阴影 — 极轻 */
-    --shadow-sm:    0 1px 2px rgba(44, 40, 36, 0.03);
-    --shadow-md:    0 2px 8px rgba(44, 40, 36, 0.04);
-    --shadow-hover: 0 4px 12px rgba(44, 40, 36, 0.06);
+    /* Shadows — ring-based system */
+    --shadow-sm:    0px 0px 0px 1px rgba(240, 238, 230, 0.8);
+    --shadow-md:    rgba(0, 0, 0, 0.05) 0px 4px 24px;
+    --shadow-hover: 0px 0px 0px 1px var(--ring-warm);
+
+    /* Animation easing */
+    --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ---- 3. 全局基础 ---- */
+/* ---- 3. Global Base ---- */
 body {
     font-family: var(--font-family);
-    line-height: 1.8;
+    line-height: 1.60;
     color: var(--primary);
     background: var(--background);
     -webkit-font-smoothing: antialiased;
 }
 
-/* 覆盖 PaperMod 在 .list 上的 background 设置 */
+/* Headings: serif + weight 500 */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-serif);
+    font-weight: 500;
+}
+
+/* Override PaperMod .list background */
 body.list {
     background: var(--background);
 }
 
-/* ---- 4. 导航栏（sticky + 视觉分层） ---- */
+/* ---- 4. Navigation (sticky + frosted glass) ---- */
 .header {
     background-color: var(--header-bg) !important;
     border-bottom: 1px solid var(--border);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    box-shadow: none;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -91,31 +108,28 @@ body.list {
     letter-spacing: 0.04em;
     text-transform: uppercase;
     padding: 8px 12px;
-    border-radius: 0;
-    border-bottom: 2px solid transparent;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition: color 0.2s ease;
 }
 
 #menu a:hover {
     color: var(--primary);
     background-color: transparent;
-    border-bottom-color: var(--border);
 }
 
 #menu a.active {
     color: var(--primary);
     background-color: transparent;
-    border-bottom-color: var(--accent);
 }
 
 .logo a {
+    font-family: var(--font-family-serif);
     font-size: 1.2rem;
-    font-weight: 700;
+    font-weight: 500;
     color: var(--primary) !important;
     letter-spacing: 0.01em;
 }
 
-/* ---- 5. 首页信息区 ---- */
+/* ---- 5. Homepage Hero ---- */
 .home-info {
     text-align: center;
     padding: 4rem 1.5rem 2.5rem;
@@ -125,22 +139,22 @@ body.list {
 }
 
 .home-info .entry-header h1 {
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 3.25rem;
+    font-weight: 500;
     color: var(--primary);
     margin-bottom: 0.8rem;
-    line-height: 1.4;
+    line-height: 1.10;
 }
 
 .home-info .entry-content {
     font-size: 1rem;
     color: var(--secondary);
-    line-height: 1.7;
+    line-height: 1.60;
     max-width: 480px;
     margin: 0 auto;
 }
 
-/* 社交图标区 — 优雅间距 */
+/* Social icons */
 .home-info .entry-footer {
     margin-top: 1.5rem;
 }
@@ -169,26 +183,26 @@ body.list {
     height: 20px;
 }
 
-/* ---- 6. 文章卡片列表 ---- */
+/* ---- 6. Post Cards ---- */
 .post-entry {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--border);
-    border-radius: 0;
-    margin-bottom: 0;
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    padding: 1.2rem 1.5rem;
     box-shadow: none;
-    transition: background-color 0.2s ease;
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .post-entry:hover {
     transform: none;
-    box-shadow: none;
-    background-color: rgba(44, 40, 36, 0.02);
+    box-shadow: var(--shadow-hover);
+    background-color: var(--entry);
 }
 
 .post-entry .entry-header h2 {
     font-size: 1.15rem;
-    font-weight: 700;
+    font-weight: 500;
     color: var(--primary);
     line-height: 1.5;
 }
@@ -204,14 +218,13 @@ body.list {
     font-size: 0.82rem;
 }
 
-/* 首篇文章也统一平面风格 */
+/* First entry matches card style */
 .first-entry {
-    border-radius: 0;
-    border: none;
-    border-bottom: 1px solid var(--border);
+    border-radius: 8px;
+    border: 1px solid var(--border);
 }
 
-/* ---- 7. 主内容区 ---- */
+/* ---- 7. Main Content Area ---- */
 .main {
     max-width: 1060px;
     margin: 0 auto;
@@ -219,17 +232,17 @@ body.list {
     position: relative;
     z-index: 1;
     background: var(--background);
-    border-radius: 0 0 0 0;
+    border-radius: 0;
 }
 
-/* 文章正文页收窄，保持阅读舒适度 */
+/* Narrow article content for reading comfort */
 .post-single {
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem 0;
 }
 
-/* 列表页文章卡片也适度收窄，避免过宽 */
+/* Narrow list page cards */
 .page-header,
 body.list .post-entry {
     max-width: 800px;
@@ -243,20 +256,20 @@ body.list .page-footer {
     margin-right: auto;
 }
 
-/* About 等独立页面也收窄 */
+/* Narrow standalone pages (About, etc.) */
 body:not(.list) .post-content {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* ---- 8. 文章正文排版 ---- */
+/* ---- 8. Article Typography ---- */
 
 .post-header .post-title {
-    font-size: 1.8rem;
-    font-weight: 700;
+    font-size: 2.3rem;
+    font-weight: 500;
     color: var(--primary);
-    line-height: 1.4;
+    line-height: 1.20;
     margin-bottom: 0.5rem;
 }
 
@@ -274,23 +287,25 @@ body:not(.list) .post-content {
 .post-content {
     color: var(--content);
     font-size: 1rem;
-    line-height: 1.9;
+    line-height: 1.60;
 }
 
 .post-content h2 {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     margin-top: 2.5rem;
     margin-bottom: 1rem;
     padding-bottom: 0.4rem;
     border-bottom: 1px solid var(--border);
     color: var(--primary);
+    line-height: 1.20;
 }
 
 .post-content h3 {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     margin-top: 2rem;
     margin-bottom: 0.8rem;
     color: var(--primary);
+    line-height: 1.20;
 }
 
 .post-content p {
@@ -310,12 +325,11 @@ body:not(.list) .post-content {
 }
 
 .post-content blockquote {
-    border-left: 3px solid var(--link);
-    padding-left: 1.2rem;
+    border-left: 3px solid var(--accent);
     margin: 1.5rem 0;
     color: var(--secondary);
     font-style: italic;
-    background: rgba(122, 143, 110, 0.06);
+    background: rgba(201, 100, 66, 0.06);
     padding: 1rem 1.2rem;
     border-radius: 0 8px 8px 0;
 }
@@ -323,7 +337,7 @@ body:not(.list) .post-content {
 .post-content code {
     background: var(--code-bg);
     padding: 2px 6px;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.88em;
     font-family: var(--font-family-code);
 }
@@ -331,7 +345,7 @@ body:not(.list) .post-content {
 .post-content .highlight {
     background: var(--code-block-bg) !important;
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
     box-shadow: var(--shadow-sm);
 }
 
@@ -345,7 +359,7 @@ body:not(.list) .post-content {
 .post-content pre {
     background: var(--code-block-bg) !important;
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 1.2rem;
     overflow-x: auto;
     box-shadow: var(--shadow-sm);
@@ -356,12 +370,12 @@ body:not(.list) .post-content {
     color: #2C2824;
     padding: 0;
     font-size: 0.85rem;
-    line-height: 1.7;
+    line-height: 1.60;
     font-family: var(--font-family-code);
 }
 
 .post-content img {
-    border-radius: 10px;
+    border-radius: 16px;
     box-shadow: var(--shadow-md);
     margin: 1.5rem 0;
 }
@@ -375,7 +389,7 @@ body:not(.list) .post-content {
     margin-bottom: 0.4rem;
 }
 
-/* ---- 9. 面包屑导航 ---- */
+/* ---- 9. Breadcrumbs ---- */
 .breadcrumbs {
     font-size: 0.82rem;
     color: var(--tertiary);
@@ -391,14 +405,14 @@ body:not(.list) .post-content {
     color: var(--primary);
 }
 
-/* ---- 10. 文章标签 ---- */
+/* ---- 10. Post Tags ---- */
 .post-tags a {
     display: inline-block;
     padding: 4px 12px;
     font-size: 0.82rem;
     color: var(--secondary);
     background: rgba(44, 40, 36, 0.05);
-    border-radius: 20px;
+    border-radius: 24px;
     border: 1px solid var(--border);
     transition: color 0.2s ease, background-color 0.2s ease;
 }
@@ -408,7 +422,7 @@ body:not(.list) .post-content {
     background: rgba(44, 40, 36, 0.10);
 }
 
-/* ---- 11. 页脚 ---- */
+/* ---- 11. Footer ---- */
 .footer {
     color: var(--secondary);
     font-size: 0.82rem;
@@ -432,7 +446,7 @@ body:not(.list) .post-content {
     color: var(--primary);
 }
 
-/* 页脚三栏布局 */
+/* Footer 3-column layout */
 .footer-columns {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
@@ -451,8 +465,9 @@ body:not(.list) .post-content {
 
 .footer-brand {
     display: block;
+    font-family: var(--font-family-serif);
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 500;
     color: var(--primary);
     margin-bottom: 0.4rem;
 }
@@ -506,7 +521,7 @@ body:not(.list) .post-content {
     margin-left: auto;
 }
 
-/* ---- 12. 回到顶部按钮 ---- */
+/* ---- 12. Scroll-to-Top Button ---- */
 .top-link {
     background: var(--entry);
     border: 1px solid var(--border);
@@ -521,7 +536,7 @@ body:not(.list) .post-content {
     box-shadow: var(--shadow-md);
 }
 
-/* ---- 13. Section/List 页面标题 ---- */
+/* ---- 13. Section/List Page Header ---- */
 .page-header {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
@@ -538,10 +553,11 @@ body:not(.list) .post-content {
 }
 
 .page-header h1 {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 2rem;
+    font-weight: 500;
     color: var(--primary);
     margin-bottom: 0.5rem;
+    line-height: 1.10;
 }
 
 .page-header .post-description {
@@ -549,7 +565,7 @@ body:not(.list) .post-content {
     font-size: 0.95rem;
 }
 
-/* ---- 14. 分页器 ---- */
+/* ---- 14. Pagination ---- */
 .pagination a,
 .pagination span {
     color: var(--secondary);
@@ -563,9 +579,9 @@ body:not(.list) .post-content {
     background: rgba(44, 40, 36, 0.06);
 }
 
-/* ---- 15. TOC ---- */
+/* ---- 15. Table of Contents ---- */
 
-/* ── 小屏：PaperMod 内联 TOC（平面化设计） ── */
+/* Small screens: PaperMod inline TOC (flat design) */
 .toc {
     background: transparent;
     border: none;
@@ -592,7 +608,7 @@ body:not(.list) .post-content {
 .toc .inner {
     font-size: 0.85rem;
     color: var(--secondary);
-    line-height: 1.9;
+    line-height: 1.60;
 }
 
 .toc .inner ul {
@@ -615,12 +631,12 @@ body:not(.list) .post-content {
     color: var(--primary);
 }
 
-/* 大屏隐藏内联 TOC（由 JS 时间轴替代） */
+/* Hide inline TOC on large screens (replaced by JS timeline) */
 @media screen and (min-width: 1440px) {
     .toc { display: none; }
 }
 
-/* ── 右侧时间轴 TOC（贴近文本右侧） ── */
+/* Right-side timeline TOC (anchored to content edge) */
 .toc-timeline {
     position: fixed;
     top: 0;
@@ -634,7 +650,7 @@ body:not(.list) .post-content {
     opacity: 1;
 }
 
-/* 容纳 line/progress/nodes 的区域（考虑 sticky header 偏移） */
+/* Timeline area (offset for sticky header) */
 .toc-timeline-area {
     position: absolute;
     left: 0;
@@ -644,7 +660,7 @@ body:not(.list) .post-content {
     pointer-events: auto;
 }
 
-/* 竖向轴线 */
+/* Vertical axis line */
 .toc-timeline-line {
     position: absolute;
     left: 0;
@@ -654,18 +670,18 @@ body:not(.list) .post-content {
     background: var(--border);
 }
 
-/* 阅读进度滑块 */
+/* Reading progress indicator */
 .toc-timeline-progress {
     position: absolute;
     left: -3px;
     width: 7px;
-    background: rgba(155, 175, 163, 0.2);
+    background: rgba(201, 100, 66, 0.2);
     border-radius: 4px;
     transition: top 0.15s linear, height 0.15s linear;
     pointer-events: none;
 }
 
-/* ── 节点通用 ── */
+/* Node (shared) */
 .toc-timeline-node {
     position: absolute;
     left: 0;
@@ -677,7 +693,7 @@ body:not(.list) .post-content {
     cursor: pointer;
 }
 
-/* h2 节点圆点 */
+/* h2 node dot */
 .toc-timeline-dot {
     width: 7px;
     height: 7px;
@@ -689,7 +705,7 @@ body:not(.list) .post-content {
     transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* h3/h4 子节点 */
+/* h3/h4 sub-nodes */
 .toc-timeline-node.sub {
     left: 16px;
     gap: 8px;
@@ -700,7 +716,7 @@ body:not(.list) .post-content {
     height: 5px;
     margin-left: 0;
 }
-/* 连接线 */
+/* Connector line */
 .toc-timeline-node.sub::before {
     content: '';
     position: absolute;
@@ -712,7 +728,7 @@ body:not(.list) .post-content {
     transition: opacity 0.2s ease, background 0.2s ease;
 }
 
-/* 折叠态子节点 */
+/* Collapsed sub-nodes */
 .toc-timeline-node.sub.toc-sub-collapsed {
     opacity: 0;
     pointer-events: none;
@@ -722,27 +738,27 @@ body:not(.list) .post-content {
     opacity: 0;
 }
 
-/* hover — 圆点 */
+/* hover — dot */
 .toc-timeline-node:hover .toc-timeline-dot {
     background: var(--secondary);
     transform: scale(1.3);
 }
-/* active — 圆点 */
+/* active — dot */
 .toc-timeline-node.active .toc-timeline-dot {
     background: var(--link);
     transform: scale(1.5);
-    box-shadow: 0 0 0 3px rgba(122, 143, 110, 0.12);
+    box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.12);
 }
-/* hover — 连接线 */
+/* hover — connector */
 .toc-timeline-node.sub:hover::before {
     background: var(--secondary);
 }
-/* active — 连接线 */
+/* active — connector */
 .toc-timeline-node.sub.active::before {
     background: var(--link);
 }
 
-/* 节点文字标签 */
+/* Node label */
 .toc-timeline-label {
     font-size: 0.72rem;
     font-family: var(--font-family);
@@ -767,19 +783,19 @@ body:not(.list) .post-content {
     font-weight: 500;
 }
 
-/* 滚动状态：隐藏非活跃标签 */
+/* Scroll state: hide inactive labels */
 .toc-timeline.scrolled .toc-timeline-label {
     opacity: 0;
 }
 .toc-timeline.scrolled .toc-timeline-node.active .toc-timeline-label {
     opacity: 1;
 }
-/* hover 轴区域时恢复所有标签 */
+/* Hover on timeline area restores all labels */
 .toc-timeline-area:hover .toc-timeline-label {
     opacity: 1 !important;
 }
 
-/* ---- 16. 代码复制按钮 ---- */
+/* ---- 16. Code Copy Button ---- */
 .copy-code {
     background: rgba(255, 255, 255, 0.1);
     border: none;
@@ -793,15 +809,15 @@ body:not(.list) .post-content {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* ---- 17. 选中文字高亮 ---- */
+/* ---- 17. Text Selection Highlight ---- */
 ::selection {
-    background: rgba(122, 143, 110, 0.22);
+    background: rgba(201, 100, 66, 0.15);
     color: var(--primary);
 }
 
-/* ---- 18. 引用 / 题词（Epigraph） ---- */
+/* ---- 18. Epigraphs ---- */
 
-/* 首页题词 — 居中，在问候语与社交图标之间 */
+/* Homepage epigraph — centered, between greeting and social icons */
 .home-epigraph {
     text-align: center;
     margin: 2rem auto 0.5rem;
@@ -813,7 +829,7 @@ body:not(.list) .post-content {
     font-size: 0.95rem;
     font-style: italic;
     color: var(--secondary);
-    line-height: 1.8;
+    line-height: 1.60;
     margin-bottom: 0.3rem;
     letter-spacing: 0.02em;
 }
@@ -824,9 +840,9 @@ body:not(.list) .post-content {
     margin: 0;
 }
 
-/* Section / About 页内嵌题词 — 左对齐带左边线 */
+/* Section / About page epigraph — left-aligned with border */
 .page-epigraph {
-    border-left: 2px solid var(--link);
+    border-left: 2px solid var(--accent);
     padding: 0.6rem 0 0.6rem 1.2rem;
     margin: 0.8rem 0 2rem;
 }
@@ -835,7 +851,7 @@ body:not(.list) .post-content {
     font-size: 0.92rem;
     font-style: italic;
     color: var(--secondary);
-    line-height: 1.7;
+    line-height: 1.60;
     margin: 0 0 0.2rem;
 }
 
@@ -845,15 +861,13 @@ body:not(.list) .post-content {
     margin: 0;
 }
 
-/* ---- 19. Logo 间距 ---- */
+/* ---- 19. Logo Spacing ---- */
 .logo a svg {
     margin-right: 8px;
     vertical-align: middle;
 }
 
-/* ---- 20. (removed: illustration) ---- */
-
-/* ---- 21. About 页面人像插画 ---- */
+/* ---- 20. About Page Portrait ---- */
 .about-illustration {
     display: flex;
     justify-content: center;
@@ -864,11 +878,12 @@ body:not(.list) .post-content {
 .about-illustration img {
     width: 220px;
     height: auto;
+    border-radius: 16px;
     pointer-events: none;
     user-select: none;
 }
 
-/* ---- 22. 首页写作热力图 ---- */
+/* ---- 21. Homepage Writing Heatmap ---- */
 .home-heatmap {
     border-top: 1px solid var(--border);
     padding: 2rem 0 0.6rem;
@@ -975,8 +990,8 @@ body:not(.list) .post-content {
 
 .home-heatmap-cell {
     display: block;
-    background: rgba(122, 143, 110, 0.08);
-    border: 1px solid rgba(122, 143, 110, 0.08);
+    background: rgba(201, 100, 66, 0.06);
+    border: 1px solid rgba(201, 100, 66, 0.06);
     box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.5);
     opacity: 0;
     transform: translateY(8px) scale(0.96);
@@ -998,28 +1013,28 @@ body:not(.list) .post-content {
 }
 
 .level-0 {
-    background: rgba(122, 143, 110, 0.05);
-    border-color: rgba(122, 143, 110, 0.05);
+    background: rgba(201, 100, 66, 0.05);
+    border-color: rgba(201, 100, 66, 0.05);
 }
 
 .level-1 {
-    background: rgba(173, 191, 164, 0.34);
-    border-color: rgba(173, 191, 164, 0.26);
+    background: rgba(201, 100, 66, 0.18);
+    border-color: rgba(201, 100, 66, 0.14);
 }
 
 .level-2 {
-    background: rgba(142, 168, 130, 0.55);
-    border-color: rgba(122, 143, 110, 0.34);
+    background: rgba(201, 100, 66, 0.38);
+    border-color: rgba(201, 100, 66, 0.28);
 }
 
 .level-3 {
-    background: rgba(104, 132, 94, 0.82);
-    border-color: rgba(92, 107, 90, 0.46);
+    background: rgba(201, 100, 66, 0.62);
+    border-color: rgba(201, 100, 66, 0.46);
 }
 
 .level-4 {
-    background: #465c42;
-    border-color: rgba(70, 92, 66, 0.7);
+    background: #a84e2e;
+    border-color: rgba(168, 78, 46, 0.7);
 }
 
 @keyframes heatmap-cell-enter {
@@ -1033,7 +1048,7 @@ body:not(.list) .post-content {
     }
 }
 
-/* ---- 23. 首页三栏分区 ---- */
+/* ---- 22. Homepage Section Showcase ---- */
 .home-sections {
     display: grid;
     grid-template-columns: 1fr;
@@ -1041,7 +1056,7 @@ body:not(.list) .post-content {
     margin-top: 0;
 }
 
-/* 保持单栏纵向排列，宽屏不变 */
+/* Single-column vertical layout, unchanged on wide screens */
 
 .home-section {
     background: transparent;
@@ -1058,7 +1073,7 @@ body:not(.list) .post-content {
     border-bottom: none;
 }
 
-/* 双语标签：英文大写在上 */
+/* Bilingual label: English uppercase on top */
 .section-label {
     display: block;
     font-size: 0.72rem;
@@ -1070,9 +1085,10 @@ body:not(.list) .post-content {
 }
 
 .home-section-header h2 {
-    font-size: 1.3rem;
-    font-weight: 700;
+    font-size: 1.6rem;
+    font-weight: 500;
     margin: 0 0 0.2rem;
+    line-height: 1.20;
 }
 
 .home-section-header h2 a {
@@ -1105,7 +1121,7 @@ body:not(.list) .post-content {
     display: block;
     text-decoration: none;
     color: inherit;
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 0.5rem 0.8rem;
     margin: -0.5rem -0.8rem;
     transition: background-color 0.2s ease;
@@ -1115,7 +1131,7 @@ body:not(.list) .post-content {
     background: rgba(44, 40, 36, 0.03);
 }
 
-/* 日期在标题上方 */
+/* Date above title */
 .home-section-entry .entry-meta {
     display: block;
     font-size: 0.72rem;
@@ -1127,7 +1143,7 @@ body:not(.list) .post-content {
 
 .home-section-entry h3 {
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 500;
     color: var(--primary);
     margin: 0 0 0.25rem;
     line-height: 1.5;
@@ -1166,14 +1182,14 @@ body:not(.list) .post-content {
     margin: 0.5rem 0;
 }
 
-/* ---- 24. 响应式调整 ---- */
+/* ---- 23. Responsive ---- */
 @media (max-width: 768px) {
     .home-info {
         padding: 2.5rem 1rem 2rem;
     }
 
     .home-info .entry-header h1 {
-        font-size: 1.6rem;
+        font-size: 2rem;
     }
 
     .post-header .post-title {
@@ -1211,7 +1227,7 @@ body:not(.list) .post-content {
         min-width: 560px;
     }
 
-    /* 页脚移动端单栏 */
+    /* Footer mobile: single column */
     .footer-columns {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -1231,7 +1247,7 @@ body:not(.list) .post-content {
     }
 }
 
-/* 中等屏幕过渡 */
+/* Medium screen transition */
 @media (min-width: 769px) and (max-width: 1060px) {
     .main {
         padding: 0 1.5rem;
@@ -1239,13 +1255,8 @@ body:not(.list) .post-content {
 }
 
 /* ============================================================
-   25. 入场动画 — 克制的渐现效果
+   24. Entrance Animations — subtle fade-in effects
    ============================================================ */
-
-/* 缓动变量 */
-:root {
-    --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);      /* 柔性减速 */
-}
 
 /* Keyframes -------------------------------------------------- */
 @keyframes fade-down {
@@ -1263,17 +1274,17 @@ body:not(.list) .post-content {
     50%, 100% { opacity: 0; }
 }
 
-/* 导航栏 — 轻柔下滑（所有页面） */
+/* Header — gentle slide down (all pages) */
 .header {
     animation: fade-down 0.5s var(--ease-soft) both;
 }
 
-/* 首页 Hero — 简单渐现 */
+/* Homepage Hero — fade in */
 .home-info {
     animation: fade-up 0.5s var(--ease-soft) 0.1s both;
 }
 
-/* 首页三块卡片逐一渐现 */
+/* Homepage sections — staggered fade in */
 .home-sections .home-section:nth-child(1) {
     animation: fade-up 0.5s var(--ease-soft) 0.2s both;
 }
@@ -1288,7 +1299,7 @@ body:not(.list) .post-content {
     animation: fade-up 0.5s var(--ease-soft) 0.5s both;
 }
 
-/* 打字机光标 */
+/* Typewriter cursor */
 .typewriter-cursor {
     display: inline;
     color: var(--accent);
@@ -1297,7 +1308,7 @@ body:not(.list) .post-content {
     margin-left: 1px;
 }
 
-/* 可及性：减少动画首选项 */
+/* Accessibility: respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
     .header,
     .home-info,

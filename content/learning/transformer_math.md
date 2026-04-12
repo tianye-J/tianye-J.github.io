@@ -1,6 +1,6 @@
 +++
 title = 'Transformer 数学原理'
-date = 2026-04-13T14:00:00+08:00
+date = 2026-04-13T01:13:25+08:00
 draft = false
 math = true
 description = "Transformer 核心组件的数学推导与直觉解释"
@@ -475,11 +475,4 @@ Attention 的 softmax 权重可以看作一种信息选择机制：
 | [14] | Hinton et al. (2015). "Distilling the Knowledge in a Neural Network." arXiv:1503.02531 | §2 |
 
 ---
-
-
-
-
-
-
-
 

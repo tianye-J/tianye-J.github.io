@@ -1,7 +1,23 @@
 # Hugo 构建产物
-public/
-resources/_gen/
-.hugo_build.lock
+/public/
+/resources/_gen/
+/.hugo_build.lock
+
+# 本地编辑器 / AI 工具目录
+.obsidian/
+.claude/
+.vscode/
+.idea/
+
+# 本地环境变量
+.env
+.env.*
+!.env.example
+
+# 缓存与日志
+.cache/
+.sass-cache/
+*.log
 
 # 系统文件
 .DS_Store
@@ -12,6 +28,3 @@ drafts.md
 list.md
 markdown_grammar.md
 latex_grammar.md
-
-.obsidian
-.claude

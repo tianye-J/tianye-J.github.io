@@ -46,9 +46,15 @@ theme = "PaperMod"
     hiddenInSingle = true
 
   [params.label]
-    text = "Arden’s blog"
+    text = "Arden's blog"
     icon = "/images/logo.png"
     iconHeight = 28
+
+  [params.assets]
+    favicon = "favicon-32x32.png"
+    favicon16x16 = "favicon-16x16.png"
+    favicon32x32 = "favicon-32x32.png"
+    apple_touch_icon = "apple-touch-icon.png"
 
   [params.footer]
     hideCopyright = false

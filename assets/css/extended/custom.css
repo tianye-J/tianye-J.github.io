@@ -1327,6 +1327,10 @@ body:not(.list) .post-content {
     margin-top: 0;
 }
 
+.friends-comments .comments {
+    margin-top: 2rem;
+}
+
 /* ---- 24. Responsive ---- */
 @media (max-width: 768px) {
     .home-info {

@@ -54,6 +54,12 @@
     {{- else }}{{ .Content }}{{ end }}
   </div>
   {{- end }}
+
+  {{- if (.Param "comments") }}
+  <section class="friends-comments" aria-label="友链留言">
+    {{- partial "comments.html" . }}
+  </section>
+  {{- end }}
 </article>
 
 {{- end }}

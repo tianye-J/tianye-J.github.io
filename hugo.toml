@@ -88,6 +88,12 @@ theme = "PaperMod"
   weight = 40
 
 [[menu.main]]
+  identifier = "friends"
+  name = "FRIENDS"
+  url = "/friends/"
+  weight = 45
+
+[[menu.main]]
   identifier = "search"
   name = "SEARCH"
   url = "/search/"

@@ -1195,7 +1195,139 @@ body:not(.list) .post-content {
     margin: 0.5rem 0;
 }
 
-/* ---- 23. Responsive ---- */
+/* ---- 23. Friends Page ---- */
+.friends-page {
+    max-width: 900px;
+}
+
+.friends-header {
+    margin-bottom: 2rem;
+}
+
+.friends-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0 auto 2.5rem;
+}
+
+.friend-card {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    min-height: 128px;
+    padding: 1rem;
+    color: inherit;
+    text-decoration: none;
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: none;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.friend-card:hover {
+    color: inherit;
+    background: var(--entry);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+}
+
+.friend-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(201, 100, 66, 0.08);
+    border: 1px solid var(--border-warm);
+    color: var(--accent);
+    font-family: var(--font-family-serif);
+    font-size: 1.35rem;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.friend-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.friend-avatar-fallback {
+    line-height: 1;
+}
+
+.friend-body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.friend-name {
+    color: var(--primary);
+    font-family: var(--font-family-serif);
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.friend-description {
+    color: var(--secondary);
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.friend-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.15rem;
+}
+
+.friend-tags span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 2px 8px;
+    color: var(--tertiary);
+    font-size: 0.72rem;
+    line-height: 1.3;
+    background: rgba(44, 40, 36, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+}
+
+.friends-empty {
+    grid-column: 1 / -1;
+    padding: 1.2rem 1.4rem;
+    color: var(--secondary);
+    background: var(--entry);
+    border: 1px dashed var(--border-warm);
+    border-radius: 8px;
+}
+
+.friends-empty p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+.friends-page-content {
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--border);
+}
+
+.friends-page-content h2:first-child {
+    margin-top: 0;
+}
+
+/* ---- 24. Responsive ---- */
 @media (max-width: 768px) {
     .home-info {
         padding: 2.5rem 1rem 2rem;
@@ -1215,6 +1347,24 @@ body:not(.list) .post-content {
 
     .home-section {
         padding: 1.5rem 0;
+    }
+
+    .friends-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+        margin-bottom: 2rem;
+    }
+
+    .friend-card {
+        grid-template-columns: 48px minmax(0, 1fr);
+        min-height: 112px;
+        padding: 0.9rem;
+    }
+
+    .friend-avatar {
+        width: 48px;
+        height: 48px;
+        font-size: 1.15rem;
     }
 
     .home-heatmap {

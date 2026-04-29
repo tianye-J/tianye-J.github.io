@@ -1,0 +1,14 @@
+# Add friend links here. Example:
+# - name: "Example Blog"
+#   url: "https://example.com"
+#   avatar: "/images/friends/example.png"
+#   description: "Research notes, essays, and small experiments."
+#   tags:
+#     - AI
+#     - Blog
+- name: "Joye Personal Blog"
+  url: "https://joyehuang.me/"
+  avatar: "https://joyehuang.me/favicon/favicon.ico"
+  description: "Stay hungry, stay foolish"
+  tags:
+    - Blog

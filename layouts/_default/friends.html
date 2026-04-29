@@ -1,0 +1,59 @@
+{{- define "main" }}
+
+<article class="post-single friends-page">
+  <header class="post-header friends-header">
+    {{ partial "breadcrumbs.html" . }}
+    <span class="section-label">FRIENDS</span>
+    <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
+    {{- with .Description }}
+    <div class="post-description">
+      {{ . | markdownify }}
+    </div>
+    {{- end }}
+  </header>
+
+  {{- $friends := site.Data.friends | default (slice) }}
+  <section class="friends-grid" aria-label="友情链接">
+    {{- range $friends }}
+    {{- $name := .name | default "Untitled" }}
+    {{- $url := .url | default "#" }}
+    {{- $description := .description | default "A personal site worth visiting." }}
+    {{- $initial := .initial | default (substr $name 0 1 | upper) }}
+    <a class="friend-card" href="{{ $url }}" target="_blank" rel="noopener noreferrer">
+      <span class="friend-avatar" aria-hidden="true">
+        {{- with .avatar }}
+        {{- $avatar := . }}
+        <img src="{{ cond (or (hasPrefix $avatar "http://") (hasPrefix $avatar "https://")) $avatar ($avatar | relURL) }}" alt="" loading="lazy">
+        {{- else }}
+        <span class="friend-avatar-fallback">{{ $initial }}</span>
+        {{- end }}
+      </span>
+      <span class="friend-body">
+        <span class="friend-name">{{ $name }}</span>
+        <span class="friend-description">{{ $description }}</span>
+        {{- with .tags }}
+        <span class="friend-tags" aria-label="tags">
+          {{- range . }}
+          <span>{{ . }}</span>
+          {{- end }}
+        </span>
+        {{- end }}
+      </span>
+    </a>
+    {{- else }}
+    <div class="friends-empty">
+      <p>这里还没有添加友链。等第一位朋友搬进来时，这里会自动长成一片小小的站点地图。</p>
+    </div>
+    {{- end }}
+  </section>
+
+  {{- if .Content }}
+  <div class="post-content friends-page-content">
+    {{- if not (.Param "disableAnchoredHeadings") }}
+    {{- partial "anchored_headings.html" .Content -}}
+    {{- else }}{{ .Content }}{{ end }}
+  </div>
+  {{- end }}
+</article>
+
+{{- end }}

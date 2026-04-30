@@ -13,14 +13,18 @@
 
 /* ---- 2. Design Tokens ---- */
 :root {
-    /* Palette — Parchment / Terracotta / Warm Neutrals */
-    --theme:        #D8D4CE;        /* PaperMod theme color */
-    --background:   #f5f4ed;        /* Parchment */
-    --entry:        #faf9f5;        /* Ivory */
-    --code-bg:      #edebe3;        /* Inline code background */
-    --code-block-bg:#faf9f5;        /* Code block background (Ivory) */
-    --border:       #f0eee6;        /* Border Cream */
-    --header-bg:    rgba(250, 249, 245, 0.92); /* Ivory semi-transparent */
+    /* Palette — layered parchment / terracotta / warm neutrals */
+    --theme:        #eeebe3;        /* PaperMod shell color */
+    --background:   #eeebe3;        /* Site shell */
+    --paper:        #f7f5ee;        /* Main content paper */
+    --paper-soft:   #f3f0e8;        /* Section band */
+    --entry:        #fcfbf7;        /* Ivory panel */
+    --panel:        #fcfbf7;        /* Raised inner panel */
+    --panel-muted:  #f8f6ef;        /* Quiet card hover / inset */
+    --code-bg:      #eeeae0;        /* Inline code background */
+    --code-block-bg:#fcfbf7;        /* Code block background (Ivory) */
+    --border:       #e6e1d7;        /* Warm paper edge */
+    --header-bg:    rgba(252, 251, 247, 0.88); /* Ivory semi-transparent */
 
     /* Text hierarchy — warm grays only */
     --primary:      #141413;        /* Anthropic Near Black */
@@ -37,9 +41,9 @@
 
     /* Extended tokens */
     --dark-warm:    #3d3d3a;
-    --border-warm:  #e8e6dc;        /* Prominent borders / dividers */
-    --ring-warm:    #d1cfc5;        /* Ring shadow */
-    --ring-deep:    #c2c0b6;        /* Active/pressed ring */
+    --border-warm:  #ddd7cc;        /* Prominent borders / dividers */
+    --ring-warm:    #d1c9bc;        /* Ring shadow */
+    --ring-deep:    #bfb7aa;        /* Active/pressed ring */
 
     /* Typography — dual system: serif headings + sans body */
     --font-family-serif: 'Noto Serif', 'LXGW WenKai', Georgia, serif;
@@ -51,8 +55,10 @@
     --radius:       8px;
 
     /* Shadows — ring-based system */
-    --shadow-sm:    0px 0px 0px 1px rgba(240, 238, 230, 0.8);
-    --shadow-md:    rgba(0, 0, 0, 0.05) 0px 4px 24px;
+    --shadow-sm:    0px 0px 0px 1px rgba(230, 225, 215, 0.78);
+    --shadow-md:    rgba(66, 55, 42, 0.045) 0px 10px 32px;
+    --shadow-paper: 0 18px 54px rgba(66, 55, 42, 0.055);
+    --shadow-panel: 0 12px 34px rgba(66, 55, 42, 0.045);
     --shadow-hover: 0px 0px 0px 1px var(--ring-warm);
 
     /* Animation easing */
@@ -60,11 +66,17 @@
 }
 
 /* ---- 3. Global Base ---- */
+html {
+    background: var(--background);
+}
+
 body {
     font-family: var(--font-family);
     line-height: 1.60;
     color: var(--primary);
-    background: var(--background);
+    background:
+        linear-gradient(180deg, rgba(252, 251, 247, 0.42) 0, rgba(238, 235, 227, 0) 320px),
+        var(--background);
     -webkit-font-smoothing: antialiased;
 }
 
@@ -77,14 +89,16 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Override PaperMod .list background */
 body.list {
-    background: var(--background);
+    background:
+        linear-gradient(180deg, rgba(252, 251, 247, 0.42) 0, rgba(238, 235, 227, 0) 320px),
+        var(--background);
 }
 
 /* ---- 4. Navigation (sticky + frosted glass) ---- */
 .header {
     background-color: var(--header-bg) !important;
     border-bottom: 1px solid var(--border);
-    box-shadow: none;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -132,11 +146,33 @@ body.list {
 
 /* ---- 5. Homepage Hero ---- */
 .home-info {
+    position: relative;
+    overflow: hidden;
     text-align: center;
-    padding: 4rem 1.5rem 2.5rem;
-    border: none;
-    box-shadow: none;
-    background: transparent;
+    padding: 4.35rem 1.5rem 3rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-panel), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    background:
+        linear-gradient(180deg, rgba(255, 254, 250, 0.72), rgba(248, 246, 239, 0.88)),
+        var(--panel);
+}
+
+.home-info::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('/images/topo-bg.svg');
+    background-size: 980px auto;
+    background-position: center 46%;
+    background-repeat: no-repeat;
+    opacity: 0.035;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+}
+
+.home-info > * {
+    position: relative;
+    z-index: 1;
 }
 
 .home-info .entry-header h1 {
@@ -228,12 +264,15 @@ body.list {
 /* ---- 7. Main Content Area ---- */
 .main {
     max-width: 1060px;
-    margin: 0 auto;
-    padding: 2rem 2.5rem;
+    margin: 1.75rem auto 0;
+    padding: 2.5rem;
     position: relative;
     z-index: 1;
-    background: var(--background);
-    border-radius: 0;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    box-shadow: var(--shadow-paper);
 }
 
 /* Narrow article content for reading comfort */
@@ -241,6 +280,22 @@ body.list {
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem 0;
+}
+
+@media screen and (min-width: 1440px) {
+    body:has(.post-single) {
+        --article-paper-shift: clamp(64px, 6vw, 112px);
+    }
+
+    .main:has(.post-single) {
+        margin-left: max(1.5rem, calc((100vw - 1060px) / 2 - var(--article-paper-shift)));
+        margin-right: auto;
+    }
+
+    body:has(.post-single) .footer {
+        margin-left: max(1.5rem, calc((100vw - 1060px) / 2 - var(--article-paper-shift)));
+        margin-right: auto;
+    }
 }
 
 /* Narrow list page cards */
@@ -428,13 +483,15 @@ body:not(.list) .post-content {
     color: var(--secondary);
     font-size: 0.82rem;
     padding: 3rem 2.5rem 2rem;
-    border-top: 1px solid var(--border);
-    background: var(--background);
+    border: 1px solid var(--border);
+    border-top: none;
+    background: var(--paper);
     position: relative;
     z-index: 1;
     max-width: 1060px;
-    margin: 0 auto;
-    border-radius: 0;
+    margin: 0 auto 2rem;
+    border-radius: 0 0 10px 10px;
+    box-shadow: var(--shadow-paper);
 }
 
 .footer a {
@@ -632,21 +689,33 @@ body:not(.list) .post-content {
     color: var(--primary);
 }
 
-/* Hide inline TOC on large screens (replaced by JS timeline) */
+/* Hide inline TOC when the margin-note timeline is available */
 @media screen and (min-width: 1440px) {
     .toc { display: none; }
+}
+
+@media screen and (max-width: 1439px) {
+    .toc-timeline { display: none !important; }
 }
 
 /* Right-side timeline TOC — fixed list layout, no collision detection */
 .toc-timeline {
     position: fixed;
-    left: calc(50% + 424px);
+    left: min(calc(50% + 552px - var(--article-paper-shift, 0px)), calc(100vw - 252px));
     top: 50%;
     transform: translateY(-50%);
     z-index: 50;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    width: 216px;
+    padding: 10px 12px 10px 10px;
+    border: 1px solid rgba(230, 225, 215, 0.55);
+    border-radius: 10px;
+    background: rgba(247, 245, 238, 0.58);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.36);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: opacity 0.3s ease, background-color 0.2s ease, border-color 0.2s ease;
     max-height: 70vh;
     overflow-y: auto;
     overflow-x: hidden;
@@ -654,8 +723,14 @@ body:not(.list) .post-content {
 }
 .toc-timeline::-webkit-scrollbar { display: none; }
 .toc-timeline.visible {
-    opacity: 1;
+    opacity: 0.66;
     pointer-events: auto;
+}
+
+.toc-timeline.visible:hover {
+    opacity: 0.96;
+    background: rgba(252, 251, 247, 0.74);
+    border-color: rgba(209, 201, 188, 0.72);
 }
 
 /* List container */
@@ -663,26 +738,26 @@ body:not(.list) .post-content {
     position: relative;
     list-style: none;
     margin: 0;
-    padding: 4px 0;
+    padding: 2px 0;
 }
 
 /* Vertical axis line */
 .toc-tl-list::before {
     content: '';
     position: absolute;
-    left: 3px;
+    left: 2.5px;
     top: 0;
     bottom: 0;
     width: 1px;
-    background: var(--border);
+    background: rgba(209, 201, 188, 0.42);
 }
 
 /* Progress indicator on the axis */
 .toc-tl-progress {
     position: absolute;
     left: 0;
-    width: 7px;
-    background: rgba(201, 100, 66, 0.2);
+    width: 6px;
+    background: rgba(201, 100, 66, 0.14);
     border-radius: 4px;
     transition: top 0.2s ease, height 0.2s ease;
     pointer-events: none;
@@ -698,8 +773,8 @@ body:not(.list) .post-content {
 /* Link row */
 .toc-tl-item > a {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: flex-start;
+    gap: 9px;
     padding: 5px 0;
     text-decoration: none;
     cursor: pointer;
@@ -707,10 +782,11 @@ body:not(.list) .post-content {
 
 /* Dot */
 .toc-tl-dot {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
+    margin-top: 0.44rem;
     border-radius: 50%;
-    background: var(--border);
+    background: rgba(209, 201, 188, 0.62);
     flex-shrink: 0;
     z-index: 2;
     transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -718,13 +794,19 @@ body:not(.list) .post-content {
 
 /* Label */
 .toc-tl-label {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
     font-size: 0.72rem;
+    line-height: 1.48;
     font-family: var(--font-family);
-    color: var(--tertiary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 180px;
+    color: rgba(94, 93, 89, 0.62);
+    white-space: normal;
+    overflow: visible;
+    overflow-wrap: break-word;
+    word-break: normal;
+    text-overflow: clip;
+    max-width: 188px;
     transition: opacity 0.25s ease, color 0.2s ease;
 }
 
@@ -744,12 +826,13 @@ body:not(.list) .post-content {
     padding: 3px 0;
 }
 .toc-tl-item.sub .toc-tl-dot {
-    width: 5px;
-    height: 5px;
+    width: 4px;
+    height: 4px;
+    margin-top: 0.42rem;
 }
 .toc-tl-item.sub .toc-tl-label {
     font-size: 0.68rem;
-    max-width: 160px;
+    max-width: 168px;
 }
 
 /* Sub-node connector line */
@@ -760,7 +843,7 @@ body:not(.list) .post-content {
     top: 50%;
     width: 13px;
     height: 1px;
-    background: var(--border);
+    background: rgba(209, 201, 188, 0.34);
     transition: background 0.2s ease;
 }
 
@@ -772,8 +855,8 @@ body:not(.list) .post-content {
 
 /* ── Hover states ── */
 .toc-tl-item > a:hover .toc-tl-dot {
-    background: var(--secondary);
-    transform: scale(1.3);
+    background: rgba(94, 93, 89, 0.64);
+    transform: scale(1.18);
 }
 .toc-tl-item > a:hover .toc-tl-label {
     color: var(--primary);
@@ -782,20 +865,20 @@ body:not(.list) .post-content {
 /* ── Active state ── */
 .toc-tl-item.active > a .toc-tl-dot {
     background: var(--link);
-    transform: scale(1.5);
-    box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.12);
+    transform: scale(1.35);
+    box-shadow: 0 0 0 2px rgba(201, 100, 66, 0.10);
 }
 .toc-tl-item.active > a .toc-tl-label {
     color: var(--primary);
     font-weight: 500;
 }
 .toc-tl-item.sub.active > a::before {
-    background: var(--link);
+    background: rgba(201, 100, 66, 0.44);
 }
 
 /* ── Scroll state: dim inactive labels ── */
 .toc-timeline.scrolled .toc-tl-label {
-    opacity: 0.4;
+    opacity: 0.35;
 }
 .toc-timeline.scrolled .toc-tl-item.sub .toc-tl-label {
     opacity: 0;
@@ -899,7 +982,9 @@ body:not(.list) .post-content {
 /* ---- 21. Homepage Writing Heatmap ---- */
 .home-heatmap {
     border-top: 1px solid var(--border);
-    padding: 2rem 0 0.6rem;
+    margin: 0 -2.5rem;
+    padding: 2.2rem 2.5rem 1.2rem;
+    background: rgba(252, 251, 247, 0.42);
 }
 
 .home-heatmap-header {
@@ -1066,18 +1151,22 @@ body:not(.list) .post-content {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0;
-    margin-top: 0;
+    margin: 0 -2.5rem;
 }
 
 /* Single-column vertical layout, unchanged on wide screens */
 
 .home-section {
-    background: transparent;
+    background: rgba(252, 251, 247, 0.34);
     border: none;
     border-top: 1px solid var(--border);
     border-radius: 0;
-    padding: 2rem 0;
+    padding: 2.2rem 2.5rem;
     box-shadow: none;
+}
+
+.home-section:nth-child(even) {
+    background: rgba(243, 240, 232, 0.44);
 }
 
 .home-section-header {
@@ -1122,7 +1211,7 @@ body:not(.list) .post-content {
 /* Section entry cards */
 .home-section-entry {
     padding: 0.6rem 0;
-    border-bottom: 1px solid rgba(213, 206, 195, 0.4);
+    border-bottom: 1px solid rgba(218, 211, 199, 0.54);
 }
 
 .home-section-entry:last-child {
@@ -1141,7 +1230,7 @@ body:not(.list) .post-content {
 }
 
 .home-section-entry a:hover {
-    background: rgba(44, 40, 36, 0.03);
+    background: rgba(66, 55, 42, 0.035);
 }
 
 /* Date above title */
@@ -1346,11 +1435,25 @@ body:not(.list) .post-content {
     }
 
     .main {
-        padding: 0 1rem;
+        margin: 0 auto;
+        padding: 1rem;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     .home-section {
-        padding: 1.5rem 0;
+        padding: 1.5rem 1rem;
+    }
+
+    .home-sections,
+    .home-heatmap {
+        margin-left: -1rem;
+        margin-right: -1rem;
+    }
+
+    .home-heatmap {
+        padding: 1.5rem 1rem 0.8rem;
     }
 
     .friends-grid {
@@ -1369,10 +1472,6 @@ body:not(.list) .post-content {
         width: 48px;
         height: 48px;
         font-size: 1.15rem;
-    }
-
-    .home-heatmap {
-        padding: 1.5rem 0 0.4rem;
     }
 
     .home-heatmap-header,
@@ -1412,12 +1511,45 @@ body:not(.list) .post-content {
     .footer-powered {
         margin-left: 0;
     }
+
+    .footer {
+        margin: 0 auto;
+        padding: 2.5rem 1rem 2rem;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
 }
 
 /* Medium screen transition */
 @media (min-width: 769px) and (max-width: 1060px) {
     .main {
-        padding: 0 1.5rem;
+        margin: 1rem auto 0;
+        padding: 1.5rem;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+    }
+
+    .home-sections,
+    .home-heatmap {
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+    }
+
+    .home-section,
+    .home-heatmap {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .footer {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
     }
 }
 

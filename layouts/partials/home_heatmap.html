@@ -11,6 +11,7 @@
 <section
   class="home-heatmap"
   data-weeks="26"
+  data-mobile-weeks="13"
   data-summary="{count} posts across {days} days in the past {weeks} weeks."
   data-summary-empty="No new posts in the past {weeks} weeks. The next one will light up here."
   data-tooltip-empty="{date} · No posts"
@@ -64,7 +65,11 @@
       counts.set(dateKey, (counts.get(dateKey) || 0) + 1);
     });
 
-    const weeks = Number(root.dataset.weeks || 26);
+    const mobileQuery = window.matchMedia('(max-width: 640px)');
+    const weeks = mobileQuery.matches
+      ? Number(root.dataset.mobileWeeks || 13)
+      : Number(root.dataset.weeks || 26);
+    root.style.setProperty('--heatmap-weeks', String(weeks));
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 

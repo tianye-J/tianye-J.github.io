@@ -47,7 +47,7 @@ theme = "PaperMod"
 
   [params.label]
     text = "Arden's blog"
-    icon = "/images/logo.png"
+    icon = "/images/logo-swirl.png"
     iconHeight = 28
 
   [params.footer]

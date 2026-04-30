@@ -3,7 +3,7 @@ title = 'PromptFL阅读笔记'
 date = 2026-03-15T09:48:51+08:00
 draft = false
 description = "文献随记"
-tags = ["联邦域泛化（FedDG）", "literature"]
+tags = ["论文阅读", "PromptFL", "联邦学习", "Prompt Learning", "CLIP"]
 series = ["联邦域泛化"]
 +++
 

@@ -2,7 +2,7 @@
 title = 'Domain adaptation学习笔记（2.选择篇）'
 date = 2026-03-07T19:00:54+08:00
 draft = false
-tags = ["科研", "联邦域泛化（FedDG）", "人工智能"]
+tags = ["域适应", "联邦域泛化", "研究方向", "强化学习", "LLM"]
 series = ["联邦域泛化"]
 math = true
 +++

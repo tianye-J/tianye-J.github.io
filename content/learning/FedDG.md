@@ -2,7 +2,7 @@
 title = 'FedDG 论文导读'
 date = 2026-03-07T21:22:43+08:00
 draft = false
-tags = ["科研", "联邦域泛化（FedDG）"]
+tags = ["联邦域泛化", "论文导读", "CLIP", "Prompt Learning", "Source-Free DA"]
 series = ["联邦域泛化"]
 +++
 

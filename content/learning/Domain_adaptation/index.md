@@ -2,7 +2,7 @@
 title = 'Domain adaptation入门笔记（1.超基础知识篇）'
 date = 2026-03-06T09:29:23+08:00
 draft = false
-tags = ["域适应", "笔记"]
+tags = ["域适应", "迁移学习", "DANN", "GRL", "学习笔记"]
 series = ["联邦域泛化"]
 math = true
 +++

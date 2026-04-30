@@ -4,7 +4,7 @@ date = 2026-04-13T01:13:25+08:00
 draft = false
 math = true
 description = "Transformer 核心组件的数学推导与直觉解释"
-tags = ["深度学习"]
+tags = ["Transformer", "数学原理", "Attention", "深度学习", "学习笔记"]
 series = ["Transformer"]
 +++
 

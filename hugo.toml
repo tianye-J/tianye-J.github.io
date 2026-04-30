@@ -50,12 +50,6 @@ theme = "PaperMod"
     icon = "/images/logo.png"
     iconHeight = 28
 
-  [params.assets]
-    favicon = "favicon.ico"
-    favicon16x16 = "favicon-16x16.png"
-    favicon32x32 = "favicon-32x32.png"
-    apple_touch_icon = "apple-touch-icon.png"
-
   [params.footer]
     hideCopyright = false
     text = "*南方，某扇房门，某个街角* — 博尔赫斯"

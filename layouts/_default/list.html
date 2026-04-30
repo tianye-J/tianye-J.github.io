@@ -122,6 +122,7 @@
       <span class="section-label">LEARNING</span>
       <h2><a href="{{ "learning/" | absURL }}">Learning Notes</a></h2>
       <p class="home-section-desc">Technical accumulation and knowledge distillation</p>
+      <span class="home-section-count">{{ len $learning }} notes</span>
     </div>
     <div class="home-section-list">
       {{- range first 3 $learning }}
@@ -152,6 +153,7 @@
       <span class="section-label">PROJECTS</span>
       <h2><a href="{{ "projects/" | absURL }}">Projects</a></h2>
       <p class="home-section-desc">Engineering practice and portfolio</p>
+      <span class="home-section-count">{{ len $projects }} projects</span>
     </div>
     <div class="home-section-list">
       {{- range first 3 $projects }}
@@ -182,6 +184,7 @@
       <span class="section-label">THINKING</span>
       <h2><a href="{{ "thinking/" | absURL }}">Reflections</a></h2>
       <p class="home-section-desc">Periodic reflections and plans</p>
+      <span class="home-section-count">{{ len $thinking }} reflections</span>
     </div>
     <div class="home-section-list">
       {{- range first 3 $thinking }}
@@ -204,6 +207,20 @@
     {{- end }}
   </section>
 </div>
+
+<section class="home-focus" aria-labelledby="home-focus-title">
+  <div class="home-focus-kicker">CURRENT FOCUS</div>
+  <div class="home-focus-copy">
+    <h2 id="home-focus-title">Research notes from the edge of robotics and learning systems.</h2>
+    <p>Warm, durable notes on the ideas I keep returning to: how models generalize, how clients disagree, and how prompts become a small handle on large representations.</p>
+  </div>
+  <div class="home-focus-tags" aria-label="Research directions">
+    <span>Robotics</span>
+    <span>Federated Learning</span>
+    <span>Domain Generalization</span>
+    <span>CLIP Prompt Tuning</span>
+  </div>
+</section>
 
 {{- partial "home_heatmap.html" . }}
 

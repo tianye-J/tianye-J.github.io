@@ -24,6 +24,7 @@
   var tl = document.createElement('nav');
   tl.className = 'toc-timeline';
   tl.setAttribute('aria-label', 'Table of Contents');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var list = document.createElement('ul');
   list.className = 'toc-tl-list';
@@ -46,7 +47,7 @@
     a.href = '#' + h.id;
     a.addEventListener('click', function (e) {
       e.preventDefault();
-      h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      h.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
     });
 
     var dot = document.createElement('span');
@@ -208,6 +209,9 @@
   // Homepage only, no effect on other pages
   var h1 = document.querySelector('.home-info .entry-header h1');
   if (!h1) return;
+
+  // Keep the mobile first paint stable; the compact hero works better without typing.
+  if (window.matchMedia('(max-width: 768px)').matches) return;
 
   // Respect reduced-motion preference
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;

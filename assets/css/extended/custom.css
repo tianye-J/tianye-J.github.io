@@ -2488,7 +2488,14 @@ body:not(.list) .post-content {
     gap: 0.9rem;
 }
 
+.about-life-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
 .about-fact-card,
+.about-life-card,
 .about-journey-item,
 .about-tool-group {
     background: var(--entry);
@@ -2501,7 +2508,27 @@ body:not(.list) .post-content {
     padding: 1.05rem 1.1rem;
 }
 
-.about-fact-card strong {
+.about-life-card {
+    padding: 1.05rem 1.1rem;
+}
+
+.about-life-card .about-card-label {
+    display: flex;
+    gap: 0.42rem;
+    align-items: center;
+}
+
+.about-life-emoji {
+    color: var(--secondary);
+    font-size: 1rem;
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: none;
+    filter: saturate(0.86);
+}
+
+.about-fact-card strong,
+.about-life-card strong {
     display: block;
     margin: 0.25rem 0 0.25rem;
     font-family: var(--font-family-display);
@@ -2525,7 +2552,8 @@ body:not(.list) .post-content {
     text-decoration-color: var(--accent);
 }
 
-.about-fact-card p {
+.about-fact-card p,
+.about-life-card p {
     margin: 0;
     color: var(--secondary);
     font-size: 0.9rem;
@@ -2682,6 +2710,7 @@ a.about-tool-item:focus-visible {
 }
 
 @media (max-width: 900px) {
+    .about-life-grid,
     .about-tools-grid {
         grid-template-columns: 1fr;
     }

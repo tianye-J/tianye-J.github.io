@@ -68,6 +68,36 @@
   </section>
   {{- end }}
 
+  {{- with $about.life }}
+  <section class="about-section about-life" aria-labelledby="about-life-title">
+    <div class="about-section-heading">
+      <span class="section-label">OFF THE DESK</span>
+      <h2 id="about-life-title">A less academic silhouette</h2>
+    </div>
+    <div class="about-life-grid">
+      {{- range . }}
+      {{- $lifeValue := .value -}}
+      <article class="about-life-card">
+        <span class="about-card-label">
+          {{- with .emoji }}<span class="about-life-emoji" aria-hidden="true">{{ . }}</span>{{- end }}
+          <span>{{ .label }}</span>
+        </span>
+        <strong>
+          {{- with .url }}
+          {{- $url := . -}}
+          {{- $isExternal := or (hasPrefix $url "http://") (hasPrefix $url "https://") -}}
+          <a class="about-inline-link" href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ $lifeValue }}</a>
+          {{- else }}
+          {{ $lifeValue }}
+          {{- end }}
+        </strong>
+        <p>{{ .note }}</p>
+      </article>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
   {{- with $about.journey }}
   <section class="about-section about-journey" aria-labelledby="about-journey-title">
     <div class="about-section-heading">

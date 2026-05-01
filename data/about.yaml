@@ -1,0 +1,87 @@
+profile:
+  name: "Jiang Jinghang"
+  display_name: "Arden"
+  role: "Robotics Engineering student"
+  affiliation: "Nanjing University of Posts and Telecommunications"
+  avatar: "/images/portrait.png"
+  intro: "I study Robotics Engineering, while my long-term effort is moving toward foundation models, post-training, and AI infrastructure: from PyTorch-style frameworks to GPU parallel computing and device-level communication."
+  links:
+    - label: "GitHub"
+      url: "https://github.com/tianye-J"
+      primary: true
+    - label: "Email"
+      url: "mailto:jjh2444972201@gmail.com"
+      primary: false
+
+facts:
+  - label: "Based in"
+    value: "Nanjing, China"
+    note: "A quiet base for school, notes, and small experiments."
+  - label: "Academic home"
+    value: "NJUPT"
+    url: "https://www.njupt.edu.cn/en/"
+    note: "Robotics Engineering, with a hardware-flavored route into AI."
+  - label: "Long-term direction"
+    value: "Foundation models · Post-training · AI infra"
+    note: "The area I want to keep building toward, from model behavior down to the training stack."
+  - label: "Current project"
+    value: "FedDG / DG"
+    note: "A current research exercise and training ground, not my long-term specialization."
+
+journey:
+  - kicker: "Now"
+    title: "Rebuilding the foundation model stack"
+    description: "Reading foundation model papers with attention to model behavior, data mixture, evaluation, and the systems assumptions behind the results."
+    tags: ["foundation models", "evaluation", "model behavior"]
+  - kicker: "Building"
+    title: "Learning post-training as a system"
+    description: "Trying to understand SFT, preference learning, RL-style feedback, and evaluation as one pipeline rather than isolated tricks."
+    tags: ["SFT", "preference learning", "alignment"]
+  - kicker: "Exploring"
+    title: "Exploring AI infrastructure below the model API"
+    description: "Building literacy around PyTorch-style runtime abstractions, GPU parallel computing, memory movement, kernels, and GPU-to-GPU communication."
+    tags: ["PyTorch internals", "CUDA", "GPU communication"]
+
+tools:
+  - group: "Languages"
+    items:
+      - name: "Python"
+        url: "https://www.python.org/"
+        logo: "/images/tools/python.svg"
+        description: "Daily scripting, experiments, data checks, and small automation."
+      - name: "TypeScript"
+        url: "https://www.typescriptlang.org/"
+        logo: "/images/tools/typescript.svg"
+        description: "Typed frontend work and small web tooling when the interface matters."
+      - name: "C++"
+        url: "https://isocpp.org/"
+        logo: "/images/tools/cplusplus.svg"
+        description: "A lower-level language path for performance, systems, and robotics-flavored work."
+  - group: "Compute stack"
+    items:
+      - name: "PyTorch"
+        url: "https://pytorch.org/"
+        logo: "/images/tools/pytorch.svg"
+        description: "The main framework layer for tensors, models, autograd, and distributed training."
+      - name: "CUDA"
+        url: "https://developer.nvidia.com/cuda-toolkit"
+        logo: "/images/tools/nvidia.svg"
+        description: "The GPU programming surface I want to understand more deeply."
+      - name: "Hugging Face"
+        url: "https://huggingface.co/"
+        logo: "/images/tools/huggingface.svg"
+        description: "Model, dataset, and tooling ecosystem for practical AI development."
+  - group: "Workspace"
+    items:
+      - name: "Claude Code"
+        url: "https://docs.anthropic.com/en/docs/claude-code/overview"
+        logo: "/images/tools/anthropic.svg"
+        description: "Agentic coding in the terminal when I need a sharper pair of hands."
+      - name: "Codex"
+        url: "https://openai.com/codex/"
+        logo: "/images/tools/openai.svg"
+        description: "Codebase editing, review, and implementation support inside real projects."
+      - name: "Obsidian"
+        url: "https://obsidian.md/"
+        logo: "/images/tools/obsidian.svg"
+        description: "Long-term notes, reading maps, and the place where scattered ideas settle."

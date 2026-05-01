@@ -2034,3 +2034,420 @@ body:not(.list) .post-content {
     padding-top: 2rem;
     border-top: 1px solid var(--border);
 }
+
+/* ---- 28. About Page ---- */
+.about-page {
+    max-width: 900px;
+}
+
+.about-header {
+    margin-bottom: 1.8rem;
+}
+
+.about-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(180px, 0.65fr);
+    gap: clamp(1.8rem, 5vw, 3.5rem);
+    align-items: center;
+    padding: 2rem 0 2.6rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.about-hero-copy {
+    min-width: 0;
+}
+
+.about-kicker,
+.about-card-label,
+.about-journey-kicker {
+    display: block;
+    color: var(--tertiary);
+    font-family: var(--font-family);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.about-kicker {
+    margin-bottom: 0.55rem;
+}
+
+.about-hero h2 {
+    margin: 0 0 0.55rem;
+    font-family: var(--font-family-display);
+    font-size: 3.35rem;
+    font-weight: 500;
+    line-height: 1.08;
+}
+
+.about-affiliation {
+    margin: 0 0 1rem;
+    color: var(--secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.about-intro {
+    max-width: 560px;
+    margin: 0;
+    color: var(--content);
+    font-family: var(--font-family-serif);
+    font-size: 1.1rem;
+    line-height: 1.72;
+}
+
+.about-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1.45rem;
+}
+
+.about-button {
+    text-decoration: none;
+}
+
+.about-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 13px;
+    color: var(--secondary);
+    background: var(--panel-muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.about-button.primary {
+    color: var(--paper);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.about-button:hover {
+    color: var(--accent);
+    background: var(--panel-muted);
+    box-shadow: var(--shadow-hover);
+}
+
+.about-button.primary:hover {
+    color: var(--paper);
+    background: var(--accent);
+}
+
+.about-portrait {
+    justify-self: end;
+    margin: 0;
+    text-align: center;
+}
+
+.about-portrait img {
+    display: block;
+    width: min(240px, 100%);
+    height: auto;
+    margin: 0 auto;
+    border-radius: 18px;
+    box-shadow: var(--shadow-panel), var(--shadow-sm);
+    user-select: none;
+}
+
+.about-portrait figcaption {
+    margin-top: 0.75rem;
+    color: var(--tertiary);
+    font-size: 0.78rem;
+    font-style: italic;
+}
+
+.about-section {
+    padding: 2.6rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.about-section:last-child {
+    border-bottom: none;
+}
+
+.about-section-heading {
+    max-width: 680px;
+    margin-bottom: 1.25rem;
+}
+
+.about-section-heading h2 {
+    margin: 0.2rem 0 0;
+    font-family: var(--font-family-display);
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.18;
+}
+
+.about-facts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
+.about-fact-card,
+.about-journey-item,
+.about-tool-group {
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.about-fact-card {
+    padding: 1.05rem 1.1rem;
+}
+
+.about-fact-card strong {
+    display: block;
+    margin: 0.25rem 0 0.25rem;
+    font-family: var(--font-family-display);
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.about-inline-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--border);
+    text-underline-offset: 0.18em;
+    overflow-wrap: anywhere;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.about-inline-link:hover,
+.about-inline-link:focus-visible {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+}
+
+.about-fact-card p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: 0.9rem;
+    line-height: 1.62;
+}
+
+.about-journey-item h3,
+.about-tool-group h3 {
+    margin: 0 0 0.45rem;
+    font-family: var(--font-family-display);
+    font-size: 1.08rem;
+    font-weight: 500;
+    line-height: 1.28;
+}
+
+.about-tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.38rem;
+    margin-top: 0.85rem;
+}
+
+.about-tag-row span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 2px 8px;
+    color: var(--tertiary);
+    background: var(--panel-muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.72rem;
+    line-height: 1.3;
+}
+
+.about-journey-list {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.about-journey-item {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+}
+
+.about-journey-item p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: 0.92rem;
+    line-height: 1.65;
+}
+
+.about-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
+.about-tool-group {
+    padding: 1.05rem;
+}
+
+.about-tool-list {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.about-tool-item {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 0.7rem;
+    align-items: center;
+    min-width: 0;
+    padding: 0.48rem 0.5rem;
+    color: inherit;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+a.about-tool-item {
+    cursor: pointer;
+}
+
+a.about-tool-item:hover,
+a.about-tool-item:focus-visible {
+    color: inherit;
+    background: var(--panel-muted);
+    border-color: var(--border);
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--accent) 10%, transparent);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+a.about-tool-item:focus-visible {
+    border-color: var(--accent);
+}
+
+.about-tool-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--panel-muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.about-tool-mark img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.about-tool-mark span {
+    color: var(--accent);
+    font-family: var(--font-family-code);
+    font-size: 0.72rem;
+    font-weight: 500;
+}
+
+.about-tool-text,
+.about-tool-text strong,
+.about-tool-text small {
+    display: block;
+    min-width: 0;
+}
+
+.about-tool-text strong {
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.about-tool-text small {
+    color: var(--tertiary);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.about-page .about-section,
+.about-hero {
+    animation: fade-up 0.5s var(--ease-soft) both;
+}
+
+@media (max-width: 900px) {
+    .about-tools-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-header {
+        margin-bottom: 1rem;
+    }
+
+    .about-hero {
+        grid-template-columns: 1fr;
+        gap: 1.6rem;
+        padding: 1.3rem 0 2rem;
+    }
+
+    .about-hero h2 {
+        font-size: 2.3rem;
+    }
+
+    .about-section-heading h2 {
+        font-size: 1.55rem;
+    }
+
+    .about-intro {
+        font-size: 1rem;
+    }
+
+    .about-portrait {
+        justify-self: center;
+    }
+
+    .about-portrait img {
+        width: min(180px, 58vw);
+        border-radius: 16px;
+    }
+
+    .about-facts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-section {
+        padding: 2.1rem 0;
+    }
+
+    .about-journey-item {
+        grid-template-columns: 1fr;
+        gap: 0.55rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .about-page .about-section,
+    .about-hero {
+        animation: none;
+        transform: none;
+    }
+
+    .about-tool-item {
+        transition: none;
+    }
+
+    a.about-tool-item:hover,
+    a.about-tool-item:focus-visible {
+        transform: none;
+    }
+}

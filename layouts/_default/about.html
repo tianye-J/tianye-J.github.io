@@ -1,0 +1,146 @@
+{{- define "main" }}
+
+{{- $about := site.Data.about | default dict -}}
+{{- $profile := $about.profile | default dict -}}
+
+<article class="post-single about-page">
+  <header class="post-header about-header">
+    {{ partial "breadcrumbs.html" . }}
+    <span class="section-label">ABOUT</span>
+    <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
+  </header>
+
+  {{- with $profile }}
+  <section class="about-hero" aria-labelledby="about-hero-title">
+    <div class="about-hero-copy">
+      <span class="about-kicker">{{ .role }}</span>
+      <h2 id="about-hero-title">Hi, I’m {{ .display_name | default .name }}</h2>
+      {{- with .affiliation }}
+      <p class="about-affiliation">{{ . }}</p>
+      {{- end }}
+      {{- with .intro }}
+      <p class="about-intro">{{ . }}</p>
+      {{- end }}
+      {{- with .links }}
+      <div class="about-hero-actions" aria-label="Primary links">
+        {{- range . }}
+        {{- $url := .url | default "#" -}}
+        {{- $isExternal := or (hasPrefix $url "http://") (hasPrefix $url "https://") -}}
+        <a class="about-button{{ if .primary }} primary{{ end }}" href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>
+          {{ .label }}
+        </a>
+        {{- end }}
+      </div>
+      {{- end }}
+    </div>
+    <figure class="about-portrait">
+      {{- $avatar := .avatar | default "/images/portrait.png" -}}
+      <img src="{{ $avatar | relURL }}" alt="{{ .display_name | default .name }} portrait" loading="eager" draggable="false">
+      <figcaption>Photo taken in real life :)</figcaption>
+    </figure>
+  </section>
+  {{- end }}
+
+  {{- with $about.facts }}
+  <section class="about-section about-facts" aria-labelledby="about-facts-title">
+    <div class="about-section-heading">
+      <span class="section-label">QUICK FACTS</span>
+      <h2 id="about-facts-title">A few anchors</h2>
+    </div>
+    <div class="about-facts-grid">
+      {{- range . }}
+      {{- $factValue := .value -}}
+      <article class="about-fact-card">
+        <span class="about-card-label">{{ .label }}</span>
+        <strong>
+          {{- with .url }}
+          {{- $url := . -}}
+          {{- $isExternal := or (hasPrefix $url "http://") (hasPrefix $url "https://") -}}
+          <a class="about-inline-link" href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ $factValue }}</a>
+          {{- else }}
+          {{ $factValue }}
+          {{- end }}
+        </strong>
+        <p>{{ .note }}</p>
+      </article>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
+  {{- with $about.journey }}
+  <section class="about-section about-journey" aria-labelledby="about-journey-title">
+    <div class="about-section-heading">
+      <span class="section-label">NOW / NEXT / LATER</span>
+      <h2 id="about-journey-title">A lightweight journey map</h2>
+    </div>
+    <div class="about-journey-list">
+      {{- range . }}
+      <article class="about-journey-item">
+        <span class="about-journey-kicker">{{ .kicker }}</span>
+        <div>
+          <h3>{{ .title }}</h3>
+          <p>{{ .description }}</p>
+          {{- with .tags }}
+          <div class="about-tag-row">
+            {{- range . }}
+            <span>{{ . }}</span>
+            {{- end }}
+          </div>
+          {{- end }}
+        </div>
+      </article>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
+  {{- with $about.tools }}
+  <section class="about-section about-tools" aria-labelledby="about-tools-title">
+    <div class="about-section-heading">
+      <span class="section-label">TOOLS & STACK</span>
+      <h2 id="about-tools-title">The development stack I keep close</h2>
+    </div>
+    <div class="about-tools-grid">
+      {{- range . }}
+      <section class="about-tool-group" aria-label="{{ .group }}">
+        <h3>{{ .group }}</h3>
+        {{- with .items }}
+        <div class="about-tool-list">
+          {{- range . }}
+          {{- $name := .name | default "Tool" -}}
+          {{- $url := .url | default "" -}}
+          {{- $isLinked := ne $url "" -}}
+          {{- $isExternal := or (hasPrefix $url "http://") (hasPrefix $url "https://") -}}
+          {{- if $isLinked }}
+          <a class="about-tool-item" href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>
+          {{- else }}
+          <div class="about-tool-item">
+          {{- end }}
+            <span class="about-tool-mark" aria-hidden="true">
+              {{- with .logo }}
+              <img src="{{ . | relURL }}" alt="" loading="lazy" draggable="false">
+              {{- else }}
+              <span>{{ substr $name 0 2 | upper }}</span>
+              {{- end }}
+            </span>
+            <span class="about-tool-text">
+              <strong>{{ $name }}</strong>
+              <small>{{ .description }}</small>
+            </span>
+          {{- if $isLinked }}
+          </a>
+          {{- else }}
+          </div>
+          {{- end }}
+          {{- end }}
+        </div>
+        {{- end }}
+      </section>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+</article>
+
+{{- end }}

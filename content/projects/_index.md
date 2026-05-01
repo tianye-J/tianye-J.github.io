@@ -1,4 +1,4 @@
 +++
 title = "Project"
-description = "Projects and engineering practice"
+description = "Robotics, systems, and ML engineering artifacts"
 +++

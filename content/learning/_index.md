@@ -1,6 +1,6 @@
 +++
 title = "Learning"
-description = "Learning notes and technical accumulation"
+description = "Learning routes through foundation models, post-training, AI infrastructure, and research training notes"
 +++
 
 <div class="page-epigraph">

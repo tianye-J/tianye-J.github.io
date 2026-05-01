@@ -81,6 +81,38 @@
     <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
   </div>
   {{- end }}
+  {{- if ne .Section "projects" }}
+  {{- $tags := .GetTerms "tags" }}
+  {{- if $tags }}
+  <div class="entry-tags" aria-label="Tags">
+    {{- range $tags }}
+    <span>{{ .LinkTitle }}</span>
+    {{- end }}
+  </div>
+  {{- end }}
+  {{- end }}
+  {{- if eq .Section "projects" }}
+  {{- $status := .Param "status" }}
+  {{- $stack := .Param "stack" }}
+  {{- $outcome := .Param "outcome" }}
+  {{- if or $status $stack $outcome }}
+  <div class="project-entry-details" aria-label="Project details">
+    {{- with $status }}
+    <span class="project-status">{{ . }}</span>
+    {{- end }}
+    {{- with $stack }}
+    <span class="project-stack">
+      {{- range $index, $item := . }}
+      {{- if $index }} · {{ end }}{{ $item }}
+      {{- end }}
+    </span>
+    {{- end }}
+    {{- with $outcome }}
+    <span class="project-outcome">{{ . }}</span>
+    {{- end }}
+  </div>
+  {{- end }}
+  {{- end }}
   {{- if not (.Param "hideMeta") }}
   <footer class="entry-footer">
     {{- partial "post_meta.html" . -}}
@@ -121,7 +153,7 @@
     <div class="home-section-header">
       <span class="section-label">LEARNING</span>
       <h2><a href="{{ "learning/" | absURL }}">Learning Notes</a></h2>
-      <p class="home-section-desc">Technical accumulation and knowledge distillation</p>
+      <p class="home-section-desc">Foundation models, post-training, AI infrastructure, and older research notes</p>
       <span class="home-section-count">{{ len $learning }} notes</span>
     </div>
     <div class="home-section-list">
@@ -152,7 +184,7 @@
     <div class="home-section-header">
       <span class="section-label">PROJECTS</span>
       <h2><a href="{{ "projects/" | absURL }}">Projects</a></h2>
-      <p class="home-section-desc">Engineering practice and portfolio</p>
+      <p class="home-section-desc">Robotics, systems, and ML engineering artifacts</p>
       <span class="home-section-count">{{ len $projects }} projects</span>
     </div>
     <div class="home-section-list">
@@ -183,7 +215,7 @@
     <div class="home-section-header">
       <span class="section-label">THINKING</span>
       <h2><a href="{{ "thinking/" | absURL }}">Reflections</a></h2>
-      <p class="home-section-desc">Periodic reflections and plans</p>
+      <p class="home-section-desc">Monthly reviews and direction notes</p>
       <span class="home-section-count">{{ len $thinking }} reflections</span>
     </div>
     <div class="home-section-list">

@@ -27,11 +27,11 @@ theme = "PaperMod"
   TocOpen = true
   UseHugoToc = true
   comments = true
-  description = "Arden’s blog — Federated Learning & Domain Generalization"
+  description = "Arden’s blog — Robotics, foundation models, post-training, and AI infrastructure"
 
   [params.homeInfoParams]
     Title = "Hello, I’m **Arden**"
-    Content = "Robotics Engineering @ NJUPT · Exploring Federated Learning & Domain Generalization"
+    Content = "Robotics Engineering @ NJUPT · Foundation models, post-training, and AI infrastructure"
 
   [[params.socialIcons]]
     name = "github"

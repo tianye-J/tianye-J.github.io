@@ -3,6 +3,9 @@ title = "深度学习入门：PyTorch零基础到多任务联合微调"
 date = 2026-02-26T18:39:55+08:00
 draft = false
 description = "基于超分辨率特征增强的图像分类多任务学习"
+status = "Completed"
+stack = ["PyTorch", "Computer Vision", "Multi-task Learning"]
+outcome = "完成图像恢复与分类联合训练的个人实践复盘。"
 tags = ["项目实践", "PyTorch", "计算机视觉", "多任务学习", "超分辨率"]
 +++
 ## 前言
@@ -453,7 +456,6 @@ loss = lambda_sr * loss_sr + lambda_cls * loss_cls
 3. **善用AI工具**。gemini和claude在学习过程中帮了很大的忙。尤其是优化了命名规范，提升了代码可读性（至少简化了我20%的代码）。
 
 我很庆幸在入门阶段经历了如此愉快的编译时光，再次感谢校科协的学长们🙏
-
 
 
 

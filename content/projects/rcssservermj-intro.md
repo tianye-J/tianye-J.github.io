@@ -3,6 +3,9 @@ title = 'RCSSServerMJ 入门指南'
 date = 2026-04-15T14:22:43+08:00
 draft = false
 description = "面向零基础读者的 RCSSServerMJ 仿真服务器源码阅读入门指南"
+status = "Completed"
+stack = ["C++", "MuJoCo", "RoboCup 3D"]
+outcome = "把仿真服务器、通信协议和物理循环梳理成源码阅读路线。"
 tags = ["RoboCup", "仿真足球", "RCSSServerMJ", "MuJoCo", "入门指南"]
 series = ["RoboCup 3D 足球仿真"]
 +++

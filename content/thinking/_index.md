@@ -1,5 +1,4 @@
 +++
 title = "Thinking"
-description = "Periodic reflections and plans"
+description = "Monthly reviews and direction notes"
 +++
-

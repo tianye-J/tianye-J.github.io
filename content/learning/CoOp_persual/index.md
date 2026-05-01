@@ -2,6 +2,7 @@
 title = 'FedDG阅读：Learning to Prompt for Vision-Language Models'
 date = 2026-03-10T15:51:47+08:00
 draft = false
+description = "精读 CoOp 如何把 CLIP 的手写 prompt 转成可学习上下文，作为 Prompt Learning 的起点。"
 tags = ["论文阅读", "CoOp", "CLIP", "Prompt Learning", "视觉语言模型"]
 series = ["联邦域泛化"]
 +++

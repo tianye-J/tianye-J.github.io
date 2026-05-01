@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 OUTPUT_PATH = Path(os.getenv("GITHUB_CONTRIB_OUTPUT", "data/github_contributions.json"))
-USERNAME = os.getenv("GITHUB_CONTRIB_USERNAME", "tianye-J") or "tianye-J"
+USERNAME = (os.getenv("GITHUB_CONTRIB_USERNAME", "tianye-J") or "tianye-J").strip()
 TOKEN = (os.getenv("CONTRIB_TOKEN") or os.getenv("GITHUB_CONTRIB_TOKEN", "")).strip()
 WEEKS = 26
 

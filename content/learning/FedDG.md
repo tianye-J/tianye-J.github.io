@@ -2,6 +2,7 @@
 title = 'FedDG 论文导读'
 date = 2026-03-07T21:22:43+08:00
 draft = false
+description = "从 PromptFL、FedSR、SHOT 三条线梳理 FedDG / CLIP 训练场的论文地基。"
 tags = ["联邦域泛化", "论文导读", "CLIP", "Prompt Learning", "Source-Free DA"]
 series = ["联邦域泛化"]
 +++

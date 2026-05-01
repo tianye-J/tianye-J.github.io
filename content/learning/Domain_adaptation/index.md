@@ -2,6 +2,7 @@
 title = 'Domain adaptation入门笔记（1.超基础知识篇）'
 date = 2026-03-06T09:29:23+08:00
 draft = false
+description = "从 domain shift 的直觉、符号和基本方法入门 Domain Adaptation。"
 tags = ["域适应", "迁移学习", "DANN", "GRL", "学习笔记"]
 series = ["联邦域泛化"]
 math = true
@@ -296,7 +297,6 @@ DANN作为一个经典网络，必然也会有它的短板：
 - 无源域适应 (Source-Free DA, SFDA)
 
 > 这些方向基于三个问题点中的1～2个进行了深入研究和优化，具体深入就要通过读对应的论文了，入门笔记就到这里啦。
-
 
 
 

@@ -3,6 +3,9 @@ title = 'Janus 客户端入门指南'
 date = 2026-04-16T14:22:43+08:00
 draft = false
 description = "面向零基础队员的 Janus RoboCup 3D 足球仿真客户端入门指南"
+status = "Completed"
+stack = ["Python", "RoboCup 3D", "Janus"]
+outcome = "把客户端感知、世界模型、决策和动作链路整理成队内入门指南。"
 tags = ["RoboCup", "仿真足球", "Janus", "入门指南"]
 series = ["RoboCup 3D 足球仿真"]
 +++

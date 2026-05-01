@@ -1036,6 +1036,7 @@ body:not(.list) .post-content {
 
 /* ---- 21. Homepage Writing Heatmap ---- */
 .home-heatmap {
+    --heatmap-weeks: 26;
     border-top: 1px solid var(--border);
     margin: 0 -2.5rem;
     padding: 2.2rem 2.5rem 1.2rem;

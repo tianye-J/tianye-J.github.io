@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-05-01T09:23:24Z",
+  "username": "tianye-J",
+  "total_contributions": 0,
+  "status": "fallback",
+  "reason": "Missing CONTRIB_TOKEN; using fallback contribution data.",
+  "range": {
+    "weeks": 26,
+    "from": "2025-11-01",
+    "to": "2026-05-01"
+  },
+  "weeks": []
+}

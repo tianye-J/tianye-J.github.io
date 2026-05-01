@@ -37,6 +37,12 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
+      - name: Fetch GitHub contribution data
+        env:
+          CONTRIB_TOKEN: ${{ secrets.CONTRIB_TOKEN }}
+          GITHUB_CONTRIB_USERNAME: ${{ vars.GITHUB_CONTRIB_USERNAME }}
+        run: |
+          python3 scripts/fetch_github_contributions.py
       - name: Build with Hugo
         env:
           HUGO_ENVIRONMENT: production

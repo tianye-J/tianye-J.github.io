@@ -4,12 +4,8 @@
    ============================================================ */
 
 /* 1. Font Imports */
-/* Serif: Noto Serif */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;1,400&display=swap');
-/* Code: JetBrains Mono */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-/* Chinese: LXGW WenKai */
-@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@latest/style.css');
+/* Claude-inspired typography: serif headlines, sans UI/body, mono code */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+SC:wght@400;500;600&display=swap');
 
 /* ---- 2. Design Tokens ---- */
 :root {
@@ -46,11 +42,12 @@
     --ring-deep:    #c2c0b6;        /* Active/pressed ring */
     --focus-ring:   #3898ec;        /* Accessibility focus blue */
 
-    /* Typography — dual system: serif headings + sans body */
-    --font-family-serif: 'Noto Serif', 'LXGW WenKai', Georgia, serif;
-    --font-family-sans:  'LXGW WenKai', system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --font-family:       var(--font-family-sans);
-    --font-family-code:  'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+    /* Typography — Claude-inspired: serif authority, sans utility, mono code */
+    --font-family-display: 'Anthropic Serif', 'Noto Serif', 'Noto Serif SC', 'Songti SC', 'STSong', Georgia, serif;
+    --font-family-serif:   'Anthropic Serif', 'Noto Serif', 'Noto Serif SC', 'Songti SC', 'STSong', Georgia, serif;
+    --font-family-sans:    'Anthropic Sans', 'Noto Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+    --font-family:         var(--font-family-sans);
+    --font-family-code:    'Anthropic Mono', 'JetBrains Mono', 'SFMono-Regular', 'Cascadia Code', 'Fira Code', Consolas, monospace;
 
     /* Border radius */
     --radius:       8px;
@@ -79,13 +76,16 @@ body {
     background:
         linear-gradient(180deg, rgba(252, 251, 247, 0.42) 0, rgba(238, 235, 227, 0) 320px),
         var(--background);
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
 }
 
 /* Headings: serif + weight 500 */
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-family-serif);
+    font-family: var(--font-family-display);
     font-weight: 500;
+    line-height: 1.22;
     scroll-margin-top: 5rem;
 }
 
@@ -143,7 +143,7 @@ body.list {
 }
 
 .logo a {
-    font-family: var(--font-family-serif);
+    font-family: var(--font-family-display);
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--primary) !important;
@@ -433,6 +433,7 @@ body:not(.list) .post-content {
 }
 
 .post-content blockquote {
+    font-family: var(--font-family-serif);
     border-left: 3px solid var(--accent);
     margin: 1.8rem 0;
     color: var(--secondary);
@@ -575,7 +576,7 @@ body:not(.list) .post-content {
 
 .footer-brand {
     display: block;
-    font-family: var(--font-family-serif);
+    font-family: var(--font-family-display);
     font-size: 1rem;
     font-weight: 500;
     color: var(--primary);
@@ -1484,7 +1485,7 @@ body:not(.list) .post-content {
     background: rgba(201, 100, 66, 0.08);
     border: 1px solid var(--border-warm);
     color: var(--accent);
-    font-family: var(--font-family-serif);
+    font-family: var(--font-family-display);
     font-size: 1.35rem;
     font-weight: 500;
     flex-shrink: 0;
@@ -1510,7 +1511,7 @@ body:not(.list) .post-content {
 
 .friend-name {
     color: var(--primary);
-    font-family: var(--font-family-serif);
+    font-family: var(--font-family-display);
     font-size: 1.05rem;
     font-weight: 500;
     line-height: 1.3;

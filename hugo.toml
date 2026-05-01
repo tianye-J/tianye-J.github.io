@@ -56,12 +56,27 @@ theme = "PaperMod"
 
   [params.fuseOpts]
     isCaseSensitive = false
+    includeMatches = true
+    includeScore = true
     shouldSort = true
+    findAllMatches = true
     location = 0
     distance = 1000
-    threshold = 0.4
-    minMatchCharLength = 0
-    keys = ["title", "permalink", "summary", "content"]
+    threshold = 0.36
+    minMatchCharLength = 1
+    ignoreLocation = true
+    limit = 24
+keys = [
+  { name = "title", weight = 0.30 },
+  { name = "tags", weight = 0.22 },
+  { name = "description", weight = 0.16 },
+  { name = "series", weight = 0.10 },
+  { name = "stack", weight = 0.08 },
+  { name = "status", weight = 0.06 },
+  { name = "outcome", weight = 0.04 },
+  { name = "summary", weight = 0.04 },
+  { name = "content", weight = 0.03 }
+]
 
 [[menu.main]]
   identifier = "learning"

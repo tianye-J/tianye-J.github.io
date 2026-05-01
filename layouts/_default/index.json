@@ -1,0 +1,50 @@
+{{- $.Scratch.Add "index" slice -}}
+{{- $searchSections := slice "learning" "projects" "thinking" -}}
+{{- range site.RegularPages -}}
+  {{- if and (in $searchSections .Section) (not .Params.searchHidden) (ne .Layout `archives`) (ne .Layout `search`) -}}
+    {{- $tags := slice -}}
+    {{- with .Params.tags -}}
+      {{- range . -}}
+        {{- $tags = $tags | append . -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $series := slice -}}
+    {{- with .Params.series -}}
+      {{- range . -}}
+        {{- $series = $series | append . -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $stack := slice -}}
+    {{- with .Params.stack -}}
+      {{- range . -}}
+        {{- $stack = $stack | append . -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $sectionTitle := .Section | humanize | title -}}
+    {{- if eq .Section "learning" -}}
+      {{- $sectionTitle = "Learning" -}}
+    {{- else if eq .Section "projects" -}}
+      {{- $sectionTitle = "Projects" -}}
+    {{- else if eq .Section "thinking" -}}
+      {{- $sectionTitle = "Thinking" -}}
+    {{- end -}}
+    {{- $.Scratch.Add "index" (dict
+      "title" .Title
+      "description" (.Description | plainify | htmlUnescape)
+      "content" (.Plain | htmlUnescape)
+      "permalink" .Permalink
+      "summary" (.Summary | plainify | htmlUnescape)
+      "tags" $tags
+      "series" $series
+      "section" .Section
+      "sectionTitle" $sectionTitle
+      "date" (.Date.Format "January 2, 2006")
+      "dateISO" (.Date.Format "2006-01-02")
+      "readingTime" .ReadingTime
+      "status" (.Param "status")
+      "stack" $stack
+      "outcome" (.Param "outcome")
+    ) -}}
+  {{- end -}}
+{{- end -}}
+{{- $.Scratch.Get "index" | jsonify -}}

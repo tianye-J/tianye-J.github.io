@@ -1,0 +1,67 @@
+{{- define "main" }}
+
+<header class="page-header search-page-header">
+  {{- partial "breadcrumbs.html" . }}
+  <span class="section-label">SEARCH</span>
+  <h1>{{ .Params.searchTitle | default .Title }}</h1>
+  {{- if .Description }}
+  <div class="post-description">
+    {{ .Description | markdownify }}
+  </div>
+  {{- end }}
+</header>
+
+<div id="searchbox" class="search-panel">
+  <label class="search-input-wrap" for="searchInput">
+    <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <input id="searchInput" autofocus placeholder="{{ .Params.placeholder | default (printf "%s ↵" .Title) }}"
+      aria-label="Search the archive" type="search" autocomplete="off" maxlength="64">
+  </label>
+
+  <div class="search-filters" role="group" aria-label="Filter search results by section">
+    <button class="search-filter is-active" type="button" data-search-filter="all" aria-pressed="true">
+      All <span data-filter-count="all">0</span>
+    </button>
+    <button class="search-filter" type="button" data-search-filter="learning" aria-pressed="false">
+      Learning <span data-filter-count="learning">0</span>
+    </button>
+    <button class="search-filter" type="button" data-search-filter="projects" aria-pressed="false">
+      Projects <span data-filter-count="projects">0</span>
+    </button>
+    <button class="search-filter" type="button" data-search-filter="thinking" aria-pressed="false">
+      Thinking <span data-filter-count="thinking">0</span>
+    </button>
+  </div>
+
+  <div class="search-suggestions" aria-label="Starter searches">
+    <span>Try</span>
+    <button type="button" data-search-term="Transformer">Transformer</button>
+    <button type="button" data-search-term="Prompt Learning">Prompt Learning</button>
+    <button type="button" data-search-term="RoboCup">RoboCup</button>
+    <button type="button" data-search-term="方法论">方法论</button>
+    <button type="button" data-search-term="课程规划">课程规划</button>
+  </div>
+
+  <p id="searchStatus" class="search-status" aria-live="polite">Loading archive index...</p>
+
+  <div id="searchEmpty" class="search-empty" hidden>
+    <p class="search-empty-title">No notes found for this query.</p>
+    <p class="search-empty-copy">Try a broader phrase, remove the section filter, or search the public site index.</p>
+    <div class="search-empty-actions">
+      <button type="button" data-search-term="CLIP">CLIP</button>
+      <button type="button" data-search-term="学习反思">学习反思</button>
+      <button type="button" data-search-clear>Clear search</button>
+      <a id="searchExternalFallback" href="https://www.google.com/search?q=site%3Aardenj.pages.dev" target="_blank"
+        rel="noopener noreferrer">Google site:ardenj.pages.dev</a>
+    </div>
+  </div>
+
+  <ul id="searchResults" aria-label="Search results"></ul>
+</div>
+
+{{- end }}{{/* end main */}}

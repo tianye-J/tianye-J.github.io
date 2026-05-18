@@ -32,12 +32,12 @@ experience:
   - time: "2026.5"
     title: "RoboCup 仿真 3D 足球"
     badge: "国家三等奖"
-    description: "围绕 Janus 客户端、RCSSServerMJ 仿真服务器、仿真足球环境和队内技术文档进行学习、整理与实践沉淀。"
+    description: "校 Apollo 战队队员，积累仿真服务器、机器人通信调度、强化学习相关知识与经验。"
     tags: ["RoboCup 3D", "Simulation", "Janus", "RCSSServerMJ"]
   - time: "2026.3 - 2026.4"
     title: "联邦学习与域泛化"
     badge: "Research Training"
-    description: "聚焦 FedDG、Domain Generalization、CLIP Prompt Learning 与 PromptFL，主要处在论文阅读、问题理解和方向积累阶段，暂无论文产出。"
+    description: "聚焦 FedDG、Prompt Learning、Prompt Tuning，积累论文阅读、实验规划与搭建的经验，以及相关领域的知识树。"
     tags: ["FedDG", "DG", "CLIP Prompt Learning", "PromptFL"]
 
 life:

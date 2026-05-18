@@ -28,6 +28,18 @@ facts:
     value: "FedDG / DG"
     note: "A current research exercise and training ground, not my long-term specialization."
 
+experience:
+  - time: "2026.5"
+    title: "RoboCup 仿真 3D 足球"
+    badge: "国家三等奖"
+    description: "围绕 Janus 客户端、RCSSServerMJ 仿真服务器、仿真足球环境和队内技术文档进行学习、整理与实践沉淀。"
+    tags: ["RoboCup 3D", "Simulation", "Janus", "RCSSServerMJ"]
+  - time: "2026.3 - 2026.4"
+    title: "联邦学习与域泛化"
+    badge: "Research Training"
+    description: "聚焦 FedDG、Domain Generalization、CLIP Prompt Learning 与 PromptFL，主要处在论文阅读、问题理解和方向积累阶段，暂无论文产出。"
+    tags: ["FedDG", "DG", "CLIP Prompt Learning", "PromptFL"]
+
 life:
   - label: "Music"
     emoji: "🥁"
@@ -54,20 +66,6 @@ life:
     emoji: "🎬"
     value: "Douban Top 100"
     note: "A small ongoing goal: slowly work through the Douban Top 100 list."
-
-journey:
-  - kicker: "Now"
-    title: "Rebuilding the foundation model stack"
-    description: "Reading foundation model papers with attention to model behavior, data mixture, evaluation, and the systems assumptions behind the results."
-    tags: ["foundation models", "evaluation", "model behavior"]
-  - kicker: "Building"
-    title: "Learning post-training as a system"
-    description: "Trying to understand SFT, preference learning, RL-style feedback, and evaluation as one pipeline rather than isolated tricks."
-    tags: ["SFT", "preference learning", "alignment"]
-  - kicker: "Exploring"
-    title: "Exploring AI infrastructure below the model API"
-    description: "Building literacy around PyTorch-style runtime abstractions, GPU parallel computing, memory movement, kernels, and GPU-to-GPU communication."
-    tags: ["PyTorch internals", "CUDA", "GPU communication"]
 
 tools:
   - group: "Languages"

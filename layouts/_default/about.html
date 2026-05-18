@@ -68,6 +68,38 @@
   </section>
   {{- end }}
 
+  {{- with $about.experience }}
+  <section id="experience" class="about-section about-experience" aria-labelledby="about-experience-title">
+    <div class="about-section-heading">
+      <span class="section-label">EXPERIENCE</span>
+      <h2 id="about-experience-title">A compact timeline</h2>
+    </div>
+    <div class="about-experience-timeline">
+      {{- range . }}
+      <article class="about-experience-item">
+        <span class="about-experience-time">{{ .time }}</span>
+        <div class="about-experience-card">
+          <div class="about-experience-card-head">
+            <h3>{{ .title }}</h3>
+            {{- with .badge }}
+            <span class="about-experience-badge">{{ . }}</span>
+            {{- end }}
+          </div>
+          <p>{{ .description }}</p>
+          {{- with .tags }}
+          <div class="about-tag-row about-experience-tags">
+            {{- range . }}
+            <span>{{ . }}</span>
+            {{- end }}
+          </div>
+          {{- end }}
+        </div>
+      </article>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
   {{- with $about.life }}
   <section class="about-section about-life" aria-labelledby="about-life-title">
     <div class="about-section-heading">
@@ -92,33 +124,6 @@
           {{- end }}
         </strong>
         <p>{{ .note }}</p>
-      </article>
-      {{- end }}
-    </div>
-  </section>
-  {{- end }}
-
-  {{- with $about.journey }}
-  <section class="about-section about-journey" aria-labelledby="about-journey-title">
-    <div class="about-section-heading">
-      <span class="section-label">NOW / NEXT / LATER</span>
-      <h2 id="about-journey-title">A lightweight journey map</h2>
-    </div>
-    <div class="about-journey-list">
-      {{- range . }}
-      <article class="about-journey-item">
-        <span class="about-journey-kicker">{{ .kicker }}</span>
-        <div>
-          <h3>{{ .title }}</h3>
-          <p>{{ .description }}</p>
-          {{- with .tags }}
-          <div class="about-tag-row">
-            {{- range . }}
-            <span>{{ . }}</span>
-            {{- end }}
-          </div>
-          {{- end }}
-        </div>
       </article>
       {{- end }}
     </div>

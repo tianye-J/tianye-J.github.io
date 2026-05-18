@@ -1676,62 +1676,55 @@ body:not(.list) .post-content {
     margin: 0.5rem 0;
 }
 
-/* ---- 22b. Homepage Current Focus Band ---- */
-.home-focus {
+/* ---- 22a. Homepage Experience Strip ---- */
+.home-experience-strip {
     display: grid;
-    grid-template-columns: minmax(120px, 0.38fr) minmax(0, 1fr) minmax(220px, 0.62fr);
-    gap: 1.5rem;
+    grid-template-columns: minmax(96px, 0.24fr) minmax(0, 1fr);
+    gap: 1rem;
     align-items: center;
-    margin: 0 -2.5rem;
-    padding: 2.6rem 2.5rem;
-    color: var(--entry);
-    background:
-        radial-gradient(circle at 86% 20%, rgba(201, 100, 66, 0.18), transparent 34%),
-        linear-gradient(135deg, #141413 0%, #262622 100%);
-    border-top: 1px solid #30302e;
-    border-bottom: 1px solid #30302e;
+    margin: 1rem -2.5rem 0;
+    padding: 0.85rem 2.5rem;
+    color: inherit;
+    background: rgba(252, 251, 247, 0.42);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.home-focus-kicker {
-    color: #d97757;
+.home-experience-strip:hover,
+.home-experience-strip:focus-visible {
+    color: inherit;
+    background: rgba(250, 249, 245, 0.72);
+    border-color: var(--border-warm);
+}
+
+.home-experience-kicker {
+    color: var(--tertiary);
+    font-family: var(--font-family);
     font-size: 0.72rem;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
 }
 
-.home-focus-copy h2 {
-    margin: 0 0 0.65rem;
-    color: #faf9f5;
-    font-size: clamp(1.55rem, 3vw, 2.1rem);
-    line-height: 1.18;
-}
-
-.home-focus-copy p {
-    max-width: 620px;
-    margin: 0;
-    color: #b0aea5;
-    font-size: 0.98rem;
-    line-height: 1.7;
-}
-
-.home-focus-tags {
+.home-experience-items {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     justify-content: flex-end;
 }
 
-.home-focus-tags span {
+.home-experience-items span {
     display: inline-flex;
     align-items: center;
-    min-height: 34px;
-    padding: 4px 11px;
-    color: #faf9f5;
-    background: rgba(250, 249, 245, 0.06);
-    border: 1px solid rgba(250, 249, 245, 0.14);
+    min-height: 30px;
+    padding: 4px 10px;
+    color: var(--secondary);
+    background: var(--entry);
+    border: 1px solid var(--border);
     border-radius: 999px;
     font-size: 0.78rem;
-    line-height: 1.2;
+    line-height: 1.25;
 }
 
 /* ---- 23. Friends Page ---- */
@@ -1950,10 +1943,27 @@ body:not(.list) .post-content {
     }
 
     .home-sections,
-    .home-focus,
+    .home-experience-strip,
     .home-heatmap {
         margin-left: -1rem;
         margin-right: -1rem;
+    }
+
+    .home-experience-strip {
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+        margin-top: 0.75rem;
+        padding: 0.9rem 1rem;
+    }
+
+    .home-experience-items {
+        justify-content: flex-start;
+    }
+
+    .home-experience-items span {
+        width: 100%;
+        min-height: 0;
+        padding: 0.45rem 0.65rem;
     }
 
     .home-sections {
@@ -1964,16 +1974,6 @@ body:not(.list) .post-content {
 
     .home-section {
         padding: 1.1rem;
-    }
-
-    .home-focus {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 2rem 1rem;
-    }
-
-    .home-focus-tags {
-        justify-content: flex-start;
     }
 
     .home-heatmap {
@@ -2071,10 +2071,15 @@ body:not(.list) .post-content {
     }
 
     .home-sections,
-    .home-focus,
+    .home-experience-strip,
     .home-heatmap {
         margin-left: -1.5rem;
         margin-right: -1.5rem;
+    }
+
+    .home-experience-strip {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
     }
 
     .home-sections {
@@ -2085,18 +2090,9 @@ body:not(.list) .post-content {
     }
 
     .home-section,
-    .home-focus,
     .home-heatmap {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
-    }
-
-    .home-focus {
-        grid-template-columns: 1fr;
-    }
-
-    .home-focus-tags {
-        justify-content: flex-start;
     }
 
     .footer {
@@ -2356,8 +2352,7 @@ body:not(.list) .post-content {
 }
 
 .about-kicker,
-.about-card-label,
-.about-journey-kicker {
+.about-card-label {
     display: block;
     color: var(--tertiary);
     font-family: var(--font-family);
@@ -2496,7 +2491,6 @@ body:not(.list) .post-content {
 
 .about-fact-card,
 .about-life-card,
-.about-journey-item,
 .about-tool-group {
     background: var(--entry);
     border: 1px solid var(--border);
@@ -2560,7 +2554,103 @@ body:not(.list) .post-content {
     line-height: 1.62;
 }
 
-.about-journey-item h3,
+.about-experience-timeline {
+    position: relative;
+    display: grid;
+    gap: 0.9rem;
+}
+
+.about-experience-timeline::before {
+    content: "";
+    position: absolute;
+    top: 0.7rem;
+    bottom: 0.7rem;
+    left: 128px;
+    width: 1px;
+    background: var(--border-warm);
+}
+
+.about-experience-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.about-experience-item::before {
+    content: "";
+    position: absolute;
+    top: 0.72rem;
+    left: 124px;
+    width: 9px;
+    height: 9px;
+    background: var(--accent);
+    border: 2px solid var(--paper);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px var(--border-warm);
+}
+
+.about-experience-time {
+    display: block;
+    padding-top: 0.1rem;
+    color: var(--tertiary);
+    font-family: var(--font-family-code);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.about-experience-card {
+    min-width: 0;
+    padding: 1rem 1.1rem;
+    background: var(--entry);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.about-experience-card-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.7rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.45rem;
+}
+
+.about-experience-card h3 {
+    margin: 0;
+    font-family: var(--font-family-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.28;
+}
+
+.about-experience-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 2px 9px;
+    color: var(--secondary);
+    background: rgba(201, 100, 66, 0.07);
+    border: 1px solid rgba(201, 100, 66, 0.12);
+    border-radius: 999px;
+    font-size: 0.72rem;
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+.about-experience-card p {
+    margin: 0;
+    color: var(--secondary);
+    font-size: 0.92rem;
+    line-height: 1.68;
+}
+
+.about-experience-tags {
+    margin-top: 0.85rem;
+}
+
 .about-tool-group h3 {
     margin: 0 0 0.45rem;
     font-family: var(--font-family-display);
@@ -2587,25 +2677,6 @@ body:not(.list) .post-content {
     border-radius: 999px;
     font-size: 0.72rem;
     line-height: 1.3;
-}
-
-.about-journey-list {
-    display: grid;
-    gap: 0.85rem;
-}
-
-.about-journey-item {
-    display: grid;
-    grid-template-columns: 112px minmax(0, 1fr);
-    gap: 1rem;
-    padding: 1rem 1.1rem;
-}
-
-.about-journey-item p {
-    margin: 0;
-    color: var(--secondary);
-    font-size: 0.92rem;
-    line-height: 1.65;
 }
 
 .about-tools-grid {
@@ -2756,10 +2827,37 @@ a.about-tool-item:focus-visible {
         padding: 2.1rem 0;
     }
 
-    .about-journey-item {
-        grid-template-columns: 1fr;
-        gap: 0.55rem;
+    .about-experience-timeline::before {
+        left: 0.25rem;
+        top: 1rem;
+        bottom: 1rem;
     }
+
+    .about-experience-item {
+        grid-template-columns: 1fr;
+        gap: 0.45rem;
+        padding-left: 1.25rem;
+    }
+
+    .about-experience-item::before {
+        left: 0;
+        top: 0.48rem;
+    }
+
+    .about-experience-time {
+        padding-top: 0;
+        white-space: normal;
+    }
+
+    .about-experience-card {
+        padding: 0.95rem;
+    }
+
+    .about-experience-card-head {
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

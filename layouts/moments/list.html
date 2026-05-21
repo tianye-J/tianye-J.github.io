@@ -1,0 +1,73 @@
+{{- define "main" }}
+
+<section class="moments-page">
+  <header class="page-header moments-header">
+    {{- partial "breadcrumbs.html" . }}
+    <span class="section-label">MOMENTS</span>
+    <h1>{{ .Title }}</h1>
+    {{- if .Description }}
+    <div class="post-description">
+      {{ .Description | markdownify }}
+    </div>
+    {{- end }}
+  </header>
+
+  {{- if .Content }}
+  <div class="moments-intro">
+    {{ .Content }}
+  </div>
+  {{- end }}
+
+  {{- $pages := .RegularPages.ByDate.Reverse }}
+  {{- $paginator := .Paginate $pages }}
+
+  <div class="moments-feed" aria-label="Moments feed">
+    {{- range $paginator.Pages }}
+    <article class="moment-entry">
+      <header class="moment-entry-header">
+        <a class="moment-time" href="{{ .RelPermalink }}" aria-label="Open moment: {{ .Title | plainify }}">
+          <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006.01.02 15:04" }}</time>
+        </a>
+        {{- with .Param "mood" }}
+        <span class="moment-mood">{{ . }}</span>
+        {{- end }}
+      </header>
+
+      <div class="moment-content">
+        {{ .Content }}
+      </div>
+
+      <footer class="moment-footer">
+        {{- $tags := .GetTerms "tags" }}
+        {{- if $tags }}
+        <div class="moment-tags" aria-label="Tags">
+          {{- range $tags }}
+          <a href="{{ .RelPermalink }}">#{{ .LinkTitle }}</a>
+          {{- end }}
+        </div>
+        {{- end }}
+        <a class="moment-permalink" href="{{ .RelPermalink }}">单条链接</a>
+      </footer>
+    </article>
+    {{- end }}
+
+    {{- if eq (len $pages) 0 }}
+    <p class="moments-empty">还没有发布短想法。</p>
+    {{- end }}
+  </div>
+
+  {{- if gt $paginator.TotalPages 1 }}
+  <footer class="page-footer">
+    <nav class="pagination">
+      {{- if $paginator.HasPrev }}
+      <a class="prev" href="{{ $paginator.Prev.URL | absURL }}">«&nbsp;{{ i18n "prev_page" }}&nbsp;</a>
+      {{- end }}
+      {{- if $paginator.HasNext }}
+      <a class="next" href="{{ $paginator.Next.URL | absURL }}">{{ i18n "next_page" }}&nbsp;»</a>
+      {{- end }}
+    </nav>
+  </footer>
+  {{- end }}
+</section>
+
+{{- end }}

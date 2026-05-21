@@ -79,22 +79,36 @@ keys = [
 ]
 
 [[menu.main]]
+  identifier = "blog"
+  name = "BLOG"
+  weight = 10
+
+[[menu.main]]
+  parent = "blog"
   identifier = "learning"
-  name = "LEARNING"
+  name = "Learning"
   url = "/learning/"
   weight = 10
 
 [[menu.main]]
+  parent = "blog"
   identifier = "projects"
-  name = "PROJECTS"
+  name = "Projects"
   url = "/projects/"
   weight = 20
 
 [[menu.main]]
+  parent = "blog"
   identifier = "thinking"
-  name = "THINKING"
+  name = "Thinking"
   url = "/thinking/"
   weight = 30
+
+[[menu.main]]
+  identifier = "moments"
+  name = "MOMENTS"
+  url = "/moments/"
+  weight = 35
 
 [[menu.main]]
   identifier = "about"

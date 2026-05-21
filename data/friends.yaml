@@ -12,3 +12,9 @@
   description: "Stay hungry, stay foolish"
   tags:
     - Blog
+- name: "CaiMo'sWorld"
+  url: "https://www.caomoworld.online"
+  avatar: "/images/friends/caimo-avatar.png"
+  description: "A Learner of backend development"
+  tags:
+    - Backend

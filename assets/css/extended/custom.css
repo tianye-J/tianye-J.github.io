@@ -178,12 +178,12 @@ body.list {
 
 .sub-menu {
     position: absolute;
-    top: calc(100% + 6px);
+    top: calc(100% + 4px);
     left: 50%;
     z-index: 120;
     display: grid;
-    min-width: 148px;
-    padding: 0.4rem;
+    min-width: 118px;
+    padding: 0.28rem;
     border: 1px solid var(--border);
     border-radius: 8px;
     background: rgba(250, 249, 245, 0.96);
@@ -205,6 +205,16 @@ body.list {
     height: 8px;
 }
 
+.sub-menu li {
+    display: block;
+    margin: 0;
+    line-height: 1.35;
+}
+
+#menu .sub-menu li + li {
+    margin-inline-start: 0;
+}
+
 .menu-item-has-children:hover .sub-menu,
 .menu-item-has-children:focus-within .sub-menu {
     opacity: 1;
@@ -214,11 +224,14 @@ body.list {
 
 #menu .sub-menu a {
     width: 100%;
-    min-height: 34px;
+    min-height: 30px;
     justify-content: flex-start;
-    padding: 7px 9px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 0.78rem;
     text-transform: none;
     letter-spacing: 0;
+    line-height: 1.35;
     white-space: nowrap;
 }
 
@@ -2412,186 +2425,14 @@ body:not(.list) .post-content {
     font-weight: 700;
 }
 
-/* ---- 27. Moments ---- */
-.moments-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem 0;
-}
-
-.moments-header {
-    margin-bottom: 1.35rem;
-}
-
-.moments-intro {
-    color: var(--secondary);
-    font-family: var(--font-family-serif);
-    font-size: 1rem;
-    line-height: 1.7;
-    max-width: 800px;
-    margin: -0.45rem auto 1.5rem;
-    padding-bottom: 1.1rem;
-    border-bottom: 1px solid var(--border);
-}
-
-.moments-intro p {
-    margin: 0;
-}
-
-.moments-feed {
-    display: grid;
-    gap: 0.9rem;
-}
-
-.moment-entry {
-    position: relative;
-    padding: 1.05rem 1.25rem;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--entry);
-    box-shadow: none;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.moment-entry:hover,
-.moment-entry:focus-within {
-    border-color: var(--ring-warm);
-    box-shadow: var(--shadow-hover);
-}
-
-.moment-entry-header,
-.moment-footer,
-.moment-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem 0.7rem;
-    align-items: center;
-}
-
-.moment-entry-header {
-    margin-bottom: 0.75rem;
-}
-
-.moment-time,
-.moment-meta {
-    color: var(--tertiary);
-    font-size: 0.82rem;
-    line-height: 1.45;
-}
-
-.moment-time {
-    text-decoration: none;
-}
-
-.moment-time:hover,
-.moment-permalink:hover,
-.moment-tags a:hover {
-    color: var(--link-hover);
-}
-
-.moment-mood,
-.moment-meta span {
-    display: inline-flex;
-    align-items: center;
-    min-height: 24px;
-    padding: 2px 8px;
-    border: 1px solid rgba(135, 134, 127, 0.16);
-    border-radius: 999px;
-    background: rgba(135, 134, 127, 0.07);
-    color: var(--secondary);
-    font-size: 0.74rem;
-    line-height: 1.35;
-}
-
-.moment-content {
-    color: var(--content);
-    font-size: 1.02rem;
-    line-height: 1.72;
-}
-
-.moment-content p,
-.moment-single-content p {
-    margin-bottom: 1rem;
-}
-
-.moment-content p:last-child,
-.moment-single-content p:last-child {
-    margin-bottom: 0;
-}
-
-.moment-content a,
-.moment-single-content a {
-    color: var(--link);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-thickness: 1px;
-}
-
-.moment-footer {
-    justify-content: space-between;
-    margin-top: 1rem;
-    padding-top: 0.8rem;
-    border-top: 1px solid rgba(232, 230, 220, 0.72);
-}
-
-.moment-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-}
-
-.moment-tags a,
-.moment-permalink {
-    color: var(--accent);
-    font-size: 0.78rem;
-    line-height: 1.45;
-    text-decoration: none;
-}
-
-.moments-empty {
-    color: var(--secondary);
-    margin: 1rem 0 0;
-    padding: 1.2rem 1.25rem;
-    border: 1px dashed var(--border-warm);
-    border-radius: 8px;
-    background: rgba(250, 249, 245, 0.58);
-}
-
-.moment-single {
-    max-width: 720px;
-}
-
-.moment-single-header .post-title {
-    font-size: clamp(1.75rem, 3.4vw, 2.25rem);
-}
-
-.moment-single-content {
-    padding-top: 0.4rem;
-}
-
-@media screen and (max-width: 768px) {
-    .moments-page {
-        padding-top: 1.25rem;
-    }
-
-    .moment-entry {
-        padding: 1rem;
-    }
-
-    .moment-footer {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-}
-
-/* ---- 28. Comments (Giscus) ---- */
+/* ---- 27. Comments (Giscus) ---- */
 .comments {
     margin-top: 3rem;
     padding-top: 2rem;
     border-top: 1px solid var(--border);
 }
 
-/* ---- 29. About Page ---- */
+/* ---- 28. About Page ---- */
 .about-page {
     max-width: 900px;
 }

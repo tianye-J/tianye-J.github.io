@@ -86,7 +86,6 @@
             {{- $has_url := ne .URL "" }}
             {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | absLangURL }}
             {{- $page_url:= $currentPage.Permalink | absLangURL }}
-            {{- $is_search := eq (site.GetPage .KeyName).Layout `search` }}
             {{- $is_blog_active := and (eq .Identifier "blog") (in (slice "learning" "projects" "thinking") $currentPage.Section) }}
             {{- $is_active := or (and $has_url (eq $menu_item_url $page_url)) ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) $is_blog_active }}
             <li {{- if .HasChildren }} class="menu-item-has-children" {{- end }}>
@@ -115,8 +114,7 @@
                     {{- end }}
                 </ul>
                 {{- else }}
-                <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
-                {{- cond $is_search (" accesskey=/" | safeHTMLAttr) ("" | safeHTMLAttr ) }}>
+                <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }}">
                     <span {{- if $is_active }} class="active" {{- end }}>
                         {{- .Pre }}
                         {{- .Name -}}

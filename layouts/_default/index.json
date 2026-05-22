@@ -1,5 +1,5 @@
 {{- $.Scratch.Add "index" slice -}}
-{{- $searchSections := slice "learning" "projects" "thinking" "moments" -}}
+{{- $searchSections := slice "learning" "projects" "thinking" -}}
 {{- range site.RegularPages -}}
   {{- if and (in $searchSections .Section) (not .Params.searchHidden) (ne .Layout `archives`) (ne .Layout `search`) -}}
     {{- $tags := slice -}}
@@ -27,8 +27,6 @@
       {{- $sectionTitle = "Projects" -}}
     {{- else if eq .Section "thinking" -}}
       {{- $sectionTitle = "Thinking" -}}
-    {{- else if eq .Section "moments" -}}
-      {{- $sectionTitle = "Moments" -}}
     {{- end -}}
     {{- $.Scratch.Add "index" (dict
       "title" .Title

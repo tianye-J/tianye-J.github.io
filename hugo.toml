@@ -79,36 +79,22 @@ keys = [
 ]
 
 [[menu.main]]
-  identifier = "blog"
-  name = "BLOG"
-  weight = 10
-
-[[menu.main]]
-  parent = "blog"
   identifier = "learning"
-  name = "Learning"
+  name = "LEARNING"
   url = "/learning/"
   weight = 10
 
 [[menu.main]]
-  parent = "blog"
   identifier = "projects"
-  name = "Projects"
+  name = "PROJECTS"
   url = "/projects/"
   weight = 20
 
 [[menu.main]]
-  parent = "blog"
   identifier = "thinking"
-  name = "Thinking"
+  name = "THINKING"
   url = "/thinking/"
   weight = 30
-
-[[menu.main]]
-  identifier = "moments"
-  name = "MOMENTS"
-  url = "/moments/"
-  weight = 35
 
 [[menu.main]]
   identifier = "about"
@@ -121,12 +107,6 @@ keys = [
   name = "FRIENDS"
   url = "/friends/"
   weight = 45
-
-[[menu.main]]
-  identifier = "search"
-  name = "SEARCH"
-  url = "/search/"
-  weight = 50
 
 [markup]
   [markup.highlight]

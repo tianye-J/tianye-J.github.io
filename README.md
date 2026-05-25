@@ -287,7 +287,65 @@ content/projects/my-project/
 
 ---
 
-## 八、正式部署
+## 八、PaperMod Shortcodes
+
+PaperMod 自带几个短代码，适合在文章里做轻量增强。优先用在长文、图示和补充材料里，不建议为了装饰而滥用。
+
+真实文章示例：`/projects/multi-learning/`
+
+### 1. 折叠补充内容
+
+适合收纳长推导、附录、命令输出或暂时不想打断正文节奏的材料：
+
+```markdown
+{{< collapse summary="展开推导过程" >}}
+这里写可以被折叠的内容，支持 Markdown。
+
+- 要点一
+- 要点二
+{{< /collapse >}}
+```
+
+如果想默认展开：
+
+```markdown
+{{< collapse summary="展开代码说明" openByDefault=true >}}
+默认展开的内容。
+{{< /collapse >}}
+```
+
+### 2. 带说明的图片
+
+适合替代普通 Markdown 图片，增加 caption、居中和尺寸控制：
+
+```markdown
+{{< figure src="diagram.png" alt="模型结构图" caption="模型结构示意图" align="center" width="720" >}}
+```
+
+Page Bundle 中的图片继续放在文章目录旁边，例如：
+
+```
+content/projects/my-project/
+├── index.md
+└── diagram.png
+```
+
+### 3. 行内小图标
+
+适合在一句话里嵌入很小的图标：
+
+```markdown
+PyTorch {{< inTextImg url="/images/tools/pytorch.svg" height="18" alt="PyTorch" >}} 是本文的主要框架。
+```
+
+### 4. 其他短代码
+
+- `rawhtml`：在文章中插入少量 HTML。
+- `ltr` / `rtl`：处理从左到右或从右到左的文本方向。
+
+---
+
+## 九、正式部署
 
 ### 构建
 
@@ -308,7 +366,7 @@ hugo --minify
 
 ---
 
-## 九、常用命令速查
+## 十、常用命令速查
 
 | 操作 | 命令 |
 |---|---|
@@ -320,7 +378,7 @@ hugo --minify
 
 ---
 
-## 十、注意事项
+## 十一、注意事项
 
 - **不要修改** `themes/PaperMod/` 下的任何文件，所有自定义通过项目根目录的 `layouts/` 和 `assets/` 覆盖
 - 样式修改统一在 `assets/css/extended/custom.css` 中进行

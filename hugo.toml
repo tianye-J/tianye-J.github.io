@@ -27,6 +27,9 @@ theme = "PaperMod"
   TocOpen = true
   UseHugoToc = true
   comments = true
+  mainSections = ["learning", "projects", "thinking"]
+  ShowShareButtons = true
+  ShareButtons = ["x", "linkedin", "telegram"]
   description = "Arden’s blog — Robotics, foundation models, post-training, and AI infrastructure"
 
   [params.homeInfoParams]

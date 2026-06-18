@@ -1,0 +1,27 @@
+{{- $artwork := resources.Get "images/clare-hall-turner-1793.jpeg" -}}
+{{- if $artwork -}}
+{{- $webp720 := $artwork.Fill "720x360 Center webp q82" -}}
+{{- $webp1200 := $artwork.Fill "1200x600 Center webp q82" -}}
+{{- $webp1499 := $artwork.Fill "1499x750 Center webp q82" -}}
+{{- $jpg720 := $artwork.Fill "720x360 Center jpg q86" -}}
+{{- $jpg1200 := $artwork.Fill "1200x600 Center jpg q86" -}}
+{{- $jpg1499 := $artwork.Fill "1499x750 Center jpg q86" -}}
+<figure class="home-artwork-interlude">
+  <picture>
+    <source
+      type="image/webp"
+      srcset="{{ $webp720.RelPermalink }} 720w, {{ $webp1200.RelPermalink }} 1200w, {{ $webp1499.RelPermalink }} 1499w"
+      sizes="(max-width: 768px) calc(100vw - 36px), 1180px">
+    <img
+      src="{{ $jpg1200.RelPermalink }}"
+      srcset="{{ $jpg720.RelPermalink }} 720w, {{ $jpg1200.RelPermalink }} 1200w, {{ $jpg1499.RelPermalink }} 1499w"
+      sizes="(max-width: 768px) calc(100vw - 36px), 1180px"
+      width="1499"
+      height="750"
+      alt="Clare Hall seen across water, with pale Gothic architecture framed by autumn trees"
+      loading="lazy"
+      decoding="async">
+  </picture>
+  <figcaption>J. M. W. Turner · Clare Hall · 1793</figcaption>
+</figure>
+{{- end -}}

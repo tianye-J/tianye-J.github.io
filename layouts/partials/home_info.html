@@ -1,5 +1,5 @@
 {{- with site.Params.homeInfoParams }}
-{{- $artwork := resources.Get "images/hero-artwork.jpg" -}}
+{{- $artwork := resources.Get "images/monk-by-the-sea.jpg" -}}
 {{- if $artwork -}}
 {{- $webp960 := $artwork.Resize "960x webp q82" -}}
 {{- $webp1600 := $artwork.Resize "1600x webp q82" -}}
@@ -19,7 +19,7 @@
             sizes="100vw"
             width="{{ $artwork.Width }}"
             height="{{ $artwork.Height }}"
-            alt="A steamship emerging through pale fog and rough water"
+            alt="A solitary figure standing before a dark sea beneath an immense mist-filled sky"
             loading="eager"
             decoding="async"
             fetchpriority="high">
@@ -64,7 +64,7 @@
             </div>
         </footer>
     </div>
-    <small class="home-artwork-credit">Public-domain artwork · CC0</small>
+    <small class="home-artwork-credit">Caspar David Friedrich · The Monk by the Sea · c. 1808–1810</small>
 </article>
 {{- end -}}
 {{- end -}}

@@ -1,9 +1,6 @@
 {{- $heatmap := site.Data.github_contributions | default dict -}}
-{{- $status := $heatmap.status | default "fallback" -}}
-{{- $weeks := $heatmap.weeks | default (slice) -}}
 {{- $heatmapId := "github-heatmap-data" -}}
 
-{{- if and (eq $status "ok") (gt (len $weeks) 0) -}}
 <section
   class="home-heatmap"
   data-weeks="26"
@@ -188,4 +185,3 @@
     grid.setAttribute('aria-label', `${root.dataset.ariaLabel}. ${summaryText}`);
   })();
 </script>
-{{- end -}}

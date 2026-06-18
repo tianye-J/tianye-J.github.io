@@ -16,7 +16,7 @@ theme = "PaperMod"
 [params]
   env = "production"
   defaultTheme = "light"
-  disableThemeToggle = true
+  disableThemeToggle = false
   disableScrollToTop = false
   ShowReadingTime = true
   ShowPostNavLinks = true

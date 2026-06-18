@@ -153,24 +153,27 @@
 </a>
 {{- end }}
 
-{{/* === Three-column section showcase === */}}
-<div class="home-sections">
+{{/* === Vertical archive bands === */}}
+<div class="home-sections home-archive">
 
   {{/* ---- Learning ---- */}}
   {{- $learning := where site.RegularPages "Section" "learning" }}
   {{- $learning = $learning.ByDate.Reverse }}
-  <section class="home-section">
+  <section class="home-section home-archive-band">
     <div class="home-section-header">
       <span class="section-label">LEARNING</span>
       <h2><a href="{{ "learning/" | absURL }}">Learning Notes</a></h2>
       <p class="home-section-desc">Foundation models, post-training, AI infrastructure, and older research notes</p>
       <span class="home-section-count">{{ len $learning }} notes</span>
+      {{- if gt (len $learning) 3 }}
+      <a class="home-section-more home-section-more--header" href="{{ "learning/" | absURL }}">View all ›</a>
+      {{- end }}
     </div>
     <div class="home-section-list">
       {{- range first 3 $learning }}
       <article class="home-section-entry">
         <a href="{{ .Permalink }}">
-          <span class="entry-meta">{{ .Date.Format "2006.01" }}</span>
+          <time class="entry-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01" }}</time>
           <h3>{{ .Title }}</h3>
           {{- if .Description }}
           <p class="entry-summary">{{ .Description }}</p>
@@ -182,26 +185,26 @@
       <p class="home-section-empty">No posts yet</p>
       {{- end }}
     </div>
-    {{- if gt (len $learning) 3 }}
-    <a class="home-section-more" href="{{ "learning/" | absURL }}">View all ›</a>
-    {{- end }}
   </section>
   
   {{/* ---- Projects ---- */}}
   {{- $projects := where site.RegularPages "Section" "projects" }}
   {{- $projects = $projects.ByDate.Reverse }}
-  <section class="home-section">
+  <section class="home-section home-archive-band">
     <div class="home-section-header">
       <span class="section-label">PROJECTS</span>
       <h2><a href="{{ "projects/" | absURL }}">Projects</a></h2>
       <p class="home-section-desc">Robotics, systems, and ML engineering artifacts</p>
       <span class="home-section-count">{{ len $projects }} projects</span>
+      {{- if gt (len $projects) 3 }}
+      <a class="home-section-more home-section-more--header" href="{{ "projects/" | absURL }}">View all ›</a>
+      {{- end }}
     </div>
     <div class="home-section-list">
       {{- range first 3 $projects }}
       <article class="home-section-entry">
         <a href="{{ .Permalink }}">
-          <span class="entry-meta">{{ .Date.Format "2006.01" }}</span>
+          <time class="entry-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01" }}</time>
           <h3>{{ .Title }}</h3>
           {{- if .Description }}
           <p class="entry-summary">{{ .Description }}</p>
@@ -213,26 +216,26 @@
       <p class="home-section-empty">No posts yet</p>
       {{- end }}
     </div>
-    {{- if gt (len $projects) 3 }}
-    <a class="home-section-more" href="{{ "projects/" | absURL }}">View all ›</a>
-    {{- end }}
   </section>
 
 {{/* ---- Thinking ---- */}}
   {{- $thinking := where site.RegularPages "Section" "thinking" }}
   {{- $thinking = $thinking.ByDate.Reverse }}
-  <section class="home-section">
+  <section class="home-section home-archive-band">
     <div class="home-section-header">
       <span class="section-label">THINKING</span>
       <h2><a href="{{ "thinking/" | absURL }}">Reflections</a></h2>
       <p class="home-section-desc">Monthly reviews and direction notes</p>
       <span class="home-section-count">{{ len $thinking }} reflections</span>
+      {{- if gt (len $thinking) 3 }}
+      <a class="home-section-more home-section-more--header" href="{{ "thinking/" | absURL }}">View all ›</a>
+      {{- end }}
     </div>
     <div class="home-section-list">
       {{- range first 3 $thinking }}
       <article class="home-section-entry">
         <a href="{{ .Permalink }}">
-          <span class="entry-meta">{{ .Date.Format "2006.01" }}</span>
+          <time class="entry-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01" }}</time>
           <h3>{{ .Title }}</h3>
           {{- if .Description }}
           <p class="entry-summary">{{ .Description }}</p>
@@ -244,9 +247,6 @@
       <p class="home-section-empty">No posts yet</p>
       {{- end }}
     </div>
-    {{- if gt (len $thinking) 3 }}
-    <a class="home-section-more" href="{{ "thinking/" | absURL }}">View all ›</a>
-    {{- end }}
   </section>
 </div>
 

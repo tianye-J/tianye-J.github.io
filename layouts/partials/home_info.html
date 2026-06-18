@@ -1,45 +1,70 @@
 {{- with site.Params.homeInfoParams }}
-<article class="first-entry home-info">
-    <header class="entry-header">
-        <h1>{{ .Title | markdownify }}</h1>
-    </header>
-    <div class="entry-content">
-        {{ .Content | markdownify }}
-    </div>
-    <div class="home-doodle" aria-hidden="true">
-        <img src="/images/home-doodle.svg" alt="" loading="eager">
-    </div>
-    {{/* Epigraph — a quiet philosophical anchor */}}
-    <div class="home-epigraph" aria-label="epigraph">
-        <p class="epigraph-text">Have patience with everything unresolved in your heart and try to love the questions themselves.</p>
-        <p class="epigraph-source">— Rainer Maria Rilke, <em>Letters to a Young Poet</em></p>
-    </div>
-    <footer class="entry-footer">
-        <div class="social-icons home-action-icons" {{ with site.Params.homeInfoParams.AlignSocialIconsTo }}align="{{ . }}"{{- end }}>
-            {{- range site.Params.socialIcons }}
-            <a href="{{ trim .url " " | safeURL }}" target="_blank" rel="noopener noreferrer me"
-                title="{{ (.title | default .name) | title }}">
-                {{ partial "svg.html" . }}
-            </a>
-            {{- end }}
-            <a class="home-archives-action" href="{{ "archives/" | absURL }}" title="Archives" aria-label="Archives">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" aria-hidden="true">
-                    <rect x="3" y="4" width="18" height="5" rx="1"></rect>
-                    <path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"></path>
-                    <path d="M10 13h4"></path>
-                </svg>
-            </a>
-            <a class="home-search-action" href="{{ "search/" | absURL }}" title="Search" aria-label="Search">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" aria-hidden="true">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-            </a>
+{{- $artwork := resources.Get "images/hero-artwork.jpg" -}}
+{{- if $artwork -}}
+{{- $webp960 := $artwork.Resize "960x webp q82" -}}
+{{- $webp1600 := $artwork.Resize "1600x webp q82" -}}
+{{- $webp2400 := $artwork.Resize "2400x webp q82" -}}
+{{- $jpg960 := $artwork.Resize "960x jpg q86" -}}
+{{- $jpg1600 := $artwork.Resize "1600x jpg q86" -}}
+{{- $jpg2400 := $artwork.Resize "2400x jpg q86" -}}
+<article class="first-entry home-info home-hero" aria-labelledby="home-hero-title">
+    <picture class="home-hero-picture">
+        <source
+            type="image/webp"
+            srcset="{{ $webp960.RelPermalink }} 960w, {{ $webp1600.RelPermalink }} 1600w, {{ $webp2400.RelPermalink }} 2400w"
+            sizes="100vw">
+        <img
+            src="{{ $jpg1600.RelPermalink }}"
+            srcset="{{ $jpg960.RelPermalink }} 960w, {{ $jpg1600.RelPermalink }} 1600w, {{ $jpg2400.RelPermalink }} 2400w"
+            sizes="100vw"
+            width="{{ $artwork.Width }}"
+            height="{{ $artwork.Height }}"
+            alt="A steamship emerging through pale fog and rough water"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high">
+    </picture>
+    <div class="home-hero-wash" aria-hidden="true"></div>
+    <div class="home-hero-copy">
+        <header class="entry-header">
+            <h1 id="home-hero-title">{{ .Title | markdownify }}</h1>
+        </header>
+        <div class="entry-content">
+            {{ .Content | markdownify }}
         </div>
-    </footer>
+        <div class="home-epigraph" aria-label="epigraph">
+            <p class="epigraph-text">Have patience with everything unresolved in your heart and try to love the questions themselves.</p>
+            <p class="epigraph-source">— Rainer Maria Rilke, <em>Letters to a Young Poet</em></p>
+        </div>
+        <footer class="entry-footer">
+            <div class="social-icons home-action-icons" {{ with .AlignSocialIconsTo }}align="{{ . }}"{{- end }}>
+                {{- range site.Params.socialIcons }}
+                <a href="{{ trim .url " " | safeURL }}" target="_blank" rel="noopener noreferrer me"
+                    title="{{ (.title | default .name) | title }}">
+                    {{ partial "svg.html" . }}
+                </a>
+                {{- end }}
+                <a class="home-archives-action" href="{{ "archives/" | absURL }}" title="Archives" aria-label="Archives">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="5" rx="1"></rect>
+                        <path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"></path>
+                        <path d="M10 13h4"></path>
+                    </svg>
+                </a>
+                <a class="home-search-action" href="{{ "search/" | absURL }}" title="Search" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </a>
+            </div>
+        </footer>
+    </div>
+    <small class="home-artwork-credit">Public-domain artwork · CC0</small>
 </article>
+{{- end -}}
 {{- end -}}

@@ -4994,6 +4994,7 @@ body.list:has(.home-hero) .main {
     position: relative;
     z-index: 1;
     align-self: start;
+    margin-top: -12px;
     border: 0;
 }
 
@@ -5164,18 +5165,23 @@ body.list:has(.home-hero) .main {
 }
 
 /* Compact calendar tiles: close enough to read as one contribution field. */
+.home-heatmap {
+    --heatmap-cell-size: clamp(14px, 1.25vw, 24px);
+    --heatmap-gap: clamp(2px, 0.22vw, 4px);
+}
+
 .legend-cell,
 .home-heatmap-cell {
-    width: 12px;
-    height: 12px;
+    width: var(--heatmap-cell-size);
+    height: var(--heatmap-cell-size);
     border: 0;
     border-radius: 2px;
     box-shadow: none;
 }
 
 .home-heatmap-months {
-    grid-template-columns: repeat(var(--heatmap-weeks, 26), 12px);
-    gap: 3px;
+    grid-template-columns: repeat(var(--heatmap-weeks, 26), var(--heatmap-cell-size));
+    gap: var(--heatmap-gap);
     width: max-content;
     min-width: 0;
     margin-left: 34px;
@@ -5188,20 +5194,20 @@ body.list:has(.home-hero) .main {
 }
 
 .home-heatmap-grid {
-    grid-template-columns: repeat(var(--heatmap-weeks, 26), 12px);
-    grid-template-rows: repeat(7, 12px);
-    gap: 3px;
+    grid-template-columns: repeat(var(--heatmap-weeks, 26), var(--heatmap-cell-size));
+    grid-template-rows: repeat(7, var(--heatmap-cell-size));
+    gap: var(--heatmap-gap);
     width: max-content;
     min-width: 0;
 }
 
 .home-heatmap-weekdays {
-    grid-template-rows: repeat(7, 12px);
-    gap: 3px;
+    grid-template-rows: repeat(7, var(--heatmap-cell-size));
+    gap: var(--heatmap-gap);
 }
 
 .home-heatmap-weekdays span {
-    line-height: 12px;
+    line-height: var(--heatmap-cell-size);
 }
 
 .home-heatmap-months span {
@@ -5924,6 +5930,10 @@ a.about-tool-item:focus-visible {
         margin-bottom: 18px;
     }
 
+    .home-section-list {
+        margin-top: 0;
+    }
+
     .section-masthead-breadcrumbs {
         margin-bottom: 8px;
     }
@@ -5977,6 +5987,8 @@ a.about-tool-item:focus-visible {
     }
 
     .home-heatmap {
+        --heatmap-cell-size: 10px;
+        --heatmap-gap: 2px;
         display: block;
         padding: 30px 0 12px;
     }

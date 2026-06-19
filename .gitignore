@@ -22,6 +22,7 @@
 # 系统文件
 .DS_Store
 Thumbs.db
+*.swp
 
 # 个人笔记（不属于博客源码，仅保留在本地）
 drafts.md

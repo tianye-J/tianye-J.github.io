@@ -8,6 +8,7 @@ home="$root/layouts/_default/list.html"
 interlude="$root/layouts/partials/home_artwork_interlude.html"
 heatmap="$root/layouts/partials/home_heatmap.html"
 section_artwork="$root/layouts/partials/section_artwork.html"
+learning_index="$root/content/learning/_index.md"
 
 require() {
   local pattern="$1"
@@ -70,9 +71,13 @@ require 'home-section-more home-section-more--header' "$home" 'View all links mu
 require 'counter-reset:[[:space:]]*archive-section' "$css" 'editorial section numbering is missing'
 require 'project-status::before' "$css" 'project status marker is missing'
 reject 'home-heatmap-cell:nth-child' "$css" 'heatmap cells must use a regular compact grid'
-require 'grid-template-columns:[[:space:]]*repeat\(var\(--heatmap-weeks,[[:space:]]*26\),[[:space:]]*12px\)' "$css" 'heatmap weeks must use fixed adjacent columns'
-require 'home-heatmap-grid[^}]*gap:[[:space:]]*3px' "$css" 'heatmap cells must use a tight three-pixel gap'
-require 'home-heatmap[[:space:]]*\{[[:space:]]*display:[[:space:]]*block' "$css" 'mobile heatmap must remain visible'
+require '--heatmap-cell-size:[[:space:]]*clamp\(' "$css" 'heatmap needs a responsive desktop cell size'
+require 'grid-template-columns:[[:space:]]*repeat\(var\(--heatmap-weeks,[[:space:]]*26\),[[:space:]]*var\(--heatmap-cell-size\)\)' "$css" 'heatmap weeks must use responsive adjacent columns'
+require 'home-heatmap-grid[^}]*gap:[[:space:]]*var\(--heatmap-gap\)' "$css" 'heatmap cells must use the shared compact gap'
+require 'home-section-list[^}]*margin-top:[[:space:]]*-12px' "$css" 'homepage article indexes must align with section headings'
+require '(?s)@media screen and \(max-width: 768px\).*\.home-section-list[[:space:]]*\{[^}]*margin-top:[[:space:]]*0' "$css" 'mobile homepage article indexes must return to normal flow'
+require 'description = "Notes on foundation models, post-training, and AI infrastructure\."' "$learning_index" 'Learning section description must be concise'
+require 'home-heatmap[[:space:]]*\{[^}]*display:[[:space:]]*block' "$css" 'mobile heatmap must remain visible'
 require 'home-heatmap-months span[^}]*white-space:[[:space:]]*nowrap' "$css" 'heatmap month labels must not wrap vertically'
 require '\[data-theme="dark"\] \.home-section-header h2 a[^}]*color:[[:space:]]*var\(--romantic-dark-text\)[[:space:]]*!important' "$css" 'archive headings need an explicit dark-theme text color'
 reject 'if and \(eq \$status "ok"\)' "$heatmap" 'fallback contribution data must not hide the heatmap'

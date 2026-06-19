@@ -22,15 +22,15 @@
       <p class="about-intro">{{ . }}</p>
       {{- end }}
       {{- with .links }}
-      <div class="about-hero-actions" aria-label="Primary links">
+      <nav class="about-hero-actions" aria-label="Primary links">
         {{- range . }}
         {{- $url := .url | default "#" -}}
         {{- $isExternal := or (hasPrefix $url "http://") (hasPrefix $url "https://") -}}
-        <a class="about-button{{ if .primary }} primary{{ end }}" href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>
+        <a class="about-text-link{{ if .primary }} primary{{ end }}" href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>
           {{ .label }}
         </a>
         {{- end }}
-      </div>
+      </nav>
       {{- end }}
     </div>
     <figure class="about-portrait">
@@ -47,10 +47,10 @@
       <span class="section-label">QUICK FACTS</span>
       <h2 id="about-facts-title">A few anchors</h2>
     </div>
-    <div class="about-facts-grid">
+    <div class="about-facts-index">
       {{- range . }}
       {{- $factValue := .value -}}
-      <article class="about-fact-card">
+      <article class="about-fact-entry">
         <span class="about-card-label">{{ .label }}</span>
         <strong>
           {{- with .url }}
@@ -78,16 +78,16 @@
       {{- range . }}
       <article class="about-experience-item">
         <span class="about-experience-time">{{ .time }}</span>
-        <div class="about-experience-card">
-          <div class="about-experience-card-head">
+        <div class="about-experience-copy">
+          <div class="about-experience-copy-head">
             <h3>{{ .title }}</h3>
             {{- with .badge }}
-            <span class="about-experience-badge">{{ . }}</span>
+            <span class="about-experience-award">{{ . }}</span>
             {{- end }}
           </div>
           <p>{{ .description }}</p>
           {{- with .tags }}
-          <div class="about-tag-row about-experience-tags">
+          <div class="about-inline-list about-experience-tags">
             {{- range . }}
             <span>{{ . }}</span>
             {{- end }}
@@ -106,10 +106,10 @@
       <span class="section-label">OFF THE DESK</span>
       <h2 id="about-life-title">A less academic silhouette</h2>
     </div>
-    <div class="about-life-grid">
+    <div class="about-life-notes">
       {{- range . }}
       {{- $lifeValue := .value -}}
-      <article class="about-life-card">
+      <article class="about-life-note">
         <span class="about-card-label">
           {{- with .emoji }}<span class="about-life-emoji" aria-hidden="true">{{ . }}</span>{{- end }}
           <span>{{ .label }}</span>
@@ -136,9 +136,9 @@
       <span class="section-label">TOOLS & STACK</span>
       <h2 id="about-tools-title">The development stack I keep close</h2>
     </div>
-    <div class="about-tools-grid">
+    <div class="about-tools-directory">
       {{- range . }}
-      <section class="about-tool-group" aria-label="{{ .group }}">
+      <section class="about-tool-section" aria-label="{{ .group }}">
         <h3>{{ .group }}</h3>
         {{- with .items }}
         <div class="about-tool-list">

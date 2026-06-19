@@ -13,13 +13,13 @@
   </header>
 
   {{- $friends := site.Data.friends | default (slice) }}
-  <section class="friends-grid" aria-label="友情链接">
+  <section class="friends-directory" aria-label="友情链接">
     {{- range $friends }}
     {{- $name := .name | default "Untitled" }}
     {{- $url := .url | default "#" }}
     {{- $description := .description | default "A personal site worth visiting." }}
     {{- $initial := .initial | default (substr $name 0 1 | upper) }}
-    <a class="friend-card" href="{{ $url }}" target="_blank" rel="noopener noreferrer">
+    <a class="friend-entry" href="{{ $url }}" target="_blank" rel="noopener noreferrer">
       <span class="friend-avatar" aria-hidden="true">
         {{- with .avatar }}
         {{- $avatar := . }}
@@ -39,6 +39,7 @@
         </span>
         {{- end }}
       </span>
+      <span class="friend-external" aria-hidden="true">↗</span>
     </a>
     {{- else }}
     <div class="friends-empty">

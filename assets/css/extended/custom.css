@@ -1477,7 +1477,7 @@ body:not(.list) .post-content {
 
 /* ---- 21. Homepage Writing Heatmap ---- */
 .home-heatmap {
-    --heatmap-weeks: 26;
+    --heatmap-weeks: 52;
     border-top: 1px solid var(--border);
     margin: 0 -2.5rem;
     padding: 2.2rem 2.5rem 1.2rem;
@@ -1540,7 +1540,7 @@ body:not(.list) .post-content {
 
 .home-heatmap-months {
     display: grid;
-    grid-template-columns: repeat(var(--heatmap-weeks, 26), minmax(12px, 1fr));
+    grid-template-columns: repeat(var(--heatmap-weeks, 52), minmax(12px, 1fr));
     gap: 4px;
     margin-left: 2.2rem;
     margin-bottom: 0.45rem;
@@ -1576,7 +1576,7 @@ body:not(.list) .post-content {
 
 .home-heatmap-grid {
     display: grid;
-    grid-template-columns: repeat(var(--heatmap-weeks, 26), minmax(12px, 1fr));
+    grid-template-columns: repeat(var(--heatmap-weeks, 52), minmax(12px, 1fr));
     grid-template-rows: repeat(7, 12px);
     grid-auto-flow: column;
     gap: 4px;
@@ -4940,7 +4940,7 @@ body.list:has(.home-hero) .main {
 .home-section-header {
     position: relative;
     z-index: 1;
-    align-self: start;
+    align-self: stretch;
     margin: 0;
     padding: 2px 0 0;
 }
@@ -4994,7 +4994,7 @@ body.list:has(.home-hero) .main {
     position: relative;
     z-index: 1;
     align-self: start;
-    margin-top: -12px;
+    margin-top: 0;
     border: 0;
 }
 
@@ -5166,8 +5166,8 @@ body.list:has(.home-hero) .main {
 
 /* Compact calendar tiles: close enough to read as one contribution field. */
 .home-heatmap {
-    --heatmap-cell-size: clamp(14px, 1.25vw, 24px);
-    --heatmap-gap: clamp(2px, 0.22vw, 4px);
+    --heatmap-cell-size: clamp(12px, 1.35vw, 18px);
+    --heatmap-gap: clamp(2px, 0.2vw, 3px);
 }
 
 .legend-cell,
@@ -5180,7 +5180,7 @@ body.list:has(.home-hero) .main {
 }
 
 .home-heatmap-months {
-    grid-template-columns: repeat(var(--heatmap-weeks, 26), var(--heatmap-cell-size));
+    grid-template-columns: repeat(var(--heatmap-weeks, 52), var(--heatmap-cell-size));
     gap: var(--heatmap-gap);
     width: max-content;
     min-width: 0;
@@ -5194,7 +5194,7 @@ body.list:has(.home-hero) .main {
 }
 
 .home-heatmap-grid {
-    grid-template-columns: repeat(var(--heatmap-weeks, 26), var(--heatmap-cell-size));
+    grid-template-columns: repeat(var(--heatmap-weeks, 52), var(--heatmap-cell-size));
     grid-template-rows: repeat(7, var(--heatmap-cell-size));
     gap: var(--heatmap-gap);
     width: max-content;

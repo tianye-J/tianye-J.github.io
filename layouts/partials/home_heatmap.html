@@ -3,9 +3,9 @@
 
 <section
   class="home-heatmap"
-  data-weeks="26"
-  data-summary="{count} contributions in the last 6 months."
-  data-summary-empty="No public contributions in the last 6 months."
+  data-weeks="52"
+  data-summary="{count} contributions in the last year."
+  data-summary-empty="No public contributions in the last year."
   data-summary-fallback="GitHub contribution data is unavailable right now."
   data-tooltip-empty="{date} · No contributions"
   data-tooltip-single="{date} · 1 contribution"
@@ -53,7 +53,7 @@
     if (!dataNode || !grid || !weekdays || !months || !summary) return;
 
     const raw = JSON.parse(dataNode.textContent || '{}');
-    const weekCount = Number((raw.range && raw.range.weeks) || root.dataset.weeks || 26);
+    const weekCount = Number((raw.range && raw.range.weeks) || root.dataset.weeks || 52);
     root.style.setProperty('--heatmap-weeks', String(weekCount));
 
     const levelMap = {

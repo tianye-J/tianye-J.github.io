@@ -199,9 +199,7 @@
       <h2><a href="{{ "learning/" | absURL }}">Learning Notes</a></h2>
       <p class="home-section-desc">Foundation models, post-training, AI infrastructure, and older research notes</p>
       <span class="home-section-count">{{ len $learning }} notes</span>
-      {{- if gt (len $learning) 3 }}
       <a class="home-section-more home-section-more--header" href="{{ "learning/" | absURL }}">View all ›</a>
-      {{- end }}
     </div>
     <div class="home-section-list">
       {{- range first 3 $learning }}
@@ -230,9 +228,7 @@
       <h2><a href="{{ "projects/" | absURL }}">Projects</a></h2>
       <p class="home-section-desc">Robotics, systems, and ML engineering artifacts</p>
       <span class="home-section-count">{{ len $projects }} projects</span>
-      {{- if gt (len $projects) 3 }}
       <a class="home-section-more home-section-more--header" href="{{ "projects/" | absURL }}">View all ›</a>
-      {{- end }}
     </div>
     <div class="home-section-list">
       {{- range first 3 $projects }}
@@ -261,9 +257,7 @@
       <h2><a href="{{ "thinking/" | absURL }}">Reflections</a></h2>
       <p class="home-section-desc">Monthly reviews and direction notes</p>
       <span class="home-section-count">{{ len $thinking }} reflections</span>
-      {{- if gt (len $thinking) 3 }}
       <a class="home-section-more home-section-more--header" href="{{ "thinking/" | absURL }}">View all ›</a>
-      {{- end }}
     </div>
     <div class="home-section-list">
       {{- range first 3 $thinking }}

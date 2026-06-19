@@ -61,7 +61,6 @@
           {{ $factValue }}
           {{- end }}
         </strong>
-        <p>{{ .note }}</p>
       </article>
       {{- end }}
     </div>
@@ -100,36 +99,6 @@
   </section>
   {{- end }}
 
-  {{- with $about.life }}
-  <section class="about-section about-life" aria-labelledby="about-life-title">
-    <div class="about-section-heading">
-      <span class="section-label">OFF THE DESK</span>
-      <h2 id="about-life-title">A less academic silhouette</h2>
-    </div>
-    <div class="about-life-notes">
-      {{- range . }}
-      {{- $lifeValue := .value -}}
-      <article class="about-life-note">
-        <span class="about-card-label">
-          {{- with .emoji }}<span class="about-life-emoji" aria-hidden="true">{{ . }}</span>{{- end }}
-          <span>{{ .label }}</span>
-        </span>
-        <strong>
-          {{- with .url }}
-          {{- $url := . -}}
-          {{- $isExternal := or (hasPrefix $url "http://") (hasPrefix $url "https://") -}}
-          <a class="about-inline-link" href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ $lifeValue }}</a>
-          {{- else }}
-          {{ $lifeValue }}
-          {{- end }}
-        </strong>
-        <p>{{ .note }}</p>
-      </article>
-      {{- end }}
-    </div>
-  </section>
-  {{- end }}
-
   {{- with $about.tools }}
   <section class="about-section about-tools" aria-labelledby="about-tools-title">
     <div class="about-section-heading">
@@ -161,7 +130,6 @@
             </span>
             <span class="about-tool-text">
               <strong>{{ $name }}</strong>
-              <small>{{ .description }}</small>
             </span>
           {{- if $isLinked }}
           </a>

@@ -130,6 +130,9 @@
             </span>
             <span class="about-tool-text">
               <strong>{{ $name }}</strong>
+              {{- with .description }}
+              <small>{{ . }}</small>
+              {{- end }}
             </span>
           {{- if $isLinked }}
           </a>

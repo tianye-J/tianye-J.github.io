@@ -9,7 +9,40 @@
 {{/* ---- Non-home list pages: keep default behavior ---- */}}
 {{- if not .IsHome }}
 
+{{- $isArtworkSection := and (eq .Kind "section") (in (slice "learning" "projects" "thinking") .Section) -}}
 {{- if .Title }}
+{{- if $isArtworkSection }}
+<div class="section-masthead-breadcrumbs">
+  {{- partial "breadcrumbs.html" . }}
+</div>
+<section class="section-masthead section-masthead--{{ .Section }}" aria-labelledby="section-masthead-title">
+  {{- partial "section_artwork.html" (dict "Section" .Section "Variant" "page") }}
+  <header class="page-header section-masthead-copy">
+    <span class="section-label">{{ upper .Title }}</span>
+    <h1 id="section-masthead-title">
+      {{- if eq .Section "learning" }}Learning
+      {{- else if eq .Section "projects" }}Projects
+      {{- else }}Thinking
+      {{- end }}
+      {{- if .Param "ShowRssButtonInSectionTermList" }}
+      {{- with .OutputFormats.Get "rss" }}
+      <a class="section-masthead-rss" href="{{ .RelPermalink }}" title="RSS" aria-label="RSS">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" height="23">
+          <path d="M4 11a9 9 0 0 1 9 9" />
+          <path d="M4 4a16 16 0 0 1 16 16" />
+          <circle cx="5" cy="19" r="1" />
+        </svg>
+      </a>
+      {{- end }}
+      {{- end }}
+    </h1>
+    {{- with .Description }}
+    <div class="post-description">{{ . | markdownify }}</div>
+    {{- end }}
+  </header>
+</section>
+{{- else }}
 <header class="page-header">
   {{- partial "breadcrumbs.html" . }}
   {{- if eq .Kind "section" }}
@@ -40,6 +73,7 @@
   </div>
   {{- end }}
 </header>
+{{- end }}
 {{- end }}
 
 {{- if .Content }}

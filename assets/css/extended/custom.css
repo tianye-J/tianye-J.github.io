@@ -6063,15 +6063,15 @@ a.about-tool-item:focus-visible {
     .home-section.home-archive-band,
     .home-section.home-archive-band:nth-child(2) {
         display: block;
-        padding: 18px 0 20px;
+        padding: 16px 0 18px;
         background: transparent;
     }
 
     .home-section.home-archive-band::before {
-        top: 8px;
-        left: -4px;
-        font-size: clamp(56px, 15vw, 60px);
-        opacity: 0.045;
+        top: 10px;
+        left: -2px;
+        font-size: clamp(48px, 13vw, 54px);
+        opacity: 0.038;
     }
 
     .section-artwork figcaption {
@@ -6081,39 +6081,42 @@ a.about-tool-item:focus-visible {
     }
 
     .home-section-header {
-        margin-bottom: 14px;
-        padding-bottom: 14px;
-        border-bottom: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid color-mix(in srgb, var(--border) 66%, transparent);
     }
 
     .home-section-header .section-label {
-        font-size: 10.5px;
-        letter-spacing: 0.12em;
+        font-size: 10px;
+        letter-spacing: 0.13em;
     }
 
     .home-section-header h2 {
-        margin: 6px 0 8px;
-        font-size: clamp(28px, 8vw, 32px);
-        line-height: 1.08;
+        margin: 5px 0 7px;
+        font-size: clamp(24px, 7vw, 29px);
+        line-height: 1.1;
     }
 
     .home-section-desc {
-        max-width: 19rem;
-        font-size: 14.5px;
-        line-height: 1.54;
+        max-width: 17rem;
+        font-size: 13.5px;
+        line-height: 1.48;
     }
 
     .home-section-count {
-        margin-top: 12px;
-        font-size: 11.5px;
+        display: inline-block;
+        margin-top: 10px;
+        margin-right: 14px;
+        font-size: 11px;
     }
 
     .home-section-more.home-section-more--header {
         margin-top: 10px;
+        font-size: 10.5px;
     }
 
     .home-section-list {
-        margin-top: 2px;
+        margin-top: 10px;
     }
 
     .section-masthead-breadcrumbs {
@@ -6144,33 +6147,72 @@ a.about-tool-item:focus-visible {
         line-height: 1.55;
     }
 
+    .home-section-entry + .home-section-entry {
+        margin-top: 10px;
+    }
+
     .home-section-entry a {
-        padding: 13px 44px 14px 0;
+        position: relative;
+        padding: 14px 48px 15px 16px;
+        background: linear-gradient(135deg,
+            color-mix(in srgb, var(--paper-light) 76%, transparent),
+            color-mix(in srgb, var(--paper) 88%, var(--fog) 12%));
+        border: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+        border-radius: 13px;
+    }
+
+    .home-section-entry a::after {
+        content: "›";
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        color: color-mix(in srgb, var(--link) 62%, var(--tertiary));
+        font-family: var(--font-family-sans);
+        font-size: 21px;
+        line-height: 1;
+        opacity: 0.78;
+        transform: translateY(-50%);
+    }
+
+    .home-section-entry a:hover,
+    .home-section-entry a:focus-visible {
+        background: linear-gradient(135deg,
+            color-mix(in srgb, var(--paper-light) 86%, transparent),
+            color-mix(in srgb, var(--fog) 24%, var(--paper) 76%));
+        border-color: color-mix(in srgb, var(--ochre) 38%, var(--border));
     }
 
     .home-section-entry .entry-meta {
         margin-bottom: 5px;
-        font-size: 11px;
+        font-size: 10.5px;
         letter-spacing: 0.08em;
     }
 
     .home-section-entry h3 {
-        font-size: clamp(18px, 5.4vw, 21px);
+        font-size: clamp(17px, 4.8vw, 19px);
         line-height: 1.28;
         word-break: normal;
         overflow-wrap: anywhere;
     }
 
     .home-section-entry .entry-summary {
-        margin-top: 6px;
-        font-size: 13.5px;
-        line-height: 1.52;
-        overflow-wrap: anywhere;
+        display: none;
     }
 
     .home-section-entry + .home-section-entry::before {
-        left: 0;
-        width: 42px;
+        display: none;
+    }
+
+    [data-theme="dark"] .home-section-entry a {
+        background: linear-gradient(135deg,
+            color-mix(in srgb, var(--romantic-dark-panel) 78%, transparent),
+            color-mix(in srgb, var(--romantic-dark-bg) 86%, var(--romantic-dark-muted) 14%));
+        border-color: color-mix(in srgb, var(--romantic-dark-border) 58%, transparent);
+    }
+
+    [data-theme="dark"] .home-section-entry a:hover,
+    [data-theme="dark"] .home-section-entry a:focus-visible {
+        border-color: color-mix(in srgb, var(--romantic-dark-accent) 42%, var(--romantic-dark-border));
     }
 
     .home-artwork-interlude {
@@ -6221,9 +6263,10 @@ a.about-tool-item:focus-visible {
     .top-link {
         right: 10px;
         bottom: calc(16px + env(safe-area-inset-bottom));
-        width: 40px;
-        height: 40px;
-        opacity: 0.86;
+        width: 38px;
+        height: 38px;
+        opacity: 0.78;
+        box-shadow: none;
     }
 
     .post-header,

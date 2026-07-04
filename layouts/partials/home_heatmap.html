@@ -4,8 +4,11 @@
 <section
   class="home-heatmap"
   data-weeks="52"
+  data-mobile-weeks="26"
   data-summary="{count} contributions in the last year."
+  data-summary-mobile="{count} contributions in the last 6 months."
   data-summary-empty="No public contributions in the last year."
+  data-summary-mobile-empty="No public contributions in the last 6 months."
   data-summary-fallback="GitHub contribution data is unavailable right now."
   data-tooltip-empty="{date} · No contributions"
   data-tooltip-single="{date} · 1 contribution"
@@ -53,8 +56,10 @@
     if (!dataNode || !grid || !weekdays || !months || !summary) return;
 
     const raw = JSON.parse(dataNode.textContent || '{}');
-    const weekCount = Number((raw.range && raw.range.weeks) || root.dataset.weeks || 52);
-    root.style.setProperty('--heatmap-weeks', String(weekCount));
+    const desktopWeekCount = Number((raw.range && raw.range.weeks) || root.dataset.weeks || 52);
+    const mobileWeekCount = Number(root.dataset.mobileWeeks || 26);
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let renderedWeekCount = null;
 
     const levelMap = {
       NONE: 0,
@@ -100,10 +105,6 @@
       return weeks;
     }
 
-    const weeks = Array.isArray(raw.weeks) && raw.weeks.length > 0
-      ? raw.weeks.slice(-weekCount)
-      : buildEmptyWeeks(weekCount);
-
     const dayFormatter = new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
       month: 'short',
       day: 'numeric'
@@ -115,73 +116,100 @@
       weekday: 'short'
     });
 
-    const weekdaySeeds = [];
-    for (let i = 0; i < 7; i += 1) {
-      weekdaySeeds.push(new Date(Date.UTC(2024, 0, 7 + i)));
-    }
-    weekdaySeeds.forEach((date, index) => {
-      const label = document.createElement('span');
-      label.textContent = index % 2 === 1 ? weekdayFormatter.format(date) : '';
-      weekdays.appendChild(label);
-    });
+    function renderHeatmap() {
+      const isMobile = mobileQuery.matches;
+      const weekCount = isMobile ? mobileWeekCount : desktopWeekCount;
+      if (renderedWeekCount === weekCount && grid.childElementCount > 0) return;
+      renderedWeekCount = weekCount;
 
-    let previousMonth = '';
-    let activeDays = 0;
+      root.style.setProperty('--heatmap-weeks', String(weekCount));
+      weekdays.replaceChildren();
+      months.replaceChildren();
+      grid.replaceChildren();
 
-    weeks.forEach((week, weekIndex) => {
-      const firstDayDate = new Date(week.first_day || week.firstDay || week.days?.[0]?.date);
-      const monthLabel = document.createElement('span');
-      const currentMonth = `${firstDayDate.getFullYear()}-${firstDayDate.getMonth()}`;
-      if (weekIndex === 0 || currentMonth !== previousMonth) {
-        monthLabel.textContent = monthFormatter.format(firstDayDate);
-        previousMonth = currentMonth;
-      } else {
-        monthLabel.textContent = '';
+      const weeks = Array.isArray(raw.weeks) && raw.weeks.length > 0
+        ? raw.weeks.slice(-weekCount)
+        : buildEmptyWeeks(weekCount);
+
+      const weekdaySeeds = [];
+      for (let i = 0; i < 7; i += 1) {
+        weekdaySeeds.push(new Date(Date.UTC(2024, 0, 7 + i)));
       }
-      months.appendChild(monthLabel);
-
-      (week.days || []).forEach((day, dayIndex) => {
-        const cell = document.createElement('span');
-        cell.className = 'home-heatmap-cell';
-
-        const contributionCount = Number(day.count ?? day.contributionCount ?? 0);
-        const contributionLevel = day.level || day.contributionLevel || 'NONE';
-        const level = levelMap[contributionLevel] ?? 0;
-        const dateValue = new Date(day.date);
-        const labelDate = dayFormatter.format(dateValue);
-
-        let tooltip = root.dataset.tooltipEmpty.replace('{date}', labelDate);
-        if (contributionCount === 1) {
-          tooltip = root.dataset.tooltipSingle.replace('{date}', labelDate);
-        } else if (contributionCount > 1) {
-          tooltip = root.dataset.tooltipMultiple
-            .replace('{date}', labelDate)
-            .replace('{count}', String(contributionCount));
-        }
-
-        if (contributionCount > 0) {
-          activeDays += 1;
-        }
-
-        cell.classList.add(`level-${level}`);
-        cell.setAttribute('title', tooltip);
-        cell.setAttribute('aria-label', tooltip);
-        cell.style.animationDelay = `${weekIndex * 18 + dayIndex * 10}ms`;
-        grid.appendChild(cell);
+      weekdaySeeds.forEach((date, index) => {
+        const label = document.createElement('span');
+        label.textContent = index % 2 === 1 ? weekdayFormatter.format(date) : '';
+        weekdays.appendChild(label);
       });
-    });
 
-    const totalContributions = Number(raw.total_contributions || raw.totalContributions || 0);
-    const status = raw.status || 'fallback';
-    const summaryText = status === 'ok'
-      ? (totalContributions > 0
-          ? root.dataset.summary
-              .replace('{count}', String(totalContributions))
-              .replace('{days}', String(activeDays))
-          : root.dataset.summaryEmpty)
-      : root.dataset.summaryFallback;
+      let previousMonth = '';
+      let activeDays = 0;
+      let visibleContributions = 0;
 
-    summary.textContent = summaryText;
-    grid.setAttribute('aria-label', `${root.dataset.ariaLabel}. ${summaryText}`);
+      weeks.forEach((week, weekIndex) => {
+        const firstDayDate = new Date(week.first_day || week.firstDay || week.days?.[0]?.date);
+        const monthLabel = document.createElement('span');
+        const currentMonth = `${firstDayDate.getFullYear()}-${firstDayDate.getMonth()}`;
+        if (weekIndex === 0 || currentMonth !== previousMonth) {
+          monthLabel.textContent = monthFormatter.format(firstDayDate);
+          previousMonth = currentMonth;
+        } else {
+          monthLabel.textContent = '';
+        }
+        months.appendChild(monthLabel);
+
+        (week.days || []).forEach((day, dayIndex) => {
+          const cell = document.createElement('span');
+          cell.className = 'home-heatmap-cell';
+
+          const contributionCount = Number(day.count ?? day.contributionCount ?? 0);
+          const contributionLevel = day.level || day.contributionLevel || 'NONE';
+          const level = levelMap[contributionLevel] ?? 0;
+          const dateValue = new Date(day.date);
+          const labelDate = dayFormatter.format(dateValue);
+
+          let tooltip = root.dataset.tooltipEmpty.replace('{date}', labelDate);
+          if (contributionCount === 1) {
+            tooltip = root.dataset.tooltipSingle.replace('{date}', labelDate);
+          } else if (contributionCount > 1) {
+            tooltip = root.dataset.tooltipMultiple
+              .replace('{date}', labelDate)
+              .replace('{count}', String(contributionCount));
+          }
+
+          if (contributionCount > 0) {
+            activeDays += 1;
+            visibleContributions += contributionCount;
+          }
+
+          cell.classList.add(`level-${level}`);
+          cell.setAttribute('title', tooltip);
+          cell.setAttribute('aria-label', tooltip);
+          cell.style.animationDelay = `${weekIndex * 18 + dayIndex * 10}ms`;
+          grid.appendChild(cell);
+        });
+      });
+
+      const status = raw.status || 'fallback';
+      const summaryTemplate = isMobile ? root.dataset.summaryMobile : root.dataset.summary;
+      const emptyTemplate = isMobile ? root.dataset.summaryMobileEmpty : root.dataset.summaryEmpty;
+      const summaryText = status === 'ok'
+        ? (visibleContributions > 0
+            ? summaryTemplate
+                .replace('{count}', String(visibleContributions))
+                .replace('{days}', String(activeDays))
+            : emptyTemplate)
+        : root.dataset.summaryFallback;
+
+      summary.textContent = summaryText;
+      grid.setAttribute('aria-label', `${root.dataset.ariaLabel}. ${summaryText}`);
+    }
+
+    renderHeatmap();
+
+    if (mobileQuery.addEventListener) {
+      mobileQuery.addEventListener('change', renderHeatmap);
+    } else if (mobileQuery.addListener) {
+      mobileQuery.addListener(renderHeatmap);
+    }
   })();
 </script>

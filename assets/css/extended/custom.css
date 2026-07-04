@@ -115,6 +115,10 @@ body.list {
     max-width: 1060px;
 }
 
+.mobile-menu-toggle {
+    display: none;
+}
+
 #menu {
     gap: 4px;
     overflow: visible;
@@ -4326,8 +4330,7 @@ a.about-tool-item:focus-visible {
         width: auto;
         min-width: 0;
         margin: 0 0 0 12px;
-        overflow-x: auto;
-        overflow-y: hidden;
+        overflow: visible;
         scrollbar-width: none;
     }
 
@@ -4577,6 +4580,32 @@ summary,
 #theme-toggle:hover {
     color: var(--accent);
     border-color: var(--border);
+}
+
+.mobile-menu-toggle {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    color: var(--primary);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+.mobile-menu-toggle-line {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 999px;
+    transition: transform 0.28s ease-in-out, opacity 0.28s ease-in-out;
+}
+
+.mobile-menu-toggle-line + .mobile-menu-toggle-line {
+    margin-top: 4px;
 }
 
 .sub-menu {
@@ -5868,6 +5897,131 @@ a.about-tool-item:focus-visible {
 }
 
 @media screen and (max-width: 768px) {
+    .header {
+        min-height: 64px;
+        overflow: visible;
+    }
+
+    .nav {
+        position: relative;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        height: 64px;
+        min-height: 64px;
+        gap: 10px;
+        padding: 0 18px;
+        overflow: visible;
+    }
+
+    .logo {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        width: auto;
+        min-width: 0;
+        margin: 0;
+    }
+
+    .logo a {
+        min-width: 0;
+        max-width: calc(100vw - 128px);
+        min-height: 40px;
+        overflow: hidden;
+        font-size: 18px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .logo-switches {
+        flex: 0 0 auto;
+        margin-left: auto;
+    }
+
+    #theme-toggle {
+        width: 38px;
+        height: 38px;
+        margin-inline-start: 8px;
+    }
+
+    .mobile-menu-toggle {
+        display: inline-flex;
+        flex: 0 0 auto;
+    }
+
+    body.menu-open .mobile-menu-toggle-line:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+    }
+
+    body.menu-open .mobile-menu-toggle-line:nth-child(2) {
+        opacity: 0;
+    }
+
+    body.menu-open .mobile-menu-toggle-line:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
+    }
+
+    #menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        z-index: 180;
+        display: grid;
+        justify-items: end;
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 12px 24px 18px;
+        gap: 0;
+        overflow: visible;
+        background: color-mix(in srgb, var(--background) 96%, transparent);
+        border-bottom: 1px solid var(--border);
+        box-shadow: none;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(-8px);
+        transition: opacity 0.28s ease-in-out, transform 0.28s ease-in-out, visibility 0.28s ease-in-out;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    body.menu-open #menu {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    #menu li,
+    #menu li + li {
+        display: block;
+        width: 100%;
+        max-width: 220px;
+        margin: 0;
+    }
+
+    #menu a,
+    #menu .menu-parent-toggle {
+        justify-content: flex-end;
+        width: 100%;
+        min-height: 44px;
+        padding: 8px 0;
+        font-size: 14px;
+        letter-spacing: 0.06em;
+        text-align: right;
+    }
+
+    #menu span.active {
+        text-underline-offset: 0.38em;
+    }
+
+    [data-theme="dark"] #menu {
+        background: color-mix(in srgb, var(--romantic-dark-bg) 94%, transparent);
+    }
+
     .main,
     body:has(.post-single) .main {
         width: 100%;
@@ -5927,11 +6081,39 @@ a.about-tool-item:focus-visible {
     }
 
     .home-section-header {
-        margin-bottom: 18px;
+        margin-bottom: 20px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    }
+
+    .home-section-header .section-label {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+    }
+
+    .home-section-header h2 {
+        margin: 8px 0 10px;
+        font-size: 38px;
+        line-height: 1.04;
+    }
+
+    .home-section-desc {
+        max-width: 21rem;
+        font-size: 16px;
+        line-height: 1.62;
+    }
+
+    .home-section-count {
+        margin-top: 14px;
+        font-size: 12px;
+    }
+
+    .home-section-more.home-section-more--header {
+        margin-top: 12px;
     }
 
     .home-section-list {
-        margin-top: 0;
+        margin-top: 8px;
     }
 
     .section-masthead-breadcrumbs {
@@ -5963,7 +6145,24 @@ a.about-tool-item:focus-visible {
     }
 
     .home-section-entry a {
-        padding: 14px 2px;
+        padding: 16px 0 17px;
+    }
+
+    .home-section-entry .entry-meta {
+        margin-bottom: 6px;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+    }
+
+    .home-section-entry h3 {
+        font-size: 23px;
+        line-height: 1.24;
+    }
+
+    .home-section-entry .entry-summary {
+        margin-top: 7px;
+        font-size: 14px;
+        line-height: 1.55;
     }
 
     .home-section-entry + .home-section-entry::before {
@@ -5987,10 +6186,40 @@ a.about-tool-item:focus-visible {
     }
 
     .home-heatmap {
-        --heatmap-cell-size: 10px;
-        --heatmap-gap: 2px;
+        --heatmap-cell-size: clamp(8px, 2.45vw, 10px);
+        --heatmap-gap: clamp(1px, 0.45vw, 2px);
+        width: calc(100% - 20px);
         display: block;
-        padding: 30px 0 12px;
+        padding: 30px 0 64px;
+    }
+
+    .home-heatmap-meta {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .home-heatmap-board {
+        overflow-x: visible;
+    }
+
+    .home-heatmap-months {
+        margin-left: 29px;
+    }
+
+    .home-heatmap-grid-shell {
+        grid-template-columns: 24px max-content;
+        gap: 5px;
+    }
+
+    .home-heatmap-weekdays span {
+        font-size: 10px;
+    }
+
+    .top-link {
+        right: 12px;
+        bottom: calc(14px + env(safe-area-inset-bottom));
+        width: 44px;
+        height: 44px;
     }
 
     .post-header,

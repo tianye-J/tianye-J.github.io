@@ -99,6 +99,31 @@
   </section>
   {{- end }}
 
+  {{- with $about.life }}
+  <section class="about-section about-life" aria-labelledby="about-life-title">
+    <div class="about-section-heading">
+      <span class="section-label">OFF THE DESK</span>
+      <h2 id="about-life-title">Small weather systems</h2>
+    </div>
+    <div class="about-life-notes">
+      {{- range . }}
+      <article class="about-life-note">
+        {{- with .emoji }}
+        <span class="about-life-emoji" aria-hidden="true">{{ . }}</span>
+        {{- end }}
+        {{- with .label }}
+        <span class="about-card-label">{{ . }}</span>
+        {{- end }}
+        <strong>{{ .title }}</strong>
+        {{- with .description }}
+        <p>{{ . }}</p>
+        {{- end }}
+      </article>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
   {{- with $about.tools }}
   <section class="about-section about-tools" aria-labelledby="about-tools-title">
     <div class="about-section-heading">

@@ -10,6 +10,8 @@ heatmap="$root/layouts/partials/home_heatmap.html"
 heatmap_fetcher="$root/scripts/fetch_github_contributions.py"
 section_artwork="$root/layouts/partials/section_artwork.html"
 learning_index="$root/content/learning/_index.md"
+header="$root/layouts/partials/header.html"
+footer="$root/layouts/partials/footer.html"
 
 require() {
   local pattern="$1"
@@ -94,12 +96,20 @@ reject 'home-section-list[^}]*margin-top:[[:space:]]*-[0-9]' "$css" 'homepage ar
 require 'home-section-header[^}]*align-self:[[:space:]]*stretch' "$css" 'homepage section dividers must follow the taller column'
 require 'WEEKS = 52' "$heatmap_fetcher" 'GitHub contribution fetcher must request 52 weeks'
 require 'data-weeks="52"' "$heatmap" 'heatmap template must default to 52 weeks'
+require 'data-mobile-weeks="26"' "$heatmap" 'mobile heatmap must render six months'
+require 'last 6 months' "$heatmap" 'mobile heatmap summary must describe the last six months'
 require 'last year' "$heatmap" 'heatmap summary must describe the last year'
-require '--heatmap-cell-size:[[:space:]]*10px' "$css" 'mobile heatmap cells must shrink to 10px'
-require '--heatmap-gap:[[:space:]]*2px' "$css" 'mobile heatmap gap must shrink to 2px'
+require '--heatmap-cell-size:[[:space:]]*clamp\(8px,[[:space:]]*2\.45vw,[[:space:]]*10px\)' "$css" 'mobile heatmap cells must use a narrow-screen clamp'
+require '--heatmap-gap:[[:space:]]*clamp\(1px,[[:space:]]*0\.45vw,[[:space:]]*2px\)' "$css" 'mobile heatmap gap must use a narrow-screen clamp'
 require 'description = "Notes on foundation models, post-training, and AI infrastructure\."' "$learning_index" 'Learning section description must be concise'
 require 'home-heatmap[[:space:]]*\{[^}]*display:[[:space:]]*block' "$css" 'mobile heatmap must remain visible'
 require 'home-heatmap-months span[^}]*white-space:[[:space:]]*nowrap' "$css" 'heatmap month labels must not wrap vertically'
+require 'mobile-menu-toggle' "$header" 'mobile hamburger toggle is missing from the header'
+require 'aria-controls="menu"' "$header" 'mobile hamburger toggle must control the menu'
+require 'aria-expanded="false"' "$header" 'mobile hamburger toggle must expose collapsed state'
+require 'menu-open' "$footer" 'mobile menu script must toggle the open state'
+require 'Escape' "$footer" 'mobile menu must close on Escape'
+reject '#menu[^}]*overflow-x:[[:space:]]*auto' "$css" 'mobile menu must not rely on horizontal scrolling'
 require '\[data-theme="dark"\] \.home-section-header h2 a[^}]*color:[[:space:]]*var\(--romantic-dark-text\)[[:space:]]*!important' "$css" 'archive headings need an explicit dark-theme text color'
 reject 'if and \(eq \$status "ok"\)' "$heatmap" 'fallback contribution data must not hide the heatmap'
 require 'london-from-greenwich-park\.jpg' "$section_artwork" 'Learning artwork mapping is missing'

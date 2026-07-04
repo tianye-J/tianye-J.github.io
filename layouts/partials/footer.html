@@ -55,14 +55,48 @@
 {{- partial "extend_footer.html" . }}
 
 <script>
-    let menu = document.getElementById('menu');
-    if (menu) {
-        const scrollPosition = localStorage.getItem("menu-scroll-position");
-        if (scrollPosition) {
-            menu.scrollLeft = parseInt(scrollPosition, 10);
-        }
-        menu.onscroll = function () {
-            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+    const menu = document.getElementById('menu');
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const mobileMenuQuery = window.matchMedia('(max-width: 768px)');
+
+    function setMobileMenuOpen(isOpen) {
+        if (!menuToggle) return;
+        document.body.classList.toggle('menu-open', isOpen);
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        menuToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    }
+
+    if (menu && menuToggle) {
+        menuToggle.addEventListener('click', function () {
+            setMobileMenuOpen(!document.body.classList.contains('menu-open'));
+        });
+
+        menu.addEventListener('click', function (event) {
+            if (event.target.closest('a')) {
+                setMobileMenuOpen(false);
+            }
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!mobileMenuQuery.matches || !document.body.classList.contains('menu-open')) return;
+            if (menu.contains(event.target) || menuToggle.contains(event.target)) return;
+            setMobileMenuOpen(false);
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                setMobileMenuOpen(false);
+            }
+        });
+
+        if (mobileMenuQuery.addEventListener) {
+            mobileMenuQuery.addEventListener('change', function (event) {
+                if (!event.matches) setMobileMenuOpen(false);
+            });
+        } else if (mobileMenuQuery.addListener) {
+            mobileMenuQuery.addListener(function (event) {
+                if (!event.matches) setMobileMenuOpen(false);
+            });
         }
     }
 

@@ -6063,15 +6063,15 @@ a.about-tool-item:focus-visible {
     .home-section.home-archive-band,
     .home-section.home-archive-band:nth-child(2) {
         display: block;
-        padding: 22px 0;
+        padding: 18px 0 20px;
         background: transparent;
     }
 
     .home-section.home-archive-band::before {
-        top: 2px;
-        left: -8px;
-        font-size: 72px;
-        opacity: 0.07;
+        top: 8px;
+        left: -4px;
+        font-size: clamp(56px, 15vw, 60px);
+        opacity: 0.045;
     }
 
     .section-artwork figcaption {
@@ -6081,39 +6081,39 @@ a.about-tool-item:focus-visible {
     }
 
     .home-section-header {
-        margin-bottom: 20px;
-        padding-bottom: 18px;
+        margin-bottom: 14px;
+        padding-bottom: 14px;
         border-bottom: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
     }
 
     .home-section-header .section-label {
-        font-size: 11px;
+        font-size: 10.5px;
         letter-spacing: 0.12em;
     }
 
     .home-section-header h2 {
-        margin: 8px 0 10px;
-        font-size: 38px;
-        line-height: 1.04;
+        margin: 6px 0 8px;
+        font-size: clamp(28px, 8vw, 32px);
+        line-height: 1.08;
     }
 
     .home-section-desc {
-        max-width: 21rem;
-        font-size: 16px;
-        line-height: 1.62;
+        max-width: 19rem;
+        font-size: 14.5px;
+        line-height: 1.54;
     }
 
     .home-section-count {
-        margin-top: 14px;
-        font-size: 12px;
+        margin-top: 12px;
+        font-size: 11.5px;
     }
 
     .home-section-more.home-section-more--header {
-        margin-top: 12px;
+        margin-top: 10px;
     }
 
     .home-section-list {
-        margin-top: 8px;
+        margin-top: 2px;
     }
 
     .section-masthead-breadcrumbs {
@@ -6145,24 +6145,27 @@ a.about-tool-item:focus-visible {
     }
 
     .home-section-entry a {
-        padding: 16px 0 17px;
+        padding: 13px 44px 14px 0;
     }
 
     .home-section-entry .entry-meta {
-        margin-bottom: 6px;
-        font-size: 12px;
+        margin-bottom: 5px;
+        font-size: 11px;
         letter-spacing: 0.08em;
     }
 
     .home-section-entry h3 {
-        font-size: 23px;
-        line-height: 1.24;
+        font-size: clamp(18px, 5.4vw, 21px);
+        line-height: 1.28;
+        word-break: normal;
+        overflow-wrap: anywhere;
     }
 
     .home-section-entry .entry-summary {
-        margin-top: 7px;
-        font-size: 14px;
-        line-height: 1.55;
+        margin-top: 6px;
+        font-size: 13.5px;
+        line-height: 1.52;
+        overflow-wrap: anywhere;
     }
 
     .home-section-entry + .home-section-entry::before {
@@ -6216,10 +6219,11 @@ a.about-tool-item:focus-visible {
     }
 
     .top-link {
-        right: 12px;
-        bottom: calc(14px + env(safe-area-inset-bottom));
-        width: 44px;
-        height: 44px;
+        right: 10px;
+        bottom: calc(16px + env(safe-area-inset-bottom));
+        width: 40px;
+        height: 40px;
+        opacity: 0.86;
     }
 
     .post-header,

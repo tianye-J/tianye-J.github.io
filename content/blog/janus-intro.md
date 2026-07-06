@@ -8,10 +8,11 @@ stack = ["Python", "RoboCup 3D", "Janus"]
 outcome = "把客户端感知、世界模型、决策和动作链路整理成队内入门指南。"
 tags = ["RoboCup", "仿真足球", "Janus", "入门指南"]
 series = ["RoboCup 3D 足球仿真"]
+aliases = ["/projects/janus-intro/", "/learning/janus-intro/"]
 +++
 > 面向零基础队员。读完这篇文档，你将理解 Janus 客户端的每一个模块在做什么，以及它们如何协同工作。
 >
-> **前置阅读**：建议先读完 [RCSSServerMJ 入门指南](/learning/rcssservermj-intro/)，了解仿真服务器和通信协议的基础概念。
+> **前置阅读**：建议先读完 [RCSSServerMJ 入门指南](/blog/rcssservermj-intro/)，了解仿真服务器和通信协议的基础概念。
 >
 > **代码声明**：Janus 为南邮 Apollo 战队开源代码，如需交流或获取相关信息，请通过 [About](/about/) 页邮箱联系。
 

@@ -7,6 +7,7 @@ status = "Completed"
 stack = ["PyTorch", "Computer Vision", "Multi-task Learning"]
 outcome = "完成图像恢复与分类联合训练的个人实践复盘。"
 tags = ["项目实践", "PyTorch", "计算机视觉", "多任务学习", "超分辨率"]
+aliases = ["/projects/multi-learning/"]
 +++
 ## 前言
 该文章是基于我校 校科学技术协会 woc-python组题目个人解答过程的系统性回顾。

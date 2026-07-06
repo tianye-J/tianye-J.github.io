@@ -9,7 +9,7 @@
 {{/* ---- Non-home list pages: keep default behavior ---- */}}
 {{- if not .IsHome }}
 
-{{- $isArtworkSection := and (eq .Kind "section") (in (slice "learning" "projects" "thinking") .Section) -}}
+{{- $isArtworkSection := and (eq .Kind "section") (in (slice "blog" "learning" "thinking") .Section) -}}
 {{- if .Title }}
 {{- if $isArtworkSection }}
 <div class="section-masthead-breadcrumbs">
@@ -20,8 +20,8 @@
   <header class="page-header section-masthead-copy">
     <span class="section-label">{{ upper .Title }}</span>
     <h1 id="section-masthead-title">
-      {{- if eq .Section "learning" }}Learning
-      {{- else if eq .Section "projects" }}Projects
+      {{- if eq .Section "blog" }}Blog
+      {{- else if eq .Section "learning" }}Learning
       {{- else }}Thinking
       {{- end }}
       {{- if .Param "ShowRssButtonInSectionTermList" }}
@@ -49,8 +49,8 @@
   <span class="section-label">{{ upper .Title }}</span>
   {{- end }}
   <h1>
-    {{- if eq .Section "learning" }}Learning
-    {{- else if eq .Section "projects" }}Projects
+    {{- if eq .Section "blog" }}Blog
+    {{- else if eq .Section "learning" }}Learning
     {{- else if eq .Section "thinking" }}Thinking
     {{- else }}{{ .Title }}
     {{- end }}
@@ -115,7 +115,7 @@
     <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
   </div>
   {{- end }}
-  {{- if ne .Section "projects" }}
+  {{- if ne .Section "blog" }}
   {{- $tags := .GetTerms "tags" }}
   {{- if $tags }}
   <div class="entry-tags" aria-label="Tags">
@@ -125,7 +125,7 @@
   </div>
   {{- end }}
   {{- end }}
-  {{- if eq .Section "projects" }}
+  {{- if eq .Section "blog" }}
   {{- $status := .Param "status" }}
   {{- $stack := .Param "stack" }}
   {{- $outcome := .Param "outcome" }}
@@ -190,6 +190,35 @@
 {{/* === Vertical archive bands === */}}
 <div class="home-sections home-archive">
 
+  {{/* ---- Blog ---- */}}
+  {{- $blog := where site.RegularPages "Section" "blog" }}
+  {{- $blog = $blog.ByDate.Reverse }}
+  <section class="home-section home-archive-band">
+    <div class="home-section-header">
+      <span class="section-label">BLOG</span>
+      <h2><a href="{{ "blog/" | absURL }}">Blog</a></h2>
+      <p class="home-section-desc">Guides, field notes, and practical write-ups.</p>
+      <span class="home-section-count">{{ len $blog }} posts</span>
+      <a class="home-section-more home-section-more--header" href="{{ "blog/" | absURL }}">View all ›</a>
+    </div>
+    <div class="home-section-list">
+      {{- range first 3 $blog }}
+      <article class="home-section-entry">
+        <a href="{{ .Permalink }}">
+          <time class="entry-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01" }}</time>
+          <h3>{{ .Title }}</h3>
+          {{- if .Description }}
+          <p class="entry-summary">{{ .Description }}</p>
+          {{- end }}
+        </a>
+      </article>
+      {{- end }}
+      {{- if eq (len $blog) 0 }}
+      <p class="home-section-empty">No posts yet</p>
+      {{- end }}
+    </div>
+  </section>
+  
   {{/* ---- Learning ---- */}}
   {{- $learning := where site.RegularPages "Section" "learning" }}
   {{- $learning = $learning.ByDate.Reverse }}
@@ -214,35 +243,6 @@
       </article>
       {{- end }}
       {{- if eq (len $learning) 0 }}
-      <p class="home-section-empty">No posts yet</p>
-      {{- end }}
-    </div>
-  </section>
-  
-  {{/* ---- Projects ---- */}}
-  {{- $projects := where site.RegularPages "Section" "projects" }}
-  {{- $projects = $projects.ByDate.Reverse }}
-  <section class="home-section home-archive-band">
-    <div class="home-section-header">
-      <span class="section-label">PROJECTS</span>
-      <h2><a href="{{ "projects/" | absURL }}">Projects</a></h2>
-      <p class="home-section-desc">Robotics, systems, and ML engineering artifacts</p>
-      <span class="home-section-count">{{ len $projects }} projects</span>
-      <a class="home-section-more home-section-more--header" href="{{ "projects/" | absURL }}">View all ›</a>
-    </div>
-    <div class="home-section-list">
-      {{- range first 3 $projects }}
-      <article class="home-section-entry">
-        <a href="{{ .Permalink }}">
-          <time class="entry-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01" }}</time>
-          <h3>{{ .Title }}</h3>
-          {{- if .Description }}
-          <p class="entry-summary">{{ .Description }}</p>
-          {{- end }}
-        </a>
-      </article>
-      {{- end }}
-      {{- if eq (len $projects) 0 }}
       <p class="home-section-empty">No posts yet</p>
       {{- end }}
     </div>

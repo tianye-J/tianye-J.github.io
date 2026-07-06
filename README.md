@@ -7,9 +7,9 @@ my_blog/
 ├── hugo.toml              ← 站点配置（标题、导航、社交链接等）
 ├── content/               ← 所有文章和页面
 │   ├── about/index.md     ← 「About」页面
-│   ├── projects/          ← 「Projects」分区
-│   ├── research/          ← 「Research」分区
-│   └── learning/          ← 「Learning」分区
+│   ├── blog/              ← 「Blog」分区
+│   ├── learning/          ← 「Learning」分区
+│   └── thinking/          ← 「Thinking」分区
 ├── assets/css/extended/
 │   └── custom.css         ← 自定义样式（颜色、排版、布局）
 ├── layouts/               ← 模板覆盖（不动主题文件）
@@ -26,14 +26,14 @@ my_blog/
 在终端运行：
 
 ```bash
+# 在 Blog 分区新建文章
+hugo new content/blog/my-new-post.md
+
 # 在 Learning 分区新建文章
-hugo new content/learning/my-new-post.md
+hugo new content/learning/my-note.md
 
-# 在 Projects 分区新建文章
-hugo new content/projects/my-project.md
-
-# 在 Research 分区新建文章
-hugo new content/research/my-research.md
+# 在 Thinking 分区新建文章
+hugo new content/thinking/my-reflection.md
 ```
 
 这会根据模板 `archetypes/default.md` 自动生成文件，内容类似：
@@ -175,9 +175,9 @@ title = "Arden J"                    # 网站标题
 
 ```toml
 [[menu.main]]
-  identifier = "projects"     # 唯一标识
-  name = "Projects"           # 显示名
-  url = "/projects/"          # 链接地址
+  identifier = "blog"         # 唯一标识
+  name = "Blog"               # 显示名
+  url = "/blog/"              # 链接地址
   weight = 10                 # 排序（越小越靠左）
 ```
 
@@ -203,19 +203,19 @@ title = "Arden J"                    # 网站标题
 
 ## 五、新增分区（Section）
 
-如果想增加一个新的内容分区（比如「Blog」）：
+如果想增加一个新的内容分区（比如「Notes」）：
 
 ### 1. 创建分区目录和索引
 
 ```bash
-mkdir -p content/blog
+mkdir -p content/notes
 ```
 
-创建 `content/blog/_index.md`：
+创建 `content/notes/_index.md`：
 
 ```markdown
 +++
-title = "Blog"
+title = "Notes"
 description = "日常随笔"
 +++
 ```
@@ -226,16 +226,16 @@ description = "日常随笔"
 
 ```toml
 [[menu.main]]
-  identifier = "blog"
-  name = "Blog"
-  url = "/blog/"
+  identifier = "notes"
+  name = "Notes"
+  url = "/notes/"
   weight = 25          # 调整数字控制在导航栏中的位置
 ```
 
 ### 3. 写文章
 
 ```bash
-hugo new content/blog/first-post.md
+hugo new content/notes/first-post.md
 ```
 
 新分区会自动出现在首页的分区展示中。
@@ -247,9 +247,9 @@ hugo new content/blog/first-post.md
 每个分区的题词在其 `_index.md` 文件中：
 
 ```
-content/projects/_index.md
-content/research/_index.md
+content/blog/_index.md
 content/learning/_index.md
+content/thinking/_index.md
 ```
 
 编辑其中的 HTML：
@@ -278,7 +278,7 @@ static/images/my-photo.png
 把文章改为目录形式：
 
 ```
-content/projects/my-project/
+content/learning/my-article/
 ├── index.md        ← 文章内容
 └── photo.png       ← 图片
 ```
@@ -291,7 +291,7 @@ content/projects/my-project/
 
 PaperMod 自带几个短代码，适合在文章里做轻量增强。优先用在长文、图示和补充材料里，不建议为了装饰而滥用。
 
-真实文章示例：`/projects/multi-learning/`
+真实文章示例：`/learning/multi-learning/`
 
 ### 1. 折叠补充内容
 
@@ -325,7 +325,7 @@ PaperMod 自带几个短代码，适合在文章里做轻量增强。优先用�
 Page Bundle 中的图片继续放在文章目录旁边，例如：
 
 ```
-content/projects/my-project/
+content/learning/my-article/
 ├── index.md
 └── diagram.png
 ```

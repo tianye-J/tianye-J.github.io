@@ -27,7 +27,7 @@ theme = "PaperMod"
   TocOpen = true
   UseHugoToc = true
   comments = true
-  mainSections = ["learning", "projects", "thinking"]
+  mainSections = ["blog", "learning", "thinking"]
   ShowShareButtons = true
   ShareButtons = ["x", "linkedin", "telegram"]
   description = "Arden’s blog — Robotics, foundation models, post-training, and AI infrastructure"
@@ -88,15 +88,15 @@ keys = [
 ]
 
 [[menu.main]]
-  identifier = "learning"
-  name = "LEARNING"
-  url = "/learning/"
+  identifier = "blog"
+  name = "BLOG"
+  url = "/blog/"
   weight = 10
 
 [[menu.main]]
-  identifier = "projects"
-  name = "PROJECTS"
-  url = "/projects/"
+  identifier = "learning"
+  name = "LEARNING"
+  url = "/learning/"
   weight = 20
 
 [[menu.main]]

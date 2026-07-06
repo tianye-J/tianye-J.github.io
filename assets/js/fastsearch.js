@@ -205,7 +205,7 @@ function buildExcerpt(item, matches) {
 }
 
 function renderTags(item, matches) {
-    if (item.section === 'projects' || !Array.isArray(item.tags) || item.tags.length === 0) return '';
+    if (item.section === 'blog' || !Array.isArray(item.tags) || item.tags.length === 0) return '';
     const tags = item.tags.map(function (tag, index) {
         const tagMatch = getArrayItemMatch(matches, 'tags', index);
         const label = tagMatch ? highlightExactText(tag) : escapeHtml(tag);
@@ -215,7 +215,7 @@ function renderTags(item, matches) {
 }
 
 function renderProjectDetails(item, matches) {
-    if (item.section !== 'projects') return '';
+    if (item.section !== 'blog') return '';
 
     const details = [];
     if (item.status) {
@@ -237,7 +237,7 @@ function renderProjectDetails(item, matches) {
     }
     if (details.length === 0) return '';
 
-    return `<div class="project-entry-details search-project-details" aria-label="Project details">${details.join('')}</div>`;
+    return `<div class="project-entry-details search-project-details" aria-label="Blog details">${details.join('')}</div>`;
 }
 
 function renderResult(result) {
@@ -265,7 +265,7 @@ function renderResult(result) {
 }
 
 function updateFilterCounts(results) {
-    const counts = { all: results.length, learning: 0, projects: 0, thinking: 0 };
+    const counts = { all: results.length, blog: 0, learning: 0, thinking: 0 };
     results.forEach(function (result) {
         if (Object.prototype.hasOwnProperty.call(counts, result.item.section)) counts[result.item.section] += 1;
     });

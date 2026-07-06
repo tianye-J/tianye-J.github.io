@@ -8,12 +8,13 @@ stack = ["C++", "MuJoCo", "RoboCup 3D"]
 outcome = "把仿真服务器、通信协议和物理循环梳理成源码阅读路线。"
 tags = ["RoboCup", "仿真足球", "RCSSServerMJ", "MuJoCo", "入门指南"]
 series = ["RoboCup 3D 足球仿真"]
+aliases = ["/projects/rcssservermj-intro/", "/learning/rcssservermj-intro/"]
 +++
 > 面向零基础读者。读完这篇文档，你将理解仿真服务器的核心概念，并能开始阅读 RCSSServerMJ 的源码。
 >
 > **源代码地址**：[robocup-sim/rcssservermj](https://gitlab.com/robocup-sim/rcssservermj)
 >
-> **后续阅读**：理解服务器之后，可以继续读 [Janus 客户端入门指南](/learning/janus-intro/)，看客户端如何接收感知、做决策并发送动作。
+> **后续阅读**：理解服务器之后，可以继续读 [Janus 客户端入门指南](/blog/janus-intro/)，看客户端如何接收感知、做决策并发送动作。
 
 ---
 

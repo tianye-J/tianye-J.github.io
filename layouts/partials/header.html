@@ -91,8 +91,8 @@
             {{- $has_url := ne .URL "" }}
             {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | absLangURL }}
             {{- $page_url:= $currentPage.Permalink | absLangURL }}
-            {{- $is_blog_active := and (eq .Identifier "blog") (in (slice "learning" "projects" "thinking") $currentPage.Section) }}
-            {{- $is_active := or (and $has_url (eq $menu_item_url $page_url)) ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) $is_blog_active }}
+            {{- $is_section_active := and (in (slice "blog" "learning" "thinking") .Identifier) (eq .Identifier $currentPage.Section) }}
+            {{- $is_active := or (and $has_url (eq $menu_item_url $page_url)) ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) $is_section_active }}
             <li {{- if .HasChildren }} class="menu-item-has-children" {{- end }}>
                 {{- if .HasChildren }}
                 <button class="menu-parent-toggle" type="button" aria-haspopup="true">

@@ -1,0 +1,233 @@
+<style>
+  .map-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+  }
+  .article-map {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .article-head {
+    padding: 16px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f8fafc;
+  }
+  .article-head h3 {
+    margin: 0 0 4px;
+  }
+  .article-head p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+  }
+  .timeline {
+    padding: 12px 18px 18px;
+  }
+  .point {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eef2f7;
+  }
+  .point:last-child {
+    border-bottom: 0;
+  }
+  .dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+    color: white;
+    background: #475569;
+    margin-top: 2px;
+  }
+  .dot.must {
+    background: #0f766e;
+  }
+  .dot.good {
+    background: #2563eb;
+  }
+  .dot.optional {
+    background: #64748b;
+  }
+  .point h4 {
+    margin: 0 0 3px;
+    font-size: 15px;
+  }
+  .point p {
+    margin: 0;
+    color: #475569;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0 4px;
+    color: #475569;
+    font-size: 13px;
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .swatch.must { background: #0f766e; }
+  .swatch.good { background: #2563eb; }
+  .swatch.optional { background: #64748b; }
+  .option .content p {
+    margin-top: 4px;
+  }
+  @media (max-width: 820px) {
+    .map-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<h2>两篇 RoboCup 入门文的配图点位地图</h2>
+<p class="subtitle">目标不是给每段都加图，而是在读者最容易丢失系统感的位置放视觉锚点。</p>
+
+<div class="legend">
+  <span><i class="swatch must"></i> 必配：承担全局理解</span>
+  <span><i class="swatch good"></i> 推荐：解释抽象机制</span>
+  <span><i class="swatch optional"></i> 可选：增强记忆点</span>
+</div>
+
+<div class="map-grid">
+  <div class="article-map">
+    <div class="article-head">
+      <h3>RCSSServerMJ 入门指南</h3>
+      <p>关键词：球场 + 裁判 + 物理世界；从 Server 视角看整场比赛。</p>
+    </div>
+    <div class="timeline">
+      <div class="point">
+        <div class="dot good">0</div>
+        <div>
+          <h4>文章封面 / 列表图</h4>
+          <p>一张“MuJoCo 球场 + Server 控制台 + 多个 Client 连接”的系列封面，只在列表页露出。</p>
+        </div>
+      </div>
+      <div class="point">
+        <div class="dot must">1</div>
+        <div>
+          <h4>第二章：Client-Server 架构</h4>
+          <p>把现有 ASCII 数据流换成更清楚的 Server 居中、多 Client 下挂的架构图。</p>
+        </div>
+      </div>
+      <div class="point">
+        <div class="dot good">2</div>
+        <div>
+          <h4>第四章：长度前缀 + S-expression</h4>
+          <p>画成 byte strip：4 字节长度前缀 + N 字节消息体，再接 S-expression 树形结构。</p>
+        </div>
+      </div>
+      <div class="point">
+        <div class="dot must">3</div>
+        <div>
+          <h4>第五/八章：每 20ms 主循环</h4>
+          <p>做一张 Server / Client 双泳道循环图，连接物理步进、感知生成、动作接收、PD 控制。</p>
+        </div>
+      </div>
+      <div class="point">
+        <div class="dot optional">4</div>
+        <div>
+          <h4>第六章：PD 控制器</h4>
+          <p>弹簧 + 阻尼器的小图，帮助非控制背景读者记住 kp/kd 的直觉。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-map">
+    <div class="article-head">
+      <h3>Janus 客户端入门指南</h3>
+      <p>关键词：球员大脑；从感知解析到决策，再落到 23 个电机动作。</p>
+    </div>
+    <div class="timeline">
+      <div class="point">
+        <div class="dot good">0</div>
+        <div>
+          <h4>文章封面 / 列表图</h4>
+          <p>一张“球员大脑”风格封面：感知输入、World 状态、Decision、Skills、Motor 输出。</p>
+        </div>
+      </div>
+      <div class="point">
+        <div class="dot must">1</div>
+        <div>
+          <h4>第二章：Agent 主循环</h4>
+          <p>把 receive → world.update → decision → send 四步做成核心总览图，作为全文地图。</p>
+        </div>
+      </div>
+      <div class="point">
+        <div class="dot good">2</div>
+        <div>
+          <h4>第四章：WorldParser 感知解析</h4>
+          <p>S-expression 进入 parser，分流到 World / Robot；旁边补一个右队坐标翻转示意。</p>
+        </div>
+      </div>
+      <div class="point">
+        <div class="dot good">3</div>
+        <div>
+          <h4>第六章：T1 机器人 23 个电机</h4>
+          <p>用正面人体骨架图标注 he/lae/rae/lle/rle，降低命名表的阅读负担。</p>
+        </div>
+      </div>
+      <div class="point">
+        <div class="dot must">4</div>
+        <div>
+          <h4>第七/九章：决策到 Walk</h4>
+          <p>一张从 carry_ball 目标点到 Walk observation、ONNX、23 关节目标的动作链路图。</p>
+        </div>
+      </div>
+      <div class="point">
+        <div class="dot optional">5</div>
+        <div>
+          <h4>第十一章：GetUp 状态机</h4>
+          <p>摔倒检测 → 稳定 → 判断前/后摔 → keyframe → 原地踏步恢复平衡。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>先选一个配图密度方向</h3>
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>少而精</h3>
+      <p>每篇 1 张列表封面 + 3 张正文核心图。阅读节奏最轻，我推荐先走这个版本。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>教材式</h3>
+      <p>每篇 1 张列表封面 + 5 到 6 张正文图。解释更充分，但长文会显得更像教程讲义。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>系列化</h3>
+      <p>先做一张 Server ↔ Janus 总图，再给每篇各配 3 张。两篇文章之间的联动感最强。</p>
+    </div>
+  </div>
+</div>

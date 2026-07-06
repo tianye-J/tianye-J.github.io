@@ -10,17 +10,17 @@ tags = ["RoboCup", "仿真足球", "Janus", "入门指南"]
 series = ["RoboCup 3D 足球仿真"]
 aliases = ["/projects/janus-intro/", "/learning/janus-intro/"]
 +++
-> 面向零基础队员。读完这篇文档，你将理解 Janus 客户端的每一个模块在做什么，以及它们如何协同工作。
+> 面向零基础队员。读完后，你会知道 Janus 客户端每个模块负责什么，以及这些模块怎么串成一条完整链路。
 >
 > **前置阅读**：建议先读完 [RCSSServerMJ 入门指南](/blog/rcssservermj-intro/)，了解仿真服务器和通信协议的基础概念。
 >
-> **代码声明**：Janus 为南邮 Apollo 战队开源代码，如需交流或获取相关信息，请通过 [About](/about/) 页邮箱联系。
+> **代码声明**：Janus 是南邮 Apollo 战队的开源代码。如需交流或获取相关信息，请通过 [About](/about/) 页邮箱联系。
 
 ---
 
 ## 快速阅读路线
 
-- **10 分钟速读**：先看“第一章：Janus 是什么”“第二章：主循环”和“第十三章：完整数据流”，抓住客户端每帧的输入、决策和输出。
+- **10 分钟速读**：先看“第一章：Janus 是什么”“第二章：主循环”和“第十三章：完整数据流”，先抓住客户端每帧的输入、决策和输出。
 - **30 分钟入门**：按服务器通信、感知解析、世界模型、决策系统、技能系统这条线读，把 `server.py`、`world_parser.py`、`decision_maker.py` 串起来。
 - **深入阅读**：重点读 Walk、Keyframe、GetUp 和工具函数几章，再回到“代码对应关系一览”，对照源码逐个文件看。
 
@@ -30,7 +30,7 @@ Janus 是一个 **RoboCup 3D 足球仿真客户端**。它不负责物理仿真�
 
 > **收到服务器发来的感知 → 做决策 → 把动作发回去**
 
-类比：如果服务器是"足球场 + 裁判"，那 Janus 就是"球员的大脑"。每 20ms，大脑从眼睛和身体收到信息（感知），想好下一步做什么（决策），然后命令肌肉动起来（动作）。
+可以这么理解：服务器是一块球场加一个裁判，Janus 是球员的大脑。每 20ms，大脑从眼睛和身体收到信息（感知），决定下一步做什么（决策），再命令肌肉动起来（动作）。
 
 ### 代码在哪
 
@@ -54,9 +54,9 @@ Janus_main/Janus3D/
 
 ---
 
-## 第二章：主循环 — Agent 每帧在做什么
+## 第二章：主循环：Agent 每帧在做什么
 
-打开 `agent.py`，整个客户端的核心就是 `Agent.run()` 里的 **4 行代码**：
+打开 `agent.py`，客户端的主循环基本就落在 `Agent.run()` 里的 **4 行代码**上：
 
 ```python
 while True:
@@ -68,51 +68,15 @@ while True:
 
 画成图：
 
-```text
-                    RCSSServerMJ 服务器
-                         │
-          ┌──────────────┼──────────────┐
-          │  S-expression 感知消息       │
-          ▼                             │
-   ┌─────────────┐                     │
-   │ 1. receive() │ 从 TCP 读取消息     │
-   └──────┬──────┘                     │
-          │ 原始字节流                   │
-          ▼                             │
-   ┌──────────────────┐                │
-   │ world_parser 解析 │ 自动被调用     │
-   │ S-expr → 更新     │               │
-   │ World + Robot 状态│               │
-   └──────┬───────────┘                │
-          │                            │
-          ▼                             │
-   ┌─────────────────┐                 │
-   │ 2. world.update()│ 判断比赛阶段    │
-   └──────┬──────────┘                 │
-          │                            │
-          ▼                             │
-   ┌──────────────────────────┐        │
-   │ 3. decision_maker.update │        │
-   │    该 beam？该起身？该走路？│       │
-   │    ↓                     │        │
-   │    执行技能（Walk/GetUp） │        │
-   │    ↓                     │        │
-   │    设置 23 个电机目标角度  │        │
-   └──────┬───────────────────┘        │
-          │                            │
-          ▼                             │
-   ┌─────────────┐  S-expression 动作  │
-   │ 4. send()   │ ────────────────────┘
-   └─────────────┘
-```
+{{< figure src="/images/robocup/janus-agent-main-loop.png" alt="Janus Agent 四步主循环图" caption="Janus 每帧围绕 receive、world.update、decision_maker.update 和 send 四步循环，把服务器感知转换成动作消息。" align="center" width="900" >}}
 
-**就这么简单。** 接下来我们逐个拆解每个模块。
+主循环就这四步。下面按模块拆开看。
 
 ---
 
-## 第三章：网络通信 — server.py
+## 第三章：网络通信：server.py
 
-`Server` 类负责和仿真服务器的所有 TCP 通信。如果你读过服务器端的入门指南，这里就是它的"对面"。
+`Server` 类负责和仿真服务器的所有 TCP 通信。如果你读过服务器端的入门指南，这里就是它的“对面”。
 
 ### 连接
 
@@ -130,7 +94,7 @@ server.send_immediate("(init T1 MujocoCodebase 1)")
 #                       机器人型号  队名       球员号
 ```
 
-这条消息告诉服务器："我要加入比赛，我用的是 T1 机器人，队名叫 MujocoCodebase，我是 1 号球员"。
+这条消息告诉服务器：“我要加入比赛，我用的是 T1 机器人，队名叫 MujocoCodebase，我是 1 号球员”。
 
 ### 接收感知
 
@@ -162,9 +126,9 @@ server.commit_beam(pos2d=[x, y], rotation=angle)
 
 ---
 
-## 第四章：感知解析 — world_parser.py
+## 第四章：感知解析：world_parser.py
 
-服务器每帧发来一大段 S-expression，比如：
+服务器每帧都会发来一大段 S-expression，比如：
 
 ```text
 (GS (pm PlayOn) (t 100.0) (sl 1) (sr 0) (tl Janus) (tr Opponent))
@@ -181,22 +145,7 @@ server.commit_beam(pos2d=[x, y], rotation=angle)
 
 ### 解析流程
 
-```text
-原始 S-expression 字符串
-       │
-       ▼
-__sexpression_to_dict()     ← 把括号结构转成 Python dict
-       │
-       ▼
-parse()                     ← 根据 key 分发到不同处理函数
-  ├─ "GS"    → 解析比赛状态（比分、时间、PlayMode、队伍左右）
-  ├─ "HJ"    → 解析 23 个关节的角度和速度 → 写入 robot
-  ├─ "pos"   → 解析全局位置 [x,y,z] → 写入 world
-  ├─ "quat"  → 解析四元数 [w,x,y,z] → 转成 [x,y,z,w] → 写入 robot
-  ├─ "GYR"   → 解析陀螺仪 → 写入 robot
-  ├─ "ACC"   → 解析加速度计 → 写入 robot
-  └─ "See"   → 解析视觉 → 写入 world (球位置、其他球员等)
-```
+{{< figure src="/images/robocup/janus-world-parser-flow.png" alt="Janus WorldParser 感知分流图" caption="WorldParser 把原始 S-expression 分流到 World 和 Robot：比赛状态、位置、视觉写入世界模型，关节和传感器写入机器人状态。" align="center" width="900" >}}
 
 ### 两个重要的坐标转换
 
@@ -211,7 +160,7 @@ parse()                     ← 根据 key 分发到不同处理函数
 
 **2. 左右队翻转**
 
-服务器的坐标系是固定的——左队在左边，右队在右边。但为了让代码不用区分左右，**如果我们是右队，WorldParser 会把所有坐标旋转 180°**：
+服务器坐标系是固定的：左队在左边，右队在右边。为了让客户端代码不用反复判断左右，**如果我们是右队，WorldParser 会把所有坐标旋转 180°**：
 
 ```text
 服务器视角：                    解析后（统一视角）：
@@ -219,15 +168,15 @@ parse()                     ← 根据 key 分发到不同处理函数
   右队进攻方向 ←
 ```
 
-这样 `decision_maker.py` 里的逻辑可以永远假设"对方球门在右边"，不用管我们实际是左队还是右队。
+这样 `decision_maker.py` 里的逻辑就可以一直假设“对方球门在右边”，不用关心我们实际站在左队还是右队。
 
 > **文件**：`mujococodebase/world_parser.py`，约 255 行。
 
 ---
 
-## 第五章：世界模型 — world/
+## 第五章：世界模型：world/
 
-解析完感知后，所有信息存在 `World` 对象里。这是整个客户端的"共享记忆"。
+解析完感知后，所有信息存在 `World` 对象里。这是整个客户端的“共享记忆”。
 
 ### World（世界状态）
 
@@ -284,7 +233,7 @@ field.get_width()               # 9m
 
 ---
 
-## 第六章：机器人模型 — robot.py
+## 第六章：机器人模型：robot.py
 
 `Robot` 是对 T1 机器人的抽象。它不控制物理（那是服务器的事），它只管理 **23 个电机的状态和目标值**。
 
@@ -340,9 +289,9 @@ robot.commit_motor_targets_pd()
 #       电机 目标 速度 kp kd 力矩
 ```
 
-### 电机对称性 (Motor Symmetry)
+### 电机对称性（Motor Symmetry）
 
-人体是左右对称的。当你定义一个动作时，经常需要让左右两边做"镜像"动作。`robot.py` 里定义了对称映射：
+人体是左右对称的。当你定义一个动作时，经常需要让左右两边做“镜像”动作。`robot.py` 里定义了对称映射：
 
 ```text
 "Shoulder_Pitch" → (lae1, rae1)    方向相同
@@ -352,15 +301,15 @@ robot.commit_motor_targets_pd()
 ...
 ```
 
-这在 Keyframe 技能中很有用——只需要定义一侧的动作，另一侧自动生成。
+这在 Keyframe 技能里很有用：只需要定义一侧的动作，另一侧就能自动生成。
 
 > **文件**：`mujococodebase/robot.py`，约 274 行。
 
 ---
 
-## 第七章：决策系统 — decision_maker.py
+## 第七章：决策系统：decision_maker.py
 
-`DecisionMaker` 每帧被调用一次，根据当前状态选择行为。它的逻辑很直接（画成流程图）：
+`DecisionMaker` 每帧被调用一次，根据当前状态选择行为。画成流程图会更直观：
 
 ```text
 update_current_behavior()
@@ -391,9 +340,9 @@ update_current_behavior()
   robot.commit_motor_targets_pd()  ← 最后统一发送电机指令
 ```
 
-### carry_ball() — 带球行为
+### carry_ball()：带球行为
 
-这是目前最核心的比赛行为，逻辑是：
+目前最核心的比赛行为是 `carry_ball()`，逻辑是：
 
 ```text
 1. 算出"球→对方球门"的方向向量
@@ -406,21 +355,9 @@ update_current_behavior()
 两种情况都调用 Walk 技能
 ```
 
-用图来说：
+换成图会更直观：
 
-```text
-    ×对方球门
-    ↑
-    │  ball_to_goal 方向
-    │
-    ● 球
-    │
-    │  ← 0.3m
-    │
-    ○ 带球位置（我要先走到这里）
-
-如果我已经在带球位置且面朝球门方向 → 直接往前推
-```
+{{< figure src="/images/robocup/janus-carry-ball-walk-chain.png" alt="Janus carry_ball 到 Walk 控制链图" caption="决策层先计算带球目标位置，Walk 再把目标运动转换为观测向量、ONNX 策略输出和 23 个电机目标角度。" align="center" width="900" >}}
 
 ### Beam 位置
 
@@ -439,9 +376,9 @@ FIFA 11v11:                      HL Adult 3v3:
 
 ---
 
-## 第八章：技能系统 — skills/
+## 第八章：技能系统：skills/
 
-技能是**可复用的动作模块**。决策系统不直接控制电机，而是调用技能。
+技能是**可复用的动作模块**。决策系统不直接拧电机，而是把动作交给技能去执行。
 
 ### 基类 Skill
 
@@ -469,7 +406,7 @@ class Skill(ABC):
 skills_manager.execute("Walk", target_2d=..., orientation=...)
 ```
 
-它会自动检测技能切换——如果上一帧在执行 `GetUp`，这一帧换成了 `Walk`，它会自动传 `reset=True`。
+它会自动检测技能切换：如果上一帧在执行 `GetUp`，这一帧换成了 `Walk`，它会自动传 `reset=True`。
 
 ### 目前有 3 个技能
 
@@ -481,13 +418,13 @@ skills_manager.execute("Walk", target_2d=..., orientation=...)
 
 ---
 
-## 第九章：Walk — 神经网络走路
+## 第九章：Walk：神经网络走路
 
 Walk 是最复杂也最核心的技能。它用一个**预训练的神经网络**来控制 23 个关节，让机器人能走向任意目标位置。
 
 ### 为什么用神经网络
 
-让双足机器人走路是一个极其复杂的控制问题——需要同时保持平衡、协调 23 个关节、适应不同速度和转向。手工编写这样的控制器几乎不可能，所以用**强化学习**训练一个神经网络策略（policy），然后导出为 ONNX 格式在运行时使用。
+双足机器人走路很难：既要保持平衡，又要协调 23 个关节，还要适应速度和转向变化。手写这样的控制器几乎不现实，所以这里用**强化学习**训练出一个神经网络策略（policy），再导出成 ONNX 格式供运行时调用。
 
 ### 执行流程
 
@@ -551,19 +488,19 @@ Walk 是最复杂也最核心的技能。它用一个**预训练的神经网络*
 
 ### 几个关键概念
 
-**标称姿势 (Nominal Position)**：机器人"正常站立"时每个关节的角度（弧度）。神经网络的输出是相对于这个姿势的**偏移量**，不是绝对角度。这让网络更容易学习——输出 0 就是保持站立。
+**标称姿势（Nominal Position）**：机器人“正常站立”时每个关节的角度（弧度）。神经网络的输出是相对于这个姿势的**偏移量**，不是绝对角度。这样网络更容易学：输出 0 就表示保持站立。
 
 **train_sim_flip**：一个 23 维的数组，每个值是 +1 或 -1。因为训练时用的仿真器和 RCSSServerMJ 的关节方向定义可能不同（比如训练时左转是正，运行时左转是负），所以需要逐关节翻转。
 
-**重力投影 (Projected Gravity)**：把世界坐标系的重力向量 `[0, 0, -1]` 转换到机器人身体坐标系。网络通过这个信息知道"我的身体现在是什么姿态"——比如前倾时重力会偏向身体的前方。
+**重力投影（Projected Gravity）**：把世界坐标系的重力向量 `[0, 0, -1]` 转换到机器人身体坐标系。网络通过这个信息判断“我的身体现在是什么姿态”，比如前倾时，重力会偏向身体的前方。
 
 > **文件**：`mujococodebase/skills/walk/walk.py`，约 147 行。ONNX 模型：`walk.onnx`。
 
 ---
 
-## 第十章：关键帧技能 — Keyframe
+## 第十章：关键帧技能：Keyframe
 
-关键帧是一种更直觉的动作定义方式：**在 YAML 文件里写好每个时刻各关节的角度，然后按时间顺序播放**。
+关键帧是一种更直观的动作定义方式：**在 YAML 文件里写好每个时刻各关节的角度，然后按时间顺序播放**。
 
 ### YAML 格式
 
@@ -607,7 +544,7 @@ keyframes:
 
 ### 对称模式
 
-如果 `symmetry: true`，你只需定义"可读名称"（如 `Shoulder_Pitch: -30`），系统会自动展开成两侧：
+如果 `symmetry: true`，你只需定义“可读名称”（如 `Shoulder_Pitch: -30`），系统会自动展开成两侧：
 - `lae1 = -30`（左肩）
 - `rae1 = -30`（右肩，方向可能反转）
 
@@ -615,9 +552,9 @@ keyframes:
 
 ---
 
-## 第十一章：GetUp — 起身技能
+## 第十一章：GetUp：起身技能
 
-GetUp 是一个**复合技能**：它自己不直接控制电机，而是调用其他技能来完成"从摔倒到站稳"的全过程。
+GetUp 是一个**复合技能**：它自己不直接控制电机，而是调用其他技能，完成从摔倒到站稳的全过程。
 
 ### 状态机
 
@@ -659,11 +596,11 @@ GetUp 是一个**复合技能**：它自己不直接控制电机，而是调用�
 
 ---
 
-## 第十二章：工具函数 — utils/
+## 第十二章：工具函数：utils/
 
 ### math_ops.py（坐标变换和几何计算）
 
-这个文件有 400+ 行，是代码中用得最多的工具类。核心函数：
+这个文件 400 多行，基本是项目里最常被调用的工具集合。核心函数有这些：
 
 **坐标变换**
 
@@ -691,15 +628,15 @@ model = load_network("walk.onnx")      # 加载模型
 action = run_network(observation, model) # 推理，输入观测，输出动作
 ```
 
-ONNX (Open Neural Network Exchange) 是一种通用的神经网络格式，不依赖 PyTorch 或 TensorFlow，可以用轻量的 ONNXRuntime 高效推理。
+ONNX（Open Neural Network Exchange）是一种通用的神经网络格式，不依赖 PyTorch 或 TensorFlow，可以用轻量的 ONNXRuntime 做高效推理。
 
 > **文件**：`utils/math_ops.py`（424 行），`utils/neural_network.py`（69 行）。
 
 ---
 
-## 第十三章：完整数据流 — 一帧的生命
+## 第十三章：完整数据流：一帧的生命
 
-把所有章节串起来，看一帧（20ms）里发生的事：
+把前面的模块串起来，一帧（20ms）里大概会发生这些事：
 
 ```text
 Server 发来 S-expression
@@ -743,9 +680,9 @@ Server 发来 S-expression
 
 ## 第十四章：代码对应关系一览
 
-把服务端（rcssservermj）和客户端（Janus）对应起来看：
+把服务端（rcssservermj）和客户端（Janus）放在一起看：
 
-| 功能 | 服务端 | 客户端 (Janus) | 数据方向 |
+| 功能 | 服务端 | 客户端（Janus） | 数据方向 |
 |------|--------|---------------|----------|
 | TCP 通信 | `server/communication/` | `server.py` | 双向 |
 | 编码感知 | `server/perception_encoder.py` | — | Server 内部 |
@@ -793,6 +730,6 @@ Server 发来 S-expression
 | Beam | 开球前将球员传送到指定位置 |
 | PlayMode | 比赛状态（开球前/比赛中/界外球等） |
 | PD Control | 比例-微分控制器，让电机平滑到达目标角度 |
-| Nominal Position | 标称姿势，机器人"正常站立"的关节角度 |
+| Nominal Position | 标称姿势，机器人“正常站立”的关节角度 |
 | train_sim_flip | 修正训练/运行环境关节方向差异的数组 |
 | Motor Symmetry | 左右关节的对称映射关系 |

@@ -12,6 +12,11 @@ section_artwork="$root/layouts/partials/section_artwork.html"
 learning_index="$root/content/learning/_index.md"
 header="$root/layouts/partials/header.html"
 footer="$root/layouts/partials/footer.html"
+extend_head="$root/layouts/partials/extend_head.html"
+extend_footer="$root/layouts/partials/extend_footer.html"
+comments="$root/layouts/partials/comments.html"
+collapse="$root/layouts/shortcodes/collapse.html"
+syntax="$root/assets/css/extended/syntax.css"
 
 require() {
   local pattern="$1"
@@ -136,6 +141,7 @@ reject 'home-section-lead|home-section-meta' "$home" 'homepage artwork wrappers 
 require 'section-artwork--page' "$css" 'section-page banner styling is missing'
 require 'section-artwork figcaption[^}]*overflow-wrap:[[:space:]]*anywhere' "$css" 'section artwork credits must wrap on narrow screens'
 require 'section-artwork figcaption[^}]*white-space:[[:space:]]*normal' "$css" 'mobile section artwork credits must allow line wrapping'
+require 'section-artwork--page picture[[:space:]]*\{[^}]*width:[[:space:]]*100%[^}]*min-height:[[:space:]]*0[^}]*aspect-ratio:[[:space:]]*4[[:space:]]*/[[:space:]]*3' "$css" 'mobile section artwork must derive height from the available width'
 require 'home-section\.home-archive-band[^}]*background:[^;]*linear-gradient' "$css" 'homepage archive color wash is missing'
 require 'section-masthead' "$home" 'section artwork and title need a shared masthead wrapper'
 require 'section-masthead-copy' "$home" 'section title must overlay the artwork'
@@ -143,13 +149,62 @@ require_before 'section-masthead-breadcrumbs' 'section-masthead section-masthead
 require 'section-masthead[^}]*width:[[:space:]]*min\(1180px' "$css" 'section masthead must approach the homepage artwork width'
 require 'section-artwork--page picture[^}]*aspect-ratio:[[:space:]]*14[[:space:]]*/[[:space:]]*5' "$css" 'desktop section masthead must use the larger 2.8:1 crop'
 require 'section-masthead-copy[^}]*position:[[:space:]]*absolute' "$css" 'section title must be positioned over the artwork'
+require '\.section-masthead--learning \.section-masthead-copy[[:space:]]*\{[^}]*padding-left:[[:space:]]*clamp\(20px,[[:space:]]*3vw,[[:space:]]*36px\)' "$css" 'Learning masthead copy needs a deliberate inset from the artwork edge'
 require 'about-facts-index' "$root/layouts/_default/about.html" 'About facts must use an editorial index'
 require 'about-experience-copy' "$root/layouts/_default/about.html" 'About experience must use unboxed timeline copy'
 require 'about-life-notes' "$root/layouts/_default/about.html" 'About life section must use editorial notes'
 require 'about-tools-directory' "$root/layouts/_default/about.html" 'About tools must use a directory layout'
+require_count '1' '<h1[ >]' "$root/layouts/_default/about.html" 'About must expose one primary page heading'
+require '<header class="about-profile-header about-hero"' "$root/layouts/_default/about.html" 'About title and biography must share one profile header'
+require 'id="about-profile-title"' "$root/layouts/_default/about.html" 'About profile heading needs a stable accessible label target'
+reject 'about-header' "$root/layouts/_default/about.html" 'About must not keep a second standalone page header'
+require '\.about-page[[:space:]]*\{[^}]*counter-reset:[[:space:]]*about-section' "$css" 'About page must number only the sections that render'
+require '\.about-section[[:space:]]*\{[^}]*display:[[:space:]]*grid[^}]*grid-template-columns:[[:space:]]*minmax\(180px,[[:space:]]*220px\)[[:space:]]*minmax\(0,[[:space:]]*1fr\)[^}]*counter-increment:[[:space:]]*about-section' "$css" 'About sections need the shared desktop dossier grid'
+require '\.about-section-heading::before[[:space:]]*\{[^}]*content:[[:space:]]*counter\(about-section,[[:space:]]*decimal-leading-zero\)' "$css" 'About section headings need automatic visible indexes'
+require '\.about-tools-directory[[:space:]]*\{[^}]*grid-template-columns:[[:space:]]*repeat\(3,[[:space:]]*minmax\(0,[[:space:]]*1fr\)\)' "$css" 'About tools need three balanced desktop columns'
+require '@media screen and \(min-width:[[:space:]]*769px\) and \(max-width:[[:space:]]*960px\)' "$css" 'About needs a dedicated tablet breakpoint'
+require '\.about-tools-directory[[:space:]]*\{[^}]*grid-template-columns:[[:space:]]*repeat\(2,[[:space:]]*minmax\(0,[[:space:]]*1fr\)\)' "$css" 'About tools need a two-column tablet layout'
+require '\[data-theme="dark"\] \.about-tool-mark img[[:space:]]*\{[^}]*filter:[^;]*invert\(' "$css" 'dark About tool icons need a light inverse treatment'
+reject 'about-button|about-fact-card|about-life-card|about-experience-card|about-experience-badge|about-facts-grid|about-life-grid|about-tools-grid|about-tool-group|about-tag-row' "$css" 'retired About card rules must be removed from the stylesheet'
 require 'friends-directory' "$root/layouts/_default/friends.html" 'Friends must use a directory layout'
 require 'friend-entry' "$root/layouts/_default/friends.html" 'Friend links must use editorial entries'
 reject 'about-fact-card|about-life-card|about-experience-card|about-tool-group' "$root/layouts/_default/about.html" 'About card markup must be removed'
 reject 'friends-grid|friend-card' "$root/layouts/_default/friends.html" 'Friends card markup must be removed'
+
+# Progressive visual-polish regressions.
+reject '^@import[[:space:]]+url\(' "$css" 'font imports must not live inside the concatenated extended stylesheet'
+require 'fonts.googleapis.com/css2\?family=EB\+Garamond' "$extend_head" 'editorial web fonts must load from the document head'
+require '--romantic-muted:[[:space:]]*#656d69' "$css" 'small light-theme metadata needs a WCAG-safe muted token'
+reject '--romantic-dark-panel' "$css" 'mobile dark cards must only use defined Romantic tokens'
+require 'TocOpen[[:space:]]*=[[:space:]]*false' "$root/hugo.toml" 'long inline tables of contents should be collapsed by default'
+require '\.katex-display[[:space:]]*\{[^}]*max-width:[[:space:]]*100%[^}]*overflow-x:[[:space:]]*auto' "$css" 'display equations need bounded horizontal scrolling'
+require '\.terms-tags a[[:space:]]*\{[^}]*color:[[:space:]]*var\(--primary\)[^}]*background:[[:space:]]*transparent' "$css" 'taxonomy links need readable editorial styling'
+require '\.archive-year[[:space:]]*\{[^}]*max-width:[[:space:]]*920px' "$css" 'archive groups must align with the shared list measure'
+require '\.pagination a[[:space:]]*\{[^}]*color:[[:space:]]*var\(--primary\)[^}]*background:[[:space:]]*transparent[^}]*border:[[:space:]]*1px solid var\(--border\)' "$css" 'pagination controls need explicit high-contrast colors'
+require '\.post-content a[[:space:]]*\{[^}]*box-shadow:[[:space:]]*none' "$css" 'article links must not render duplicate underlines'
+require '\.post-content figure figcaption p[[:space:]]*\{[^}]*margin:[[:space:]]*0' "$css" 'figure captions must not inherit paragraph spacing'
+require '\.toc-tl-dot[[:space:]]*\{[^}]*border:[[:space:]]*1px solid var\(--tertiary\)' "$css" 'timeline TOC nodes need a visible inactive outline'
+require '\.series-nav[[:space:]]*\{[^}]*border-radius:[[:space:]]*0' "$css" 'series navigation must follow the unboxed editorial language'
+require '\.post-collapse[[:space:]]*\{' "$css" 'article collapse blocks need a local component style'
+require 'class="post-collapse"' "$collapse" 'collapse shortcode must render valid local component markup'
+require '\.copy-code[[:space:]]*\{[^}]*display:[[:space:]]*block' "$css" 'code copy controls must remain discoverable without hover'
+require "copybutton\.classList\.add\('copy-code'\)" "$extend_footer" 'local footer override must preserve PaperMod code-copy behavior'
+require 'navigator\.clipboard\.writeText\(codeblock\.textContent\)[^;]*\.catch\(copyWithSelection\)' "$extend_footer" 'clipboard rejection must fall back to selection copying'
+require 'function copyingFailed\(\)' "$extend_footer" 'copy failures need visible feedback instead of a silent catch'
+require '\.chroma \.lnt,[[:space:]]*\n\.chroma \.ln[[:space:]]*\{[[:space:]]*color:[[:space:]]*#656b66' "$syntax" 'light code line numbers need readable contrast'
+require '\[data-theme="dark"\] \.chroma \.lnt,[[:space:]]*\n\[data-theme="dark"\] \.chroma \.ln[[:space:]]*\{[[:space:]]*color:[[:space:]]*#8f9ba4' "$syntax" 'dark code line numbers need readable contrast'
+require 'Typewriter entrance effect' "$extend_footer" 'homepage typing entrance effect must be restored'
+require 'document\.createTreeWalker\(h1,[[:space:]]*NodeFilter\.SHOW_TEXT\)' "$extend_footer" 'homepage typing must animate existing text nodes without flattening emphasis markup'
+require "h1\.setAttribute\('aria-label',[[:space:]]*fullText\)" "$extend_footer" 'homepage typing must expose the complete title while characters animate'
+reject "h1\.textContent[[:space:]]*=[[:space:]]*''" "$extend_footer" 'homepage typing must not replace the authored strong emphasis'
+require '\.typewriter-cursor[[:space:]]*\{[^}]*animation:[[:space:]]*cursor-blink' "$css" 'homepage typing needs a visible restrained cursor'
+require 'giscusScript\.dataset\.theme[[:space:]]*=[[:space:]]*document\.documentElement\.dataset\.theme' "$comments" 'Giscus must initialize from the active site theme'
+
+open_braces="$(tr -cd '{' < "$css" | wc -c | tr -d '[:space:]')"
+close_braces="$(tr -cd '}' < "$css" | wc -c | tr -d '[:space:]')"
+if [[ "$open_braces" != "$close_braces" ]]; then
+  printf 'FAIL: custom.css braces are unbalanced (open %s, close %s)\n' "$open_braces" "$close_braces" >&2
+  exit 1
+fi
 
 printf 'PASS: fog archive structure is present\n'

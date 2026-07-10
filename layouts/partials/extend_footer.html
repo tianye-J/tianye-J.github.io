@@ -171,6 +171,7 @@
   requestAnimationFrame(onScroll);
 })();
 </script>
+
 {{- end -}}
 
 {{- /* Code block language labels */ -}}
@@ -200,56 +201,145 @@
 })();
 </script>
 
-{{- /* Typewriter entrance effect — homepage only */ -}}
+{{- /* Typewriter entrance effect — homepage only, preserving inline emphasis. */ -}}
 {{- if .IsHome -}}
 <script>
 (function () {
   'use strict';
 
-  // Homepage only, no effect on other pages
-  var h1 = document.querySelector('.home-info .entry-header h1');
+  var h1 = document.querySelector('.home-info.home-hero .entry-header h1');
   if (!h1) return;
-
-  // Keep the mobile first paint stable; the compact hero works better without typing.
   if (window.matchMedia('(max-width: 768px)').matches) return;
-
-  // Respect reduced-motion preference
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // Read original text, clear h1 content
-  var fullText = h1.innerText || h1.textContent || '';
-  h1.textContent = '';
+  var fullText = h1.textContent || '';
+  var walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT);
+  var textParts = [];
 
-  // Insert blinking cursor
+  while (walker.nextNode()) {
+    var node = walker.currentNode;
+    var text = node.nodeValue || '';
+    if (text) textParts.push({ node: node, text: text });
+  }
+  if (!fullText || !textParts.length) return;
+
+  h1.setAttribute('aria-label', fullText);
+  textParts.forEach(function (part) {
+    part.node.nodeValue = '';
+  });
+
   var cursor = document.createElement('span');
   cursor.className = 'typewriter-cursor';
   cursor.setAttribute('aria-hidden', 'true');
   cursor.textContent = '|';
   h1.appendChild(cursor);
 
-  // Delay to coordinate with hero-pop animation
-  // hero-pop: 0.12s delay + ~0.5s pop complete ≈ 0.62s before typing starts
-  var i = 0;
-  setTimeout(function () {
-    var interval = setInterval(function () {
-      if (i < fullText.length) {
-        // Insert characters one by one before the cursor
-        h1.insertBefore(document.createTextNode(fullText[i]), cursor);
-        i++;
-      } else {
-        clearInterval(interval);
-        // Typing done: fade out cursor after 1s
-        setTimeout(function () {
-          cursor.style.transition = 'opacity 0.5s ease';
-          cursor.style.opacity = '0';
-          cursor.style.animation = 'none';
-        }, 1000);
-        setTimeout(function () {
-          if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
-        }, 1550);
-      }
-    }, 78); // ~78ms per char, "Arden J" takes ~0.55s
-  }, 620);
+  var partIndex = 0;
+  var characterIndex = 0;
+
+  function finishTyping() {
+    window.setTimeout(function () {
+      cursor.classList.add('typewriter-cursor--leaving');
+    }, 1000);
+    window.setTimeout(function () {
+      if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+    }, 1550);
+  }
+
+  function typeNextCharacter() {
+    while (partIndex < textParts.length && characterIndex >= textParts[partIndex].text.length) {
+      partIndex += 1;
+      characterIndex = 0;
+    }
+
+    if (partIndex >= textParts.length) {
+      finishTyping();
+      return;
+    }
+
+    var part = textParts[partIndex];
+    part.node.nodeValue += part.text.charAt(characterIndex);
+    characterIndex += 1;
+    window.setTimeout(typeNextCharacter, 78);
+  }
+
+  window.setTimeout(typeNextCharacter, 620);
 })();
+</script>
+{{- end -}}
+
+{{- /* Preserve PaperMod's code-copy behavior in the local footer override. */ -}}
+{{- if (and (eq .Kind "page") (ne .Layout "archives") (ne .Layout "search") (.Param "ShowCodeCopyButtons")) }}
+<script>
+document.querySelectorAll('pre > code').forEach(function (codeblock) {
+  var container = codeblock.parentNode.parentNode;
+  var copybutton = document.createElement('button');
+  copybutton.type = 'button';
+  copybutton.classList.add('copy-code');
+  copybutton.setAttribute('aria-label', '{{- i18n "code_copy" | default "copy" }}');
+  copybutton.setAttribute('aria-live', 'polite');
+  copybutton.textContent = '{{- i18n "code_copy" | default "copy" }}';
+  var resetTimer;
+
+  function showCopyStatus(message) {
+    window.clearTimeout(resetTimer);
+    copybutton.setAttribute('aria-label', message);
+    copybutton.textContent = message;
+    resetTimer = window.setTimeout(function () {
+      copybutton.setAttribute('aria-label', '{{- i18n "code_copy" | default "copy" }}');
+      copybutton.textContent = '{{- i18n "code_copy" | default "copy" }}';
+    }, 2000);
+  }
+
+  function copyingDone() {
+    showCopyStatus('{{- i18n "code_copied" | default "copied!" }}');
+  }
+
+  function copyingFailed() {
+    showCopyStatus('copy failed');
+  }
+
+  function copyWithSelection() {
+    var selection = window.getSelection();
+    if (!selection) {
+      copyingFailed();
+      return;
+    }
+
+    var range = document.createRange();
+    range.selectNodeContents(codeblock);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    try {
+      if (document.execCommand('copy')) {
+        copyingDone();
+      } else {
+        copyingFailed();
+      }
+    } catch (error) {
+      copyingFailed();
+    } finally {
+      selection.removeAllRanges();
+    }
+  }
+
+  copybutton.addEventListener('click', function () {
+    if ('clipboard' in navigator) {
+      navigator.clipboard.writeText(codeblock.textContent).then(copyingDone).catch(copyWithSelection);
+      return;
+    }
+    copyWithSelection();
+  });
+
+  if (container.classList.contains('highlight')) {
+    container.appendChild(copybutton);
+  } else if (container.parentNode.firstChild === container) {
+    /* Skip the line-number column. */
+  } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName === 'TABLE') {
+    codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+  } else {
+    codeblock.parentNode.appendChild(copybutton);
+  }
+});
 </script>
 {{- end -}}

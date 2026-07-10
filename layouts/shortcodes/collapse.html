@@ -1,0 +1,10 @@
+{{- $summary := .Get "summary" -}}
+{{- if not $summary -}}
+  {{- warnf "missing value for param 'summary': %s" .Position -}}
+{{- end -}}
+<details class="post-collapse"{{ if eq (.Get "openByDefault") true }} open{{ end }}>
+  <summary>{{ $summary | markdownify }}</summary>
+  <div class="post-collapse-content">
+    {{- .Inner | markdownify -}}
+  </div>
+</details>

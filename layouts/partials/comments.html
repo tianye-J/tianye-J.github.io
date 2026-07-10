@@ -1,18 +1,24 @@
 <div class="comments">
-  <script src="https://giscus.app/client.js"
-    data-repo="tianye-J/tianye-J.github.io"
-    data-repo-id="R_kgDORZPU3Q"
-    data-category="Announcements"
-    data-category-id="DIC_kwDORZPU3c4C6qgT"
-    data-mapping="pathname"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="top"
-    data-theme="preferred_color_scheme"
-    data-lang="zh-CN"
-    data-loading="lazy"
-    crossorigin="anonymous"
-    async>
+  <script>
+  (function () {
+    var container = document.currentScript.parentElement;
+    var giscusScript = document.createElement('script');
+    giscusScript.src = 'https://giscus.app/client.js';
+    giscusScript.dataset.repo = 'tianye-J/tianye-J.github.io';
+    giscusScript.dataset.repoId = 'R_kgDORZPU3Q';
+    giscusScript.dataset.category = 'Announcements';
+    giscusScript.dataset.categoryId = 'DIC_kwDORZPU3c4C6qgT';
+    giscusScript.dataset.mapping = 'pathname';
+    giscusScript.dataset.strict = '0';
+    giscusScript.dataset.reactionsEnabled = '1';
+    giscusScript.dataset.emitMetadata = '0';
+    giscusScript.dataset.inputPosition = 'top';
+    giscusScript.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+    giscusScript.dataset.lang = 'zh-CN';
+    giscusScript.dataset.loading = 'lazy';
+    giscusScript.crossOrigin = 'anonymous';
+    giscusScript.async = true;
+    container.appendChild(giscusScript);
+  })();
   </script>
 </div>

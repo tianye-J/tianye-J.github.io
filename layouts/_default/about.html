@@ -2,44 +2,48 @@
 
 {{- $about := site.Data.about | default dict -}}
 {{- $profile := $about.profile | default dict -}}
+{{- $displayName := $profile.display_name | default $profile.name | default .Title -}}
 
 <article class="post-single about-page">
-  <header class="post-header about-header">
-    {{ partial "breadcrumbs.html" . }}
-    <span class="section-label">ABOUT</span>
-    <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
-  </header>
-
-  {{- with $profile }}
-  <section class="about-hero" aria-labelledby="about-hero-title">
-    <div class="about-hero-copy">
-      <span class="about-kicker">{{ .role }}</span>
-      <h2 id="about-hero-title">Hi, I’m {{ .display_name | default .name }}</h2>
-      {{- with .affiliation }}
-      <p class="about-affiliation">{{ . }}</p>
-      {{- end }}
-      {{- with .intro }}
-      <p class="about-intro">{{ . }}</p>
-      {{- end }}
-      {{- with .links }}
-      <nav class="about-hero-actions" aria-label="Primary links">
-        {{- range . }}
-        {{- $url := .url | default "#" -}}
-        {{- $isExternal := or (hasPrefix $url "http://") (hasPrefix $url "https://") -}}
-        <a class="about-text-link{{ if .primary }} primary{{ end }}" href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>
-          {{ .label }}
-        </a>
-        {{- end }}
-      </nav>
-      {{- end }}
+  <header class="about-profile-header about-hero" aria-labelledby="about-profile-title">
+    <div class="about-profile-breadcrumbs">
+      {{ partial "breadcrumbs.html" . }}
     </div>
-    <figure class="about-portrait">
-      {{- $avatar := .avatar | default "/images/portrait.png" -}}
-      <img src="{{ $avatar | relURL }}" alt="{{ .display_name | default .name }} portrait" loading="eager" draggable="false">
-      <figcaption>Photo taken in real life :)</figcaption>
-    </figure>
-  </section>
-  {{- end }}
+    <div class="about-hero-layout">
+      <div class="about-hero-copy">
+        <div class="about-profile-eyebrow">
+          <span class="section-label">ABOUT</span>
+          {{- with $profile.role }}
+          <span class="about-profile-separator" aria-hidden="true">·</span>
+          <span class="about-kicker">{{ . }}</span>
+          {{- end }}
+        </div>
+        <h1 id="about-profile-title" class="post-title entry-hint-parent">Hi, I’m {{ $displayName }}</h1>
+        {{- with $profile.affiliation }}
+        <p class="about-affiliation">{{ . }}</p>
+        {{- end }}
+        {{- with $profile.intro }}
+        <p class="about-intro">{{ . }}</p>
+        {{- end }}
+        {{- with $profile.links }}
+        <nav class="about-hero-actions" aria-label="Primary links">
+          {{- range . }}
+          {{- $url := .url | default "#" -}}
+          {{- $isExternal := or (hasPrefix $url "http://") (hasPrefix $url "https://") -}}
+          <a class="about-text-link{{ if .primary }} primary{{ end }}" href="{{ $url }}"{{ if $isExternal }} target="_blank" rel="noopener noreferrer"{{ end }}>
+            {{ .label }}
+          </a>
+          {{- end }}
+        </nav>
+        {{- end }}
+      </div>
+      <figure class="about-portrait">
+        {{- $avatar := $profile.avatar | default "/images/portrait.png" -}}
+        <img src="{{ $avatar | relURL }}" alt="{{ $displayName }} portrait" loading="eager" draggable="false">
+        <figcaption>Photo taken in real life :)</figcaption>
+      </figure>
+    </div>
+  </header>
 
   {{- with $about.facts }}
   <section class="about-section about-facts" aria-labelledby="about-facts-title">

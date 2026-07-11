@@ -657,7 +657,6 @@ body:not(.list) .post-content {
 .post-content img {
     border-radius: 16px;
     box-shadow: var(--shadow-md);
-    margin: 2rem 0;
 }
 
 .post-content ul, .post-content ol {
@@ -4906,27 +4905,38 @@ body.list .post-entry:focus-within {
 .post-content {
     color: var(--content);
     font-family: var(--font-family-serif);
-    font-size: 17px;
-    line-height: 1.82;
-    letter-spacing: 0.012em;
+    font-size: 16px;
+    line-height: 1.72;
+    letter-spacing: 0.008em;
 }
 
 .post-content p {
-    margin-block: 1.08em;
+    margin-block: 0.85em;
 }
 
 .post-content h2 {
-    margin: 2.45em 0 0.85em;
+    margin: 2em 0 0.7em;
     color: var(--primary);
-    font-size: 28px;
+    font-size: 26px;
     line-height: 1.28;
     border-color: var(--border);
     text-wrap: balance;
 }
 
 .post-content h3 {
+    margin: 1.75em 0 0.55em;
+    font-size: 21px;
     line-height: 1.32;
     text-wrap: balance;
+}
+
+.post-content ul,
+.post-content ol {
+    margin-block: 0.85em;
+}
+
+.post-content li {
+    margin-bottom: 0.22em;
 }
 
 .post-content a {
@@ -5004,14 +5014,20 @@ html[data-theme="dark"] .bg {
     height: auto;
 }
 
+.post-content p:has(> img:only-child),
 .post-content figure {
-    margin: 2.1em 0;
+    margin: 1.4em 0;
 }
 
+.post-content p > img:only-child,
 .post-content figure img {
     display: block;
+    width: auto;
+    max-width: min(100%, 680px);
+    max-height: 64vh;
     height: auto;
     margin: 0 auto;
+    object-fit: contain;
 }
 
 .post-content figure figcaption {
@@ -6385,19 +6401,25 @@ a.about-tool-item:focus-visible {
 
     .post-content {
         font-size: 16px;
-        line-height: 1.8;
+        line-height: 1.7;
         letter-spacing: 0.008em;
     }
 
     .post-content h2 {
-        margin-top: 2.25em;
-        font-size: 24px;
+        margin: 1.9em 0 0.65em;
+        font-size: 23px;
         line-height: 1.3;
     }
 
     .post-content h3 {
-        font-size: 20px;
+        margin: 1.65em 0 0.5em;
+        font-size: 19px;
         line-height: 1.35;
+    }
+
+    .post-content p:has(> img:only-child),
+    .post-content figure {
+        margin: 1.1em 0;
     }
 
     .post-content blockquote {

@@ -1,0 +1,8 @@
+<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <title>MuJoCo</title>
+  <path d="M2 21h20M4 18l6-6 4 3 6-7" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+  <circle cx="4" cy="18" r="2"/>
+  <circle cx="10" cy="12" r="2"/>
+  <circle cx="14" cy="15" r="2"/>
+  <circle cx="20" cy="8" r="2"/>
+</svg>

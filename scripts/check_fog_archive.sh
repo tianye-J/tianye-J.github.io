@@ -17,6 +17,8 @@ extend_footer="$root/layouts/partials/extend_footer.html"
 comments="$root/layouts/partials/comments.html"
 collapse="$root/layouts/shortcodes/collapse.html"
 syntax="$root/assets/css/extended/syntax.css"
+about_data="$root/data/about.yaml"
+mujoco_logo="$root/static/images/tools/mujoco.svg"
 
 require() {
   local pattern="$1"
@@ -166,6 +168,9 @@ require '@media screen and \(min-width:[[:space:]]*769px\) and \(max-width:[[:sp
 require '\.about-tools-directory[[:space:]]*\{[^}]*grid-template-columns:[[:space:]]*repeat\(2,[[:space:]]*minmax\(0,[[:space:]]*1fr\)\)' "$css" 'About tools need a two-column tablet layout'
 require '\[data-theme="dark"\] \.about-tool-mark img[[:space:]]*\{[^}]*filter:[^;]*invert\(' "$css" 'dark About tool icons need a light inverse treatment'
 reject 'about-button|about-fact-card|about-life-card|about-experience-card|about-experience-badge|about-facts-grid|about-life-grid|about-tools-grid|about-tool-group|about-tag-row' "$css" 'retired About card rules must be removed from the stylesheet'
+require 'name:[[:space:]]*"MuJoCo"[[:space:]]*\n[[:space:]]*url:[[:space:]]*"https://mujoco\.org/"[[:space:]]*\n[[:space:]]*logo:[[:space:]]*"/images/tools/mujoco\.svg"[[:space:]]*\n[[:space:]]*description:[[:space:]]*"Physics Simulation"' "$about_data" 'About workspace must include the complete MuJoCo tool entry'
+reject 'Claude Code|docs\.anthropic\.com|anthropic\.svg' "$about_data" 'retired Claude Code data must not remain on About'
+require '<title>MuJoCo</title>' "$mujoco_logo" 'MuJoCo tool icon must expose its source identity'
 require 'friends-directory' "$root/layouts/_default/friends.html" 'Friends must use a directory layout'
 require 'friend-entry' "$root/layouts/_default/friends.html" 'Friend links must use editorial entries'
 reject 'about-fact-card|about-life-card|about-experience-card|about-tool-group' "$root/layouts/_default/about.html" 'About card markup must be removed'

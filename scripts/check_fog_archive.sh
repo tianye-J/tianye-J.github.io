@@ -151,7 +151,7 @@ require_before 'section-masthead-breadcrumbs' 'section-masthead section-masthead
 require 'section-masthead[^}]*width:[[:space:]]*min\(1180px' "$css" 'section masthead must approach the homepage artwork width'
 require 'section-artwork--page picture[^}]*aspect-ratio:[[:space:]]*14[[:space:]]*/[[:space:]]*5' "$css" 'desktop section masthead must use the larger 2.8:1 crop'
 require 'section-masthead-copy[^}]*position:[[:space:]]*absolute' "$css" 'section title must be positioned over the artwork'
-require '\.section-masthead--learning \.section-masthead-copy[[:space:]]*\{[^}]*padding-left:[[:space:]]*clamp\(20px,[[:space:]]*3vw,[[:space:]]*36px\)' "$css" 'Learning masthead copy needs a deliberate inset from the artwork edge'
+require '\.section-masthead \.section-masthead-copy[[:space:]]*\{[^}]*padding-left:[[:space:]]*clamp\(20px,[[:space:]]*3vw,[[:space:]]*36px\)' "$css" 'Blog, Learning, and Thinking mastheads must share the responsive artwork inset'
 require 'about-facts-index' "$root/layouts/_default/about.html" 'About facts must use an editorial index'
 require 'about-experience-copy' "$root/layouts/_default/about.html" 'About experience must use unboxed timeline copy'
 require 'about-life-notes' "$root/layouts/_default/about.html" 'About life section must use editorial notes'

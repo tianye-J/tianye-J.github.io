@@ -4326,7 +4326,7 @@ body.list:has(.home-hero) .main {
     text-shadow: 0 1px 4px rgba(247, 245, 240, 0.58);
 }
 
-.section-masthead--learning .section-masthead-copy {
+.section-masthead .section-masthead-copy {
     padding-left: clamp(20px, 3vw, 36px);
 }
 

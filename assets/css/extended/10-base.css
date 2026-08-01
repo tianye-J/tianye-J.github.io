@@ -45,6 +45,11 @@ select {
     box-shadow: 0 0 0 3px var(--ring-accent);
 }
 
+:root[data-theme="dark"] :where(a, button, summary, input, textarea, select):focus-visible {
+    outline-color: var(--ring);
+    box-shadow: 0 0 0 3px var(--ring-accent);
+}
+
 a {
     color: var(--link);
     text-decoration-color: color-mix(in srgb, currentColor 54%, transparent);

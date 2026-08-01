@@ -121,6 +121,10 @@
         -webkit-backdrop-filter: blur(10px);
     }
 
+    :root[data-theme="dark"] #menu {
+        background: color-mix(in srgb, var(--bg) 94%, transparent);
+    }
+
     body.menu-open #menu {
         opacity: 1;
         visibility: visible;
@@ -365,6 +369,25 @@
             color-mix(in srgb, var(--accent) 8%, var(--bg-soft))
         );
         border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+    }
+
+    :root[data-theme="dark"] .home-section-entry a {
+        background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--surface) 78%, transparent),
+            color-mix(in srgb, var(--bg) 86%, var(--text-muted) 14%)
+        );
+        border-color: color-mix(in srgb, var(--border) 58%, transparent);
+    }
+
+    :root[data-theme="dark"] .home-section-entry a:hover,
+    :root[data-theme="dark"] .home-section-entry a:focus-visible {
+        background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--surface) 88%, transparent),
+            color-mix(in srgb, var(--accent) 9%, var(--bg))
+        );
+        border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
     }
 
     .home-section-entry .entry-meta {

@@ -50,7 +50,7 @@
     --code-block-bg: var(--code-bg);
 }
 
-[data-theme="dark"] {
+:root[data-theme="dark"] {
     color-scheme: dark;
 
     --bg: #12171c;
@@ -74,8 +74,8 @@
     --hero-wash: linear-gradient(90deg, rgba(18, 23, 28, 0.52) 0%, rgba(18, 23, 28, 0.25) 48%, rgba(18, 23, 28, 0.08) 72%);
     --artwork-wash: rgba(18, 23, 28, 0.44);
 
-    --ring: #df9b1e;
-    --ring-accent: color-mix(in srgb, var(--accent) 58%, transparent);
+    --ring: #f1b449;
+    --ring-accent: color-mix(in srgb, var(--accent) 64%, transparent);
 
     /* PaperMod compatibility aliases. */
     --theme: var(--bg);

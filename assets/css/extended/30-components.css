@@ -367,6 +367,11 @@ body.list .post-entry:focus-within {
     text-align: start;
 }
 
+:root[data-theme="dark"] .post-content table th {
+    color: var(--text);
+    background: color-mix(in srgb, var(--bg-soft) 92%, var(--accent) 8%);
+}
+
 .post-content table td {
     background: transparent;
 }

@@ -10,8 +10,8 @@
     }
 
     body:has(.post-single) .main {
-        width: min(calc(var(--container) + 112px), calc(100% - 72px));
-        padding-right: clamp(28px, 4vw, 56px);
+        width: min(var(--chrome-container), calc(100% - 72px));
+        padding-right: clamp(28px, 4vw, 58px);
     }
 
     body:has(.post-single) .footer {

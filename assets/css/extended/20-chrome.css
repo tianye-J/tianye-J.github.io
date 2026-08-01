@@ -15,7 +15,7 @@
 }
 
 .nav {
-    max-width: var(--container);
+    max-width: var(--chrome-container);
 }
 
 .logo a {
@@ -80,6 +80,7 @@
 #menu a.active,
 #menu span.active,
 #menu .menu-parent-toggle:has(.active) {
+    border-bottom: 0;
     text-decoration: underline;
     text-decoration-color: var(--accent);
     text-decoration-thickness: 2px;
@@ -202,10 +203,10 @@
 
 .main,
 body:has(.post-single) .main {
-    width: min(calc(var(--container) + 112px), calc(100% - 56px));
+    width: min(var(--chrome-container), calc(100% - 56px));
     max-width: none;
     margin: 0 auto;
-    padding: 32px clamp(28px, 4vw, 56px) 56px;
+    padding: 32px clamp(28px, 4vw, 58px) 58px;
     background: transparent;
     border: 0;
     border-radius: 0;
@@ -518,7 +519,7 @@ body.list:has(.home-hero) .main {
 .footer {
     position: relative;
     z-index: 1;
-    max-width: var(--container);
+    max-width: var(--chrome-container);
     margin: 0 auto;
     padding: 40px 28px 28px;
     color: var(--text-secondary);

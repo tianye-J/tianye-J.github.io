@@ -12,15 +12,19 @@ body.list .post-entry {
     border-radius: 0;
     box-shadow: none;
     transform: none;
-    transition: background-color var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft);
+    transition:
+        background-color var(--dur-fast) var(--ease-soft),
+        border-color var(--dur-fast) var(--ease-soft),
+        box-shadow var(--dur-fast) var(--ease-soft),
+        transform var(--dur-fast) var(--ease-soft);
 }
 
 body.list .post-entry:hover,
 body.list .post-entry:focus-within {
     background: color-mix(in srgb, var(--accent) 4%, transparent);
     border-color: var(--border);
-    box-shadow: none;
-    transform: none;
+    box-shadow: 0 0 0 1px var(--ring-accent);
+    transform: translateY(-2px);
 }
 
 .post-entry .entry-header h2 {
@@ -242,16 +246,25 @@ body.list .post-entry:focus-within {
 
 .post-content a {
     color: var(--link);
-    text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, currentColor 46%, transparent);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    text-decoration: none;
     box-shadow: none;
+    transition:
+        color var(--dur-fast) var(--ease-soft),
+        background-size var(--dur-fast) var(--ease-soft);
 }
 
-.post-content a:hover {
+.post-content a:hover,
+.post-content a:focus-visible {
     color: var(--link);
-    text-decoration-color: var(--link);
+    background-size: 100% 1px;
+}
+
+.post-content a.anchor {
+    background-image: none;
 }
 
 .post-content blockquote {

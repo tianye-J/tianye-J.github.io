@@ -121,6 +121,18 @@
     color: #3f4948;
 }
 
+.home-info.home-hero .home-epigraph {
+    max-width: 46ch;
+    padding-left: 16px;
+    border-left: 2px solid var(--accent);
+}
+
+.home-info.home-hero .epigraph-text {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-style: italic;
+}
+
 .home-info.home-hero .epigraph-source {
     color: color-mix(in srgb, #3f4948 78%, transparent);
 }
@@ -650,8 +662,8 @@
 
 /* GitHub contribution heatmap */
 .home-heatmap {
-    --heatmap-cell-size: clamp(12px, 1.35vw, 18px);
-    --heatmap-gap: clamp(2px, 0.3vw, 3px);
+    --heatmap-cell-size: 11px;
+    --heatmap-gap: 3px;
     margin-top: 0;
     padding: 30px 0 16px;
     border: 0;
@@ -762,6 +774,7 @@
     width: var(--heatmap-cell-size);
     height: var(--heatmap-cell-size);
     opacity: 0.94;
+    animation: fade-up var(--dur-fast) var(--ease-soft) both;
     transition: outline-color var(--dur-fast) var(--ease-soft), opacity var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-soft);
 }
 
@@ -770,7 +783,7 @@
     outline: 1px solid var(--accent);
     outline-offset: 1px;
     opacity: 1;
-    transform: scale(1.08);
+    transform: none;
 }
 
 .level-0 { background: var(--heatmap-0); }

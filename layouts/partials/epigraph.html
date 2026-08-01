@@ -1,0 +1,6 @@
+{{- with . -}}
+<div class="home-epigraph" aria-label="Epigraph">
+  <p class="epigraph-text">{{ .text | markdownify }}</p>
+  <p class="epigraph-source">{{ .source | markdownify }}</p>
+</div>
+{{- end -}}

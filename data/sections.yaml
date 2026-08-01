@@ -1,0 +1,17 @@
+blog:
+  label: "BLOG"
+  title: "Blog"
+  desc: "Guides, field notes, and practical write-ups."
+  noun: "posts"
+
+learning:
+  label: "LEARNING"
+  title: "Learning Notes"
+  desc: "Foundation models, post-training, and AI notes."
+  noun: "notes"
+
+thinking:
+  label: "THINKING"
+  title: "Reflections"
+  desc: "Monthly reviews and direction notes."
+  noun: "reflections"

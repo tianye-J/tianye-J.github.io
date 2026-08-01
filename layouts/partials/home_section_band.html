@@ -1,0 +1,29 @@
+{{- $section := .Section -}}
+{{- $pages := where site.RegularPages "Section" $section -}}
+{{- $pages = $pages.ByDate.Reverse -}}
+{{- $sectionURL := printf "%s/" $section -}}
+<section class="home-section home-archive-band">
+  <div class="home-section-header">
+    <span class="section-label">{{ .Label }}</span>
+    <h2><a href="{{ $sectionURL | absURL }}">{{ .Title }}</a></h2>
+    <p class="home-section-desc">{{ .Desc }}</p>
+    <span class="home-section-count">{{ len $pages }} {{ .Noun }}</span>
+    <a class="home-section-more home-section-more--header" href="{{ $sectionURL | absURL }}">View all ›</a>
+  </div>
+  <div class="home-section-list">
+    {{- range first 3 $pages }}
+    <article class="home-section-entry">
+      <a href="{{ .Permalink }}">
+        <time class="entry-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01" }}</time>
+        <h3>{{ .Title }}</h3>
+        {{- with .Description }}
+        <p class="entry-summary">{{ . }}</p>
+        {{- end }}
+      </a>
+    </article>
+    {{- end }}
+    {{- if eq (len $pages) 0 }}
+    <p class="home-section-empty">No posts yet</p>
+    {{- end }}
+  </div>
+</section>

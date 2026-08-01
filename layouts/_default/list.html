@@ -1,11 +1,5 @@
 {{- define "main" }}
 
-{{/* ======== Profile Mode (unchanged) ======== */}}
-{{- if (and site.Params.profileMode.enabled .IsHome) }}
-{{- partial "index_profile.html" . }}
-
-{{- else }}{{/* ======== Normal Mode ======== */}}
-
 {{/* ---- Non-home list pages: keep default behavior ---- */}}
 {{- if not .IsHome }}
 
@@ -39,6 +33,9 @@
     </h1>
     {{- with .Description }}
     <div class="post-description">{{ . | markdownify }}</div>
+    {{- end }}
+    {{- with index site.Data.epigraphs .Section }}
+    {{- partial "epigraph.html" . }}
     {{- end }}
   </header>
 </section>
@@ -181,101 +178,27 @@
 <a class="home-experience-strip" href="{{ "about/#experience" | relURL }}" aria-label="View selected experience timeline">
   <span class="home-experience-kicker">EXPERIENCE</span>
   <span class="home-experience-items">
-    <span>2026.5 · RoboCup 3D · National Third Prize</span>
-    <span>2026.3-2026.4 · FedDG / DG · Research Training</span>
+    {{- range first 2 . }}
+    <span>{{ .time }} · {{ .title }} · {{ .badge }}</span>
+    {{- end }}
   </span>
 </a>
 {{- end }}
 
 {{/* === Vertical archive bands === */}}
 <div class="home-sections home-archive">
-
-  {{/* ---- Blog ---- */}}
-  {{- $blog := where site.RegularPages "Section" "blog" }}
-  {{- $blog = $blog.ByDate.Reverse }}
-  <section class="home-section home-archive-band">
-    <div class="home-section-header">
-      <span class="section-label">BLOG</span>
-      <h2><a href="{{ "blog/" | absURL }}">Blog</a></h2>
-      <p class="home-section-desc">Guides, field notes, and practical write-ups.</p>
-      <span class="home-section-count">{{ len $blog }} posts</span>
-      <a class="home-section-more home-section-more--header" href="{{ "blog/" | absURL }}">View all ›</a>
-    </div>
-    <div class="home-section-list">
-      {{- range first 3 $blog }}
-      <article class="home-section-entry">
-        <a href="{{ .Permalink }}">
-          <time class="entry-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01" }}</time>
-          <h3>{{ .Title }}</h3>
-          {{- if .Description }}
-          <p class="entry-summary">{{ .Description }}</p>
-          {{- end }}
-        </a>
-      </article>
-      {{- end }}
-      {{- if eq (len $blog) 0 }}
-      <p class="home-section-empty">No posts yet</p>
-      {{- end }}
-    </div>
-  </section>
-  
-  {{/* ---- Learning ---- */}}
-  {{- $learning := where site.RegularPages "Section" "learning" }}
-  {{- $learning = $learning.ByDate.Reverse }}
-  <section class="home-section home-archive-band">
-    <div class="home-section-header">
-      <span class="section-label">LEARNING</span>
-      <h2><a href="{{ "learning/" | absURL }}">Learning Notes</a></h2>
-      <p class="home-section-desc">Foundation models, post-training, and AI notes.</p>
-      <span class="home-section-count">{{ len $learning }} notes</span>
-      <a class="home-section-more home-section-more--header" href="{{ "learning/" | absURL }}">View all ›</a>
-    </div>
-    <div class="home-section-list">
-      {{- range first 3 $learning }}
-      <article class="home-section-entry">
-        <a href="{{ .Permalink }}">
-          <time class="entry-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01" }}</time>
-          <h3>{{ .Title }}</h3>
-          {{- if .Description }}
-          <p class="entry-summary">{{ .Description }}</p>
-          {{- end }}
-        </a>
-      </article>
-      {{- end }}
-      {{- if eq (len $learning) 0 }}
-      <p class="home-section-empty">No posts yet</p>
-      {{- end }}
-    </div>
-  </section>
-
-{{/* ---- Thinking ---- */}}
-  {{- $thinking := where site.RegularPages "Section" "thinking" }}
-  {{- $thinking = $thinking.ByDate.Reverse }}
-  <section class="home-section home-archive-band">
-    <div class="home-section-header">
-      <span class="section-label">THINKING</span>
-      <h2><a href="{{ "thinking/" | absURL }}">Reflections</a></h2>
-      <p class="home-section-desc">Monthly reviews and direction notes</p>
-      <span class="home-section-count">{{ len $thinking }} reflections</span>
-      <a class="home-section-more home-section-more--header" href="{{ "thinking/" | absURL }}">View all ›</a>
-    </div>
-    <div class="home-section-list">
-      {{- range first 3 $thinking }}
-      <article class="home-section-entry">
-        <a href="{{ .Permalink }}">
-          <time class="entry-meta" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01" }}</time>
-          <h3>{{ .Title }}</h3>
-          {{- if .Description }}
-          <p class="entry-summary">{{ .Description }}</p>
-          {{- end }}
-        </a>
-      </article>
-      {{- end }}
-      {{- if eq (len $thinking) 0 }}
-      <p class="home-section-empty">No posts yet</p>
-      {{- end }}
-    </div>
-  </section>
+  {{- range site.Params.mainSections }}
+  {{- $section := . }}
+  {{- with index site.Data.sections $section }}
+  {{- partial "home_section_band.html" (dict
+    "Section" $section
+    "Label" .label
+    "Title" .title
+    "Desc" .desc
+    "Noun" .noun
+  ) }}
+  {{- end }}
+  {{- end }}
 </div>
 
 {{- partial "home_artwork_interlude.html" . }}
@@ -283,7 +206,5 @@
 {{- partial "home_heatmap.html" . }}
 
 {{- end }}{{/* end .IsHome */}}
-
-{{- end }}{{/* end profileMode */}}
 
 {{- end }}{{- /* end main */ -}}

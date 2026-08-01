@@ -32,10 +32,7 @@
         <div class="entry-content">
             {{ .Content | markdownify }}
         </div>
-        <div class="home-epigraph" aria-label="epigraph">
-            <p class="epigraph-text">Have patience with everything unresolved in your heart and try to love the questions themselves.</p>
-            <p class="epigraph-source">— Rainer Maria Rilke, <em>Letters to a Young Poet</em></p>
-        </div>
+        {{- partial "epigraph.html" site.Data.epigraphs.home }}
         <footer class="entry-footer">
             <div class="social-icons home-action-icons" {{ with .AlignSocialIconsTo }}align="{{ . }}"{{- end }}>
                 {{- range site.Params.socialIcons }}

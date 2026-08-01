@@ -1,0 +1,89 @@
+/* Romantic Editorial design tokens.
+ * Keep theme values centralized here; component files consume semantic names only.
+ */
+
+:root {
+    color-scheme: light;
+
+    --bg: #f7f5f0;
+    --bg-soft: #f1eee6;
+    --surface: #f7f5f0;
+    --text: #2c3539;
+    --text-secondary: #4c5554;
+    --text-muted: #656d69;
+    --border: #dfdacb;
+    --accent: #b87333;
+    --accent-deep: #925523;
+    --code-bg: #eee9df;
+    --header-bg: rgba(247, 245, 240, 0.94);
+
+    --heatmap-0: #dedfd9;
+    --heatmap-1: #bcc8c7;
+    --heatmap-2: #91a5a6;
+    --heatmap-3: #617d81;
+    --heatmap-4: #b87333;
+
+    --hero-wash: linear-gradient(90deg, rgba(247, 245, 240, 0.46) 0%, rgba(247, 245, 240, 0.14) 42%, transparent 68%);
+    --artwork-wash: rgba(247, 245, 240, 0.38);
+
+    --font-display: 'EB Garamond', 'Noto Serif SC', 'Songti SC', 'STSong', Georgia, serif;
+    --font-body: Georgia, 'Noto Serif SC', 'Songti SC', 'STSong', serif;
+    --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    --font-mono: 'JetBrains Mono', 'SFMono-Regular', 'Cascadia Code', Consolas, monospace;
+
+    --ring: #b87333;
+    --ring-accent: color-mix(in srgb, var(--accent) 48%, transparent);
+    --dur: 420ms;
+    --dur-fast: 200ms;
+    --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+    --radius: 4px;
+    --measure: 44rem;
+
+    /* PaperMod compatibility aliases. */
+    --theme: var(--bg);
+    --entry: var(--surface);
+    --primary: var(--text);
+    --secondary: var(--text-secondary);
+    --tertiary: var(--text-muted);
+    --content: var(--text-secondary);
+    --link: var(--accent-deep);
+    --code-block-bg: var(--code-bg);
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+
+    --bg: #12171c;
+    --bg-soft: #171e24;
+    --surface: #171e24;
+    --text: #e0e6ed;
+    --text-secondary: #bcc6ce;
+    --text-muted: #929da6;
+    --border: #303a43;
+    --accent: #df9b1e;
+    --accent-deep: #f1b449;
+    --code-bg: #1b232a;
+    --header-bg: rgba(18, 23, 28, 0.94);
+
+    --heatmap-0: #273139;
+    --heatmap-1: #3c5058;
+    --heatmap-2: #587178;
+    --heatmap-3: #789095;
+    --heatmap-4: #df9b1e;
+
+    --hero-wash: linear-gradient(90deg, rgba(18, 23, 28, 0.52) 0%, rgba(18, 23, 28, 0.25) 48%, rgba(18, 23, 28, 0.08) 72%);
+    --artwork-wash: rgba(18, 23, 28, 0.44);
+
+    --ring: #df9b1e;
+    --ring-accent: color-mix(in srgb, var(--accent) 58%, transparent);
+
+    /* PaperMod compatibility aliases. */
+    --theme: var(--bg);
+    --entry: var(--surface);
+    --primary: var(--text);
+    --secondary: var(--text-secondary);
+    --tertiary: var(--text-muted);
+    --content: var(--text-secondary);
+    --link: var(--accent);
+    --code-block-bg: var(--code-bg);
+}

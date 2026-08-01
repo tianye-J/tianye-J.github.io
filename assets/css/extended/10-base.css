@@ -1,0 +1,151 @@
+/* Document baseline and editorial type scale. */
+
+html,
+body,
+body.list {
+    color: var(--text);
+    background-color: var(--bg);
+    background-image:
+        radial-gradient(circle at 18% 17%, rgba(128, 109, 77, 0.045) 0 0.7px, transparent 0.9px),
+        radial-gradient(circle at 72% 64%, rgba(95, 105, 102, 0.035) 0 0.8px, transparent 1px);
+    background-size: 23px 23px, 31px 31px;
+}
+
+[data-theme="dark"],
+[data-theme="dark"] body,
+[data-theme="dark"] body.list {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(224, 230, 237, 0.022) 0 0.7px, transparent 0.9px),
+        radial-gradient(circle at 75% 60%, rgba(223, 155, 30, 0.018) 0 0.8px, transparent 1px);
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.8;
+    letter-spacing: 0.008em;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+::selection {
+    color: var(--text);
+    background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+:where(a, button, summary, input, textarea, select):focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px var(--ring-accent);
+}
+
+a {
+    color: var(--link);
+    text-decoration-color: color-mix(in srgb, currentColor 54%, transparent);
+    text-underline-offset: 0.2em;
+    transition: color var(--dur-fast) var(--ease-soft), text-decoration-color var(--dur-fast) var(--ease-soft);
+}
+
+a:hover {
+    text-decoration-color: currentColor;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.logo a,
+.entry-header h2,
+.friend-name {
+    color: var(--text);
+    font-family: var(--font-display);
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+    scroll-margin-top: 5rem;
+}
+
+#menu,
+#theme-toggle,
+.mobile-menu-toggle,
+.section-label,
+.post-meta,
+.breadcrumbs,
+.entry-meta,
+.entry-footer,
+.archive-meta,
+.post-tags,
+.pagination,
+.toc summary,
+.code-lang-label,
+.copy-code,
+.footer-col-title,
+.footer-bottom {
+    font-family: var(--font-ui);
+}
+
+.post-meta,
+.entry-meta,
+.archive-meta {
+    font-variant-numeric: tabular-nums;
+}
+
+.section-label {
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+}
+
+.entry-header h2 {
+    font-size: 21px;
+}
+
+.page-header h1,
+.post-title,
+.post-header .post-title {
+    font-size: 33px;
+}
+
+.home-info.home-hero .entry-header h1,
+.section-masthead-copy h1 {
+    font-size: 42px;
+}
+
+.post-content {
+    max-width: var(--measure);
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.8;
+    letter-spacing: 0.008em;
+}
+
+.post-content h2 {
+    font-size: 26px;
+}
+
+.post-content h3 {
+    font-size: 21px;
+}
+
+.post-content a {
+    color: var(--link);
+    text-decoration-thickness: 1px;
+}
+
+.post-content :not(pre) > code,
+.post-content pre,
+.post-content .highlight {
+    font-family: var(--font-mono);
+}
+
+.katex {
+    color: var(--text);
+}

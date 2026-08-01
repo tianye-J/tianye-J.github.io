@@ -32,6 +32,10 @@ theme = "PaperMod"
   ShareButtons = ["x", "linkedin", "telegram"]
   description = "Arden’s blog — Robotics, foundation models, post-training, and AI infrastructure"
 
+  [params.searchSuggestions]
+    starter = ["Transformer", "Prompt Learning", "RoboCup", "方法论", "课程规划"]
+    empty = ["CLIP", "学习反思"]
+
   [params.homeInfoParams]
     Title = "Hello, I’m **Arden**"
     Content = "Robotics Engineering @ NJUPT · Foundation models, post-training, and AI infrastructure"
@@ -61,6 +65,7 @@ theme = "PaperMod"
 
   [params.footer]
     hideCopyright = false
+    tagline = "Robotics · AI · Engineering"
     text = "*南方，某扇房门，某个街角* — 博尔赫斯"
 
   [params.fuseOpts]

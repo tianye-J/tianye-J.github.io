@@ -195,7 +195,7 @@ title = "Arden J"                    # 网站标题
 ```toml
 [params.label]
   text = "Arden J"
-  icon = '/images/logo.png'
+  icon = '/images/logo-swirl.png'
   iconHeight = 28
 ```
 
@@ -244,21 +244,12 @@ hugo new content/notes/first-post.md
 
 ## 六、修改分区题词
 
-每个分区的题词在其 `_index.md` 文件中：
+首页与三个内容分区的题词统一保存在 `data/epigraphs.yaml`：
 
-```
-content/blog/_index.md
-content/learning/_index.md
-content/thinking/_index.md
-```
-
-编辑其中的 HTML：
-
-```html
-<div class="page-epigraph">
-  <p class="epigraph-text">你的新引言</p>
-  <p class="epigraph-source">— 作者</p>
-</div>
+```yaml
+learning:
+  text: "你的新引言"
+  source: "— 作者"
 ```
 
 ---

@@ -40,11 +40,9 @@
 
   <div class="search-suggestions" aria-label="Starter searches">
     <span>Try</span>
-    <button type="button" data-search-term="Transformer">Transformer</button>
-    <button type="button" data-search-term="Prompt Learning">Prompt Learning</button>
-    <button type="button" data-search-term="RoboCup">RoboCup</button>
-    <button type="button" data-search-term="方法论">方法论</button>
-    <button type="button" data-search-term="课程规划">课程规划</button>
+    {{- range site.Params.searchSuggestions.starter }}
+    <button type="button" data-search-term="{{ . }}">{{ . }}</button>
+    {{- end }}
   </div>
 
   <p id="searchStatus" class="search-status" aria-live="polite">Loading archive index...</p>
@@ -53,8 +51,9 @@
     <p class="search-empty-title">No notes found for this query.</p>
     <p class="search-empty-copy">Try a broader phrase, remove the section filter, or search the public site index.</p>
     <div class="search-empty-actions">
-      <button type="button" data-search-term="CLIP">CLIP</button>
-      <button type="button" data-search-term="学习反思">学习反思</button>
+      {{- range site.Params.searchSuggestions.empty }}
+      <button type="button" data-search-term="{{ . }}">{{ . }}</button>
+      {{- end }}
       <button type="button" data-search-clear>Clear search</button>
       <a id="searchExternalFallback" href="https://www.google.com/search?q=site%3Aardenj.pages.dev" target="_blank"
         rel="noopener noreferrer">Google site:ardenj.pages.dev</a>

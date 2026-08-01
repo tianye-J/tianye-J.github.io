@@ -665,7 +665,7 @@ body.list .post-entry:focus-within {
     background: var(--accent);
     border-radius: var(--radius);
     pointer-events: none;
-    transition: top 200ms var(--ease-soft), height 200ms var(--ease-soft);
+    transition: top 150ms var(--ease-soft), height 200ms var(--ease-soft);
 }
 
 .toc-tl-item {
@@ -761,7 +761,7 @@ body.list .post-entry:focus-within {
     background: var(--accent);
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--ring-accent);
-    transform: scale(1.35);
+    transform: scale(1.25);
 }
 
 .toc-tl-item.active > a .toc-tl-label,

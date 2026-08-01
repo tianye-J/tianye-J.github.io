@@ -1,0 +1,123 @@
+/* A small, shared motion vocabulary. */
+
+@keyframes fade-down {
+    from {
+        opacity: 0;
+        transform: translateY(-16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cursor-blink {
+    0%,
+    46% {
+        opacity: 1;
+    }
+
+    47%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.header {
+    animation: fade-down var(--dur) var(--ease-soft) both;
+}
+
+.home-info.home-hero {
+    animation: fade-up var(--dur) var(--ease-soft) 100ms both;
+}
+
+.home-section.home-archive-band:nth-child(1) {
+    animation: fade-up var(--dur) var(--ease-soft) 200ms both;
+}
+
+.home-section.home-archive-band:nth-child(2) {
+    animation: fade-up var(--dur) var(--ease-soft) 300ms both;
+}
+
+.home-section.home-archive-band:nth-child(3) {
+    animation: fade-up var(--dur) var(--ease-soft) 400ms both;
+}
+
+.home-heatmap {
+    animation: fade-up var(--dur) var(--ease-soft) 500ms both;
+}
+
+.about-profile-header,
+.about-page .about-section {
+    animation: fade-up var(--dur) var(--ease-soft) both;
+}
+
+.about-page .about-section:nth-of-type(1) {
+    animation-delay: 50ms;
+}
+
+.about-page .about-section:nth-of-type(2) {
+    animation-delay: 100ms;
+}
+
+.about-page .about-section:nth-of-type(3) {
+    animation-delay: 150ms;
+}
+
+.about-page .about-section:nth-of-type(4) {
+    animation-delay: 200ms;
+}
+
+.typewriter-cursor {
+    display: inline-block;
+    margin-left: 0.05em;
+    color: var(--accent-deep);
+    font-weight: 400;
+    animation: cursor-blink 750ms step-end infinite;
+}
+
+.typewriter-cursor--leaving {
+    opacity: 0;
+    animation: none;
+    transition: opacity 500ms var(--ease-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+    }
+
+    .header,
+    .home-info.home-hero,
+    .home-section.home-archive-band,
+    .home-heatmap,
+    .about-profile-header,
+    .about-page .about-section {
+        opacity: 1;
+        transform: none;
+    }
+}

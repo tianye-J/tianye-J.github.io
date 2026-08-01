@@ -11,7 +11,14 @@ my_blog/
 │   ├── learning/          ← 「Learning」分区
 │   └── thinking/          ← 「Thinking」分区
 ├── assets/css/extended/
-│   └── custom.css         ← 自定义样式（颜色、排版、布局）
+│   ├── 00-tokens.css      ← 颜色、字体、尺寸等语义令牌
+│   ├── 10-base.css        ← 排版基线与可访问性
+│   ├── 20-chrome.css      ← 导航、页脚、搜索等站点框架
+│   ├── 30-components.css  ← 文章、卡片、代码与 TOC 组件
+│   ├── 40-pages.css       ← 首页及各类独立页面
+│   ├── 50-motion.css      ← 动效与 reduced-motion
+│   ├── 60-responsive.css  ← 768px / 1440px 响应式规则
+│   └── syntax.css         ← Chroma 代码高亮双主题
 ├── layouts/               ← 模板覆盖（不动主题文件）
 ├── static/images/         ← 图片资源（logo、人像等）
 └── themes/PaperMod/       ← 主题（不要直接修改）
@@ -115,35 +122,26 @@ hugo server
 
 ## 三、修改 About 页面
 
-编辑 `content/about/index.md`，这是一个普通 Markdown 文件：
+About 页使用 `layouts/_default/about.html`，结构化资料保存在 `data/about.yaml`。姓名、简介、头像、链接、经历、生活片段和工具栈都在该数据文件中修改。
+
+`content/about/index.md` 负责页面元数据和可选的补充 Markdown：
 
 ```markdown
 +++
 title = "About"
-layout = "single"
+layout = "about"
 hideMeta = true
 hideFooter = false
 +++
 
-<!-- 人像图片 -->
-<div class="about-illustration" aria-hidden="true">
-  <img src="/images/portrait.png" alt="" loading="lazy" draggable="false">
-</div>
+## 补充内容
 
-<!-- 题词 -->
-<div class="page-epigraph">
-  <p class="epigraph-text">你想放的引言</p>
-  <p class="epigraph-source">— 作者</p>
-</div>
-
-## 关于我
-
-你的个人介绍...
+这部分会显示在结构化工具列表之后。
 ```
 
-- **换头像**：把新图片放到 `static/images/`，然后修改 `<img src="/images/你的文件名.png">`
-- **改引言**：直接编辑 `epigraph-text` 和 `epigraph-source` 的内容
-- **改正文**：自由编辑 Markdown 内容
+- **换头像**：把图片放到 `static/images/`，修改 `data/about.yaml` 的 `profile.avatar`
+- **改个人资料或经历**：编辑 `data/about.yaml` 对应字段
+- **补充长文**：从 `content/about/index.md` 的二级标题开始写，会接在结构化区块之后
 
 ---
 
@@ -238,7 +236,11 @@ description = "日常随笔"
 hugo new content/notes/first-post.md
 ```
 
-新分区会自动出现在首页的分区展示中。
+如需让新分区出现在首页，还要：
+
+1. 将 `notes` 加入 `hugo.toml` 的 `params.mainSections`。
+2. 在 `data/sections.yaml` 添加 `notes` 的 `label`、`title`、`desc`、`noun`。
+3. 如需分区题词，在 `data/epigraphs.yaml` 添加同名条目。
 
 ---
 
@@ -371,6 +373,6 @@ hugo --minify
 ## 十一、注意事项
 
 - **不要修改** `themes/PaperMod/` 下的任何文件，所有自定义通过项目根目录的 `layouts/` 和 `assets/` 覆盖
-- 样式修改统一在 `assets/css/extended/custom.css` 中进行
+- 样式按职责拆分在 `assets/css/extended/00-tokens.css` 至 `60-responsive.css`；代码高亮单独维护在 `syntax.css`
 - 文章文件名建议用英文或拼音，避免中文 URL
 - Front Matter 使用 TOML 格式（`+++` 分隔符），不是 YAML（`---`）

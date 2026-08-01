@@ -38,6 +38,17 @@
     --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
     --radius: 4px;
     --measure: 44rem;
+    --container: 1060px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+    --space-14: 56px;
+    --space-16: 64px;
 
     /* PaperMod compatibility aliases. */
     --theme: var(--bg);

@@ -5,7 +5,7 @@ body.list .post-entry {
     max-width: 920px;
     min-height: 0;
     margin: 0 auto;
-    padding: 23px 4px;
+    padding: var(--space-5) var(--space-6);
     background: transparent;
     border: 0;
     border-bottom: 1px solid var(--border);
@@ -191,12 +191,12 @@ body.list .post-entry:focus-within {
 }
 
 .post-content p {
-    margin-block: 0.85em;
+    margin-block: 1.5em;
 }
 
 .post-content h2 {
     position: relative;
-    margin: 2em 0 0.7em;
+    margin: 2.5em 0 0.7em;
     padding: 14px 0 10px;
     color: var(--text);
     border-bottom: 1px solid var(--border);
@@ -217,7 +217,7 @@ body.list .post-entry:focus-within {
 }
 
 .post-content h3 {
-    margin: 1.75em 0 0.55em;
+    margin: 2em 0 0.55em;
     color: var(--text);
     font-size: 21px;
     line-height: 1.32;
